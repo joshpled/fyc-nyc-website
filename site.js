@@ -13,7 +13,7 @@ const navLinks = links.map(([key, label, href]) =>
 
 document.getElementById('site-header').innerHTML = `
   <header class="site-header">
-    <a class="wordmark" href="index.html" aria-label="F.Y.C. / N.Y.C. home"><span>F.Y.C.</span><span>N.Y.C.</span></a>
+    <a class="brand-logo brand-logo--header" href="index.html" aria-label="F.Y.C. / N.Y.C. home"><img src="assets/FYC-logo-transparent.png" alt=""></a>
     <nav class="main-nav" id="main-nav" aria-label="Main navigation">${navLinks}</nav>
     <a class="header-book" href="https://resy.com/cities/new-york-ny/venues/fyc-nyc?seats=" target="_blank" rel="noopener">Book a table <span aria-hidden="true">↗</span></a>
     <button class="menu-toggle" type="button" aria-label="Open menu" aria-controls="main-nav" aria-expanded="false"><span></span><span></span></button>
@@ -23,7 +23,7 @@ document.getElementById('site-header').innerHTML = `
 document.getElementById('site-footer').innerHTML = `
   <footer class="site-footer">
     <div class="site-footer__top">
-      <div><p class="eyebrow">FAMILY. YOU. CHOOSE.</p><div class="footer-wordmark">F.Y.C. <span>/</span> N.Y.C.</div></div>
+      <div><p class="eyebrow">FAMILY. YOU. CHOOSE.</p><a class="brand-logo brand-logo--footer" href="index.html" aria-label="F.Y.C. / N.Y.C. home"><img src="assets/FYC-logo-transparent.png" alt=""></a></div>
       <div class="site-footer__nav" aria-label="Footer navigation">${navLinks}</div>
       <div class="site-footer__actions"><a href="https://resy.com/cities/new-york-ny/venues/fyc-nyc?seats=" target="_blank" rel="noopener">Reservations <span aria-hidden="true">↗</span></a><a href="https://order.toasttab.com/egiftcards/fyc-nyc-44-west-17th-street" target="_blank" rel="noopener">Gift cards <span aria-hidden="true">↗</span></a><a href="https://www.instagram.com/thefycnyc/" target="_blank" rel="noopener">Instagram <span aria-hidden="true">↗</span></a></div>
     </div>
@@ -51,7 +51,7 @@ mainNav.addEventListener('click', (event) => {
 
 // The restaurant photos are supplied locally but excluded from the public repo.
 // A fresh public checkout stays readable until the approved photos are provided.
-document.querySelectorAll('img').forEach((img) => {
+document.querySelectorAll('main img').forEach((img) => {
   const showPlaceholder = () => {
     if (img.dataset.placeholderShown === 'true') return;
     img.dataset.placeholderShown = 'true';

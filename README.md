@@ -13,6 +13,8 @@ A four-page, static concept for the restaurant website. This is a review preview
 
 Open `index.html` in a browser, or serve this folder with any static file server. There is no build step, package manager, or environment variable. The supplied restaurant photos are kept outside the public GitHub repository. Without them, the pages show a branded placeholder image. The local FYC folder has the complete photo preview.
 
+The site uses the restaurant's approved transparent logo in the shared header and footer. The accent color is the supplied Golden Wheat sample (`#DEA33E`); text on light sections uses a darker shade for legibility. The logo is committed so it appears in public checkouts, while the restaurant photos remain local.
+
 ## Content and operating links
 
 The local preview uses photos supplied in the FYC folder. Those photos are excluded from GitHub. Menu highlights, hours, address, and contact details were checked against [the current restaurant site](https://thefycnyc.com/) on September 27, 2026. The food and cocktail menus can change, so this preview links to the [live food menu](https://thefycnyc.com/food-menu), [live cocktail menu](https://thefycnyc.com/drink-menu), and [wine page](https://thefycnyc.com/wine). It deliberately omits static prices.

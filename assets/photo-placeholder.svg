@@ -1,9 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-label="F.Y.C. / N.Y.C. brand image">
-  <rect width="1200" height="900" fill="#203c32"/>
-  <path d="M0 145h1200M0 755h1200" stroke="#b99e63" stroke-opacity=".45" stroke-width="2"/>
-  <path d="M145 0v900M1055 0v900" stroke="#b99e63" stroke-opacity=".45" stroke-width="2"/>
-  <circle cx="600" cy="450" r="315" fill="none" stroke="#b99e63" stroke-opacity=".34" stroke-width="2"/>
-  <text x="600" y="425" fill="#f4efe6" font-family="Georgia,serif" font-size="108" text-anchor="middle" letter-spacing="9">F.Y.C.</text>
-  <text x="600" y="535" fill="#f4efe6" font-family="Georgia,serif" font-size="108" text-anchor="middle" letter-spacing="9">N.Y.C.</text>
-  <text x="600" y="665" fill="#c8ae76" font-family="Arial,sans-serif" font-size="24" text-anchor="middle" letter-spacing="9">FAMILY. YOU. CHOOSE.</text>
+  <rect width="1200" height="900" fill="#2b261c"/>
+  <path d="M0 145h1200M0 755h1200" stroke="#dea33e" stroke-opacity=".45" stroke-width="2"/>
+  <path d="M145 0v900M1055 0v900" stroke="#dea33e" stroke-opacity=".45" stroke-width="2"/>
+  <circle cx="600" cy="450" r="315" fill="none" stroke="#dea33e" stroke-opacity=".34" stroke-width="2"/>
+  <text x="600" y="465" fill="#dea33e" font-family="Arial,sans-serif" font-size="28" text-anchor="middle" letter-spacing="10">FAMILY. YOU. CHOOSE.</text>
 </svg>
