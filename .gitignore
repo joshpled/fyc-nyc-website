@@ -1,0 +1,11 @@
+# The supplied restaurant photos stay local and are not published to GitHub.
+assets/*.jpg
+assets/*.jpeg
+assets/*.png
+assets/*.webp
+!assets/FYC-logo-transparent.png
+
+# The private preview host binding is kept outside the public repository.
+.openai/hosting.json
+
+.DS_Store
