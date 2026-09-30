@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <meta name="theme-color" content="#151512">
-  <meta name="description" content="Explore food, cocktails, and wine at F.Y.C. / N.Y.C. in Flatiron.">
-  <title>Food & Drinks — F.Y.C. / N.Y.C.</title>
+  <meta name="description" content="Browse the full F.Y.C. / N.Y.C. food, cocktail, and wine menus with listed prices.">
+  <title>Food &amp; Drinks — F.Y.C. / N.Y.C.</title>
   <link rel="stylesheet" href="styles.css">
   <script src="site.js" defer></script>
 </head>
@@ -14,43 +14,374 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <div id="site-header"></div>
   <main id="main">
-    <section class="page-hero page-hero--menu">
-      <div class="page-hero__copy">
-        <p class="eyebrow eyebrow--dark">FOOD & DRINKS</p>
-        <h1>Made for<br><em>the table.</em></h1>
-        <p>Something familiar. Something unexpected. Always better shared with your people.</p>
-        <a class="button button--dark" href="https://resy.com/cities/new-york-ny/venues/fyc-nyc?seats=" target="_blank" rel="noopener">Reserve a table <span aria-hidden="true">↗</span></a>
+    <header class="menu-page-hero">
+      <div class="menu-page-hero__inner">
+        <div><p class="eyebrow">FOOD &amp; DRINKS</p><h1>Come hungry.<br><em>Stay awhile.</em></h1></div>
+        <div class="menu-page-hero__aside"><p>Explore the full dinner, cocktail, and wine menus. Good company makes every choice better.</p><a class="button button--gold" href="https://resy.com/cities/new-york-ny/venues/fyc-nyc?seats=" target="_blank" rel="noopener">Reserve a table <span aria-hidden="true">↗</span></a></div>
       </div>
-      <img src="assets/DAzDaieSxyy.jpg" alt="Meatballs in tomato sauce at FYC" fetchpriority="high">
-    </section>
+    </header>
 
-    <nav class="section-nav" aria-label="Menu sections"><a href="#food">Food</a><a href="#drinks">Cocktails</a><a href="#wine">Wine</a></nav>
+    <nav class="menu-page-jump" aria-label="Menu sections"><a href="#food">Food</a><a href="#drinks">Cocktails</a><a href="#wine">Wine</a></nav>
 
-    <section class="menu-section section-pad" id="food" aria-labelledby="food-title">
-      <div class="menu-section__heading"><p class="eyebrow eyebrow--dark">SOME FYC FAVORITES</p><h2 id="food-title">Dinner starts <em>here.</em></h2><p>A few dishes from the current menu. See the live menu for the latest selection, ingredients, and prices.</p></div>
-      <div class="menu-list">
-        <div class="menu-list__group"><h3>Firsts</h3>
-          <div class="menu-item"><h4>Mona’s Triple Threat Meatballs</h4><p>Nonna’s pomodoro</p></div>
-          <div class="menu-item"><h4>Sea Scallop Cru-Viche</h4><p>Yuzu, jalapeño, tomato, avocado mousse</p></div>
-          <div class="menu-item"><h4>Stuffed ’Shrooms</h4><p>Béchamel, truffle, cremini, mozzarella</p></div>
+    <section class="menu-page-section menu-page-section--food" id="food" aria-labelledby="food-title">
+      <div class="menu-page-section__inner">
+        <div class="menu-page-section__heading"><div><p class="eyebrow eyebrow--dark">DINNER MENU</p><h2 id="food-title">Food</h2></div><a class="menu-page-source-link" href="https://thefycnyc.com/food-menu" target="_blank" rel="noopener">View live food menu <span aria-hidden="true">↗</span></a></div>
+        <p class="menu-page-intro">From first bites to dessert. * denotes vegetarian as marked on the live menu.</p>
+        <p class="menu-page-note">Where two prices appear, both are shown in the same order as the live menu; serving options are not labeled there.</p>
+      <section class="menu-page-group" id="food-firsts" aria-labelledby="food-firsts-title">
+        <div class="menu-page-group__heading"><h3 id="food-firsts-title">Firsts</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Sully Street Baguette*</h4><span class="menu-page-entry__price">$7.00</span></div>
+            <p>Maldon, chili flake, artisan butter</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Sea Scallop Cru-Viche</h4><span class="menu-page-entry__price">$22.00</span></div>
+            <p>Yuzu, jalapeno, tomato, avocado mousse</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Arugula Salad*</h4><span class="menu-page-entry__price">$15.00</span></div>
+            <p>Orange segments, chevre, pepita, orange muscat vin&#x27;</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Spartichoke Pizza*</h4><span class="menu-page-entry__price">$21.00</span></div>
+            <p>fennel, cream cheese, red pepper</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Charred Endive*</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>Danish Bleu, pistachios, white nectarines, orange v&#x27;grette</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Stuffed ‘Shrooms*</h4><span class="menu-page-entry__price">$18.00</span></div>
+            <p>Bechamel, truffle, cremini, mozz</p>
+          </div>
         </div>
-        <div class="menu-list__group"><h3>Seconds</h3>
-          <div class="menu-item"><h4>FYC Wagyu Burger</h4><p>Gruyère, onion jam, truffle aioli</p></div>
-          <div class="menu-item"><h4>Kilo Mushroom Tacos</h4><p>Black garlic, chickpea, cilantro</p></div>
-          <div class="menu-item"><h4>Wild Sole en Papillote</h4><p>Spanish onion, potatoes, citrus</p></div>
+      </section>
+      <section class="menu-page-group" id="food-seconds" aria-labelledby="food-seconds-title">
+        <div class="menu-page-group__heading"><h3 id="food-seconds-title">Seconds</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Kilo Mushroom Tacos*</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>Black garlic, chickpea, cilantro</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Mona&#x27;s Triple Threat Meatballs</h4><span class="menu-page-entry__price">$25.00</span></div>
+            <p>Nonna&#x27;s pomodoro</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>&quot;Pulled&quot; Pork Tacos</h4><span class="menu-page-entry__price">$23.00</span></div>
+            <p>avo crema, pickled onion</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>F.Y.C. Wagyu Burger</h4><span class="menu-page-entry__price">$29.00</span></div>
+            <p>Gruyere, onion jam, truffle aioli</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Pasta Alla Carbonara*</h4><span class="menu-page-entry__price">$26.00</span></div>
+            <p>Spaghetti, zucchini, uova</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Herb Roasted Chicken</h4><span class="menu-page-entry__price">$29.00</span></div>
+            <p>48 hr. jus</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Wild Sole en Papillote</h4><span class="menu-page-entry__price">$46.00</span></div>
+            <p>Sweet spanish onion, potatoes, citrus</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Center-Cut Filet Mignon</h4><span class="menu-page-entry__price">$59.00</span></div>
+            <p>Porcini crust, smoked pomme-puree, gastrique</p>
+          </div>
         </div>
+      </section>
+      <section class="menu-page-group" id="food-sides" aria-labelledby="food-sides-title">
+        <div class="menu-page-group__heading"><h3 id="food-sides-title">Sides</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Blistered Brussels*</h4><span class="menu-page-entry__price">$12.00</span></div>
+            <p>Crispy shallot, chilli flake</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Risotto Ai Funghi*</h4><span class="menu-page-entry__price">$25.00</span></div>
+            <p>Maitake, Hiratake, Porcini Dust</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Haricots Verts</h4><span class="menu-page-entry__price">$13.00</span></div>
+            <p>Prosciutto Cracklin&#x27;</p>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="food-thirds" aria-labelledby="food-thirds-title">
+        <div class="menu-page-group__heading"><h3 id="food-thirds-title">Thirds</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Double-Chocolate Brownie a La Mode*</h4><span class="menu-page-entry__price">$19.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Assorted Handmade Gelato*</h4><span class="menu-page-entry__price">$6.00 / $15.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>MBBS Bread Pudding a La Mode</h4><span class="menu-page-entry__price">$19.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="food-chefs-dinner" aria-labelledby="food-chefs-dinner-title">
+        <div class="menu-page-group__heading"><h3 id="food-chefs-dinner-title">F.Y.C. Chef’s Dinner</h3>
+        <p class="menu-page-group__intro">Four courses for the whole table.</p></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>4C</h4><span class="menu-page-entry__price menu-page-entry__price--long">$105 PP++ / $175 PP++ Paired</span></div>
+          </div>
+        </div>
+      </section>
       </div>
-      <a class="text-link" href="https://thefycnyc.com/food-menu" target="_blank" rel="noopener">View the full current food menu <span aria-hidden="true">↗</span></a>
     </section>
 
-    <section class="menu-image-band" aria-label="Food and wine at FYC"><img src="assets/DTiqCogE7B0.jpg" alt="FYC Wagyu Burger" loading="lazy"><img src="assets/C8aSsQVusLL.jpg" alt="Bottle and glass of wine at FYC" loading="lazy"></section>
-
-    <section class="drinks-section section-pad" id="drinks" aria-labelledby="drinks-title">
-      <div class="drinks-section__photo"><img src="assets/DPFQ5oIAJ1S.jpg" alt="A cocktail at the FYC bar" loading="lazy"></div>
-      <div class="drinks-section__copy"><p class="eyebrow">AT THE BAR</p><h2 id="drinks-title">The first round<br>is on <em>you.</em></h2><p>Distinctive cocktails, a good place to land, and no rush to leave.</p><div class="drink-names"><span>M.T.V. Spring Break, Cancun, ’97</span><span>Piper! No!</span><span>Naomi Campbell</span></div><a class="text-link text-link--light" href="https://thefycnyc.com/drink-menu" target="_blank" rel="noopener">View the current cocktail menu <span aria-hidden="true">↗</span></a></div>
+    <section class="menu-page-section menu-page-section--drinks" id="drinks" aria-labelledby="drinks-title">
+      <div class="menu-page-section__inner">
+        <div class="menu-page-section__heading"><div><p class="eyebrow">AT THE BAR</p><h2 id="drinks-title">Cocktails</h2></div><a class="menu-page-source-link" href="https://thefycnyc.com/drink-menu" target="_blank" rel="noopener">View live drink menu <span aria-hidden="true">↗</span></a></div>
+        <p class="menu-page-intro">The current cocktail list, with ingredients and listed prices.</p>
+      <section class="menu-page-group" id="cocktails-list" aria-labelledby="cocktails-list-title">
+        <div class="menu-page-group__heading"><h3 id="cocktails-list-title">Cocktails</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>M.T.V. Spring Break, Cancun, ‘97</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>El Tequileno Repo, Turmeric Slurry, Citrus, Pebble</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Mileena Wins! Flawless Victory!</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>Dorothy Parker Gin, dragonfruit cordial, lime</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Parker Lane</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>Horseradished Vodka, Rice Wine Condiment</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>&quot;EX&quot;-en Provence</h4><span class="menu-page-entry__price">$23.00</span></div>
+            <p>Citrus gin, grapefruit, lime, lavender syrup, bubbs</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Best Man’s Speech</h4><span class="menu-page-entry__price">$23.00</span></div>
+            <p>Jaywalk Rye, Light Amaro, Pineau De Charantes</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>The Duchess of Sussex II</h4><span class="menu-page-entry__price">$19.00</span></div>
+            <p>chamomile cordial, &quot;sensation solution&quot;, vodka, bubbles, club</p>
+          </div>
+        </div>
+      </section>
+      </div>
     </section>
 
-    <section class="wine-callout section-pad" id="wine" aria-labelledby="wine-title"><p class="eyebrow eyebrow--dark">THE WINE LIST</p><h2 id="wine-title">Pick a favorite.<br><em>Find a new one.</em></h2><p>Our boutique wine selection rotates. Explore what may be pouring, then ask us about tonight’s bottles.</p><a class="button button--dark" href="https://thefycnyc.com/wine" target="_blank" rel="noopener">Explore the wine list <span aria-hidden="true">↗</span></a></section>
+    <section class="menu-page-section menu-page-section--wine" id="wine" aria-labelledby="wine-title">
+      <div class="menu-page-section__inner">
+        <div class="menu-page-section__heading"><div><p class="eyebrow eyebrow--dark">WINES WORTH POURING</p><h2 id="wine-title">Wine</h2></div><a class="menu-page-source-link" href="https://thefycnyc.com/wine" target="_blank" rel="noopener">View live wine list <span aria-hidden="true">↗</span></a></div>
+        <p class="menu-page-intro">This selection rotates. Please call the restaurant to confirm availability.</p>
+        <p class="menu-page-note">Where two prices appear, both are shown in the same order as the live wine list; serving sizes are not labeled there.</p>
+        <nav class="menu-page-category-nav" aria-label="Wine categories">
+      <a href="#wine-bubbs">Bubb’s</a>
+      <a href="#wine-blancs">Blancs</a>
+      <a href="#wine-skin-to-win">Skin to Win</a>
+      <a href="#wine-breweds">Breweds</a>
+      <a href="#wine-pinks-and-pales">Pinks and Pales</a>
+      <a href="#wine-fully-tinteds">Fully Tinteds</a>
+      <a href="#wine-fortifieds">Fortifieds</a>
+        </nav>
+      <section class="menu-page-group" id="wine-bubbs" aria-labelledby="wine-bubbs-title">
+        <div class="menu-page-group__heading"><h3 id="wine-bubbs-title">Bubb’s</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Vazart Coquart [Chardonnay], Champagne</h4><span class="menu-page-entry__price">$240.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Omaggio [Viognier] ’22, Mendoza, Argentina</h4><span class="menu-page-entry__price">$99.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Raventos I Blanc &#x27;Textures De Pedra&#x27;, Cava</h4><span class="menu-page-entry__price">$134.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Chateau Lafitte, [Tannat], Jurancon, FR</h4><span class="menu-page-entry__price">$115.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Laurent Bernard &#x27;Sept Arpents&#x27; Champagne</h4><span class="menu-page-entry__price">$168.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Chepika [Catawba] Finger Lakes, NY</h4><span class="menu-page-entry__price">$23.00 / $90.00</span></div>
+            <p>(Viennoiseiries, for breakfast in an open field in Ossages)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Lena [Spatburgunder+] ’21,Rheinhessen, GR</h4><span class="menu-page-entry__price">$133.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-blancs" aria-labelledby="wine-blancs-title">
+        <div class="menu-page-group__heading"><h3 id="wine-blancs-title">Blancs</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Knewitz [Chardonnay]’22, Rheinhessen, GR</h4><span class="menu-page-entry__price">$133.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Kolfok [Welschriesling], ’18 Burgenland, AT</h4><span class="menu-page-entry__price">$112.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Homonna [Harslevelu+] ’18,Tokaji,Hungary</h4><span class="menu-page-entry__price">$20.00 / $80.00</span></div>
+            <p>(The break of spring on Lac Leman)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Garage ‘Cru’ [Semillion] ’22, Maule Valley, Chile</h4><span class="menu-page-entry__price">$119.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Muller Catoir [Scheurebe] ’20, Pfalz, GR</h4><span class="menu-page-entry__price">$124.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Illumination [Sauv’ Blanc] ’23, Cali’-Yo</h4><span class="menu-page-entry__price">$137.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Clos Therrieres [CHENIN Blanc] ’23, Vouvray, FR</h4><span class="menu-page-entry__price">$119.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Get Down [Grenache Blanc+] ’21, Rhone Valley, FR</h4><span class="menu-page-entry__price">$19.00 / $76.00</span></div>
+            <p>(Notably smooth whilst lacking a sense of disingenuousness)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Pollerhoff [Gelber Muskateller+] ’23,Weinviertel, AT</h4><span class="menu-page-entry__price">$113.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Felton Road [Chardonnay] ’22, New Zealand</h4><span class="menu-page-entry__price">$160.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-skin-to-win" aria-labelledby="wine-skin-to-win-title">
+        <div class="menu-page-group__heading"><h3 id="wine-skin-to-win-title">Skin to Win</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Christophe Lepage [Pinot Gris] ’21,Bourgogne, FR</h4><span class="menu-page-entry__price">$21.00 / $84.00</span></div>
+            <p>(That picture of Christy Turlington where she’s smoking in all leather)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Amor Y Perreo [MUSCAT] ’23,Itata,Chile</h4><span class="menu-page-entry__price">$20.00 / $80.00</span></div>
+            <p>(The memory of orange marmalade and cocktail bitters)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Lo-Fi [Chardonnay] ’23,Santa Barbara, Cali’</h4><span class="menu-page-entry__price">$113.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Chateau Lafitte “Orange” [The Mansengs] ’20, Jurancon, FR</h4><span class="menu-page-entry__price">$167.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Maudit Flacon “Chaman” [Chasselas] Savoie, FR</h4><span class="menu-page-entry__price">$89.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-breweds" aria-labelledby="wine-breweds-title">
+        <div class="menu-page-group__heading"><h3 id="wine-breweds-title">Breweds</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Nizawa &#x27;Atago No Matsu&#x27;, Tohoku</h4><span class="menu-page-entry__price">$61.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Kurosawa Nigori, Japan</h4><span class="menu-page-entry__price">$58.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-pinks-and-pales" aria-labelledby="wine-pinks-and-pales-title">
+        <div class="menu-page-group__heading"><h3 id="wine-pinks-and-pales-title">Pinks and Pales</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Pierre Frick &#x27;Maceration&#x27; [Pinot Gris] ’22, Alsace, FR</h4><span class="menu-page-entry__price">$126.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Vignoble Dauny [Pinot Noir] ’22, Sancerre, FR</h4><span class="menu-page-entry__price">$20.00 / $80.00</span></div>
+            <p>(Montmorency cherry aqua-fresca)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Domaine Tatsis Rose &#x27;Barrel Aged&#x27;, ’16, Macedonia</h4><span class="menu-page-entry__price">$99.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Petit Ours [Syrah] ’24, Rhone Valley, FR</h4><span class="menu-page-entry__price">$19.00 / $76.00</span></div>
+            <p>(Deep, just shy of fruity, screams for pork)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>&#x27;Dope&#x27;, [Blaufrankisch] ’21, Burgenland, AT</h4><span class="menu-page-entry__price">$119.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Lo-Fi [Malbec] ’23, Santa Barbara, Cali’</h4><span class="menu-page-entry__price">$113.00</span></div>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-fully-tinteds" aria-labelledby="wine-fully-tinteds-title">
+        <div class="menu-page-group__heading"><h3 id="wine-fully-tinteds-title">Fully Tinteds</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Garage ‘Cru’[Carignan] ’19, Maule Valley, Chile</h4><span class="menu-page-entry__price">$155.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Leviathan, [Bordeaux Blend] ’22, Cali’-Oakville</h4><span class="menu-page-entry__price">$99.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Domaine Vico, &#x27;Fiumminale&#x27; [Niellucio+] ’20, Corsica, FR</h4><span class="menu-page-entry__price">$120.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>La Vielle Cure [Merlot+] ’17, Fronsac, FR</h4><span class="menu-page-entry__price">$131.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Anthem &#x27;Mount Veeder&#x27; [Cab’ Sauv’] ’17, Cali’</h4><span class="menu-page-entry__price">$292.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Sigalas [Mavrotragano] ’22, Cyclades, Greece</h4><span class="menu-page-entry__price">$135.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Mais Pais [Pais]’21, Secano Itata, Chile</h4><span class="menu-page-entry__price">$19.00 / $76.00</span></div>
+            <p>(Raspberry coulis blended with ash )</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Hirsch &#x27;San Andreas&#x27; [Pinot Noir] ’21, Cali’</h4><span class="menu-page-entry__price">$216.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Quintessa [Cab’ Sauv’+] ’18, Rutherford, Cali’</h4><span class="menu-page-entry__price">$465.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Zorah &#x27;Karasi&#x27; [Areni Noir] ’20, Armenia</h4><span class="menu-page-entry__price">$111.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Tenute Sella [Nebbiolo] ’14, Piedmont, IT</h4><span class="menu-page-entry__price">$136.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Umathum [Rotberger] ’22, Burgenland, AT</h4><span class="menu-page-entry__price">$20.00 / $80.00</span></div>
+            <p>(The blood of Eric Northman)</p>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Pehu Simonet [Pinot Noir] ’19, Champagne, FR</h4><span class="menu-page-entry__price">$169.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Domaine des Fables [Gamay] ’22, Savoie, FR</h4><span class="menu-page-entry__price">$92.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Matthieu Barret [Syrah] ’23, Cotes du Rhone, FR</h4><span class="menu-page-entry__price">$20.00 / $80.00</span></div>
+            <p>(Blueberry confit, garrigue, and graphite)</p>
+          </div>
+        </div>
+      </section>
+      <section class="menu-page-group" id="wine-fortifieds" aria-labelledby="wine-fortifieds-title">
+        <div class="menu-page-group__heading"><h3 id="wine-fortifieds-title">Fortifieds</h3></div>
+        <div class="menu-page-group__items">
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Domaine Frederic Brouca [Carignan+], Rousillon</h4><span class="menu-page-entry__price">$22.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Kopke [White Colheita] ’13, Port, Portugal</h4><span class="menu-page-entry__price">$22.00</span></div>
+          </div>
+          <div class="menu-page-entry">
+            <div class="menu-page-entry__line"><h4>Celler D’Espolla 1931 [The Grenaches] Emporda, ES</h4><span class="menu-page-entry__price">$21.00</span></div>
+          </div>
+        </div>
+      </section>
+      </div>
+    </section>
+
+    <section class="menu-page-end" aria-label="Menu information">
+      <div class="menu-page-end__inner"><p>Menu and prices checked September 30, 2026. Items, prices, and wine availability can change.</p><a class="button button--gold" href="https://resy.com/cities/new-york-ny/venues/fyc-nyc?seats=" target="_blank" rel="noopener">Book a table <span aria-hidden="true">↗</span></a></div>
+    </section>
   </main>
   <div id="site-footer"></div>
 </body>

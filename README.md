@@ -5,7 +5,7 @@ A four-page, static concept for the restaurant website. This is a review preview
 ## Pages
 
 - `index.html` — restaurant story, food and drink, and reservation calls to action
-- `menu.html` — selected menu highlights with links to current full menus
+- `menu.html` — full food, cocktail, and wine snapshot with listed prices and links to the live menus
 - `gather.html` — group dinners, celebrations, and catering inquiries
 - `visit.html` — address, hours, directions, and contact
 
@@ -17,7 +17,7 @@ The shared header and footer use the transparent FYC logo variant chosen for bet
 
 ## Content and operating links
 
-The local preview uses photos supplied in the FYC folder. Those photos are excluded from GitHub. Menu highlights, hours, address, and contact details were checked against [the current restaurant site](https://thefycnyc.com/) on September 27, 2026. The food and cocktail menus can change, so this preview links to the [live food menu](https://thefycnyc.com/food-menu), [live cocktail menu](https://thefycnyc.com/drink-menu), and [wine page](https://thefycnyc.com/wine). It deliberately omits static prices.
+The local preview uses photos supplied in the FYC folder. Those photos are excluded from GitHub. Hours, address, and contact details were checked against [the restaurant site](https://thefycnyc.com/) on September 27, 2026. The menu page contains a September 30, 2026 snapshot of every item and listed price on the [live food menu](https://thefycnyc.com/food-menu), [live cocktail menu](https://thefycnyc.com/drink-menu), and [wine page](https://thefycnyc.com/wine). Prices and wine availability can change; the menu page links back to each source. See [menu snapshot notes](docs/menu-snapshot.md) before refreshing it.
 
 Reservation buttons open the restaurant's existing Resy listing. Group inquiries open its existing event form. Gift cards open its existing Toast page. Catering uses the restaurant's published email address. This preview does not collect personal information or submit forms itself.
 

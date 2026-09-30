@@ -4,7 +4,7 @@ The site is intentionally small: four HTML pages, one shared stylesheet, one sha
 
 ## How it fits together
 
-- Each HTML file owns its page content and metadata. Static pages remain readable and easy to edit.
+- Each HTML file owns its page content and metadata. Static pages remain readable and easy to edit. `menu.html` holds the complete dated menu snapshot directly in semantic sections and price rows, so it works without fetching data at runtime.
 - `styles.css` holds the visual system, page layouts, and responsive rules.
 - `site.js` inserts the shared header and footer and controls the mobile navigation. It contains no external data or network calls.
 - `assets/` contains selected FYC photos in the local preview. Git ignores the supplied photos. The chosen small-size logo variant and a fallback SVG are committed so public checkouts show the real mark and a visible placeholder when a photo is absent.
@@ -13,7 +13,7 @@ The primary conversion path is a reservation link to Resy. The group page links 
 
 ## Why this structure
 
-Plain HTML, CSS, and JavaScript make this concept quick to review and cheap to host. The main tradeoff is that changes to menu highlights or opening hours must be updated by hand. Keeping the full menus external reduces that maintenance burden until the business decides how it wants to maintain live content.
+Plain HTML, CSS, and JavaScript make this concept quick to review and cheap to host. The main tradeoff is that menu items, prices, and opening hours must be updated by hand. The menu page links to the restaurant's live menus and carries a visible check date, but it is a snapshot rather than a live feed. [Menu snapshot notes](docs/menu-snapshot.md) record the sources and ambiguities for the next update.
 
 The logo is inserted once through the shared header/footer code. The source logo file keeps its existing path while the chosen small-size variant supplies its pixels, so every page uses the same image without changing page markup. The sampled gold lives in a CSS variable so the accent can be changed in one place; a darker companion shade keeps accent text readable on the light paper background.
 
