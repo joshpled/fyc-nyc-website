@@ -1,0 +1,93 @@
+{
+  "_readme": "Core business facts. Anything set to null renders on the site as a visible [placeholder] and is listed in README > Before launch.",
+  "name": "F.Y.C. / N.Y.C.",
+  "shortName": "FYC / NYC",
+  "meaning": "Family You Choose",
+  "tagline": "Family. You. Choose.",
+  "founded": 2024,
+  "url": "https://thefycnyc.com",
+  "description": "Wine bar and kitchen in Flatiron, NYC, on the Chelsea border. Mostly biodynamic, small-production wines, spirit-specific cocktails and seasonal global comfort food. Walk-ins always welcome.",
+  "founders": "A collective of 5 friends that have about 100 years of NYC restaurant experience between us.",
+
+  "address": {
+    "street": "44 West 17th Street",
+    "streetShort": "44 W 17th St",
+    "locality": "New York",
+    "region": "NY",
+    "postalCode": "10011",
+    "country": "US",
+    "crossStreets": "Between 5th & 6th Avenue",
+    "crossStreetsShort": "Between 5th & 6th Ave",
+    "neighborhood": "Flatiron",
+    "neighborhoodLong": "Flatiron, on the Chelsea border",
+    "landmarks": "Near Union Square and Madison Square Park"
+  },
+  "geo": { "lat": 40.7386729, "lng": -73.9944924 },
+  "googlePlaceId": "ChIJ-6U6tnBZwokRb3rayV7SEJo",
+  "links": {
+    "googleMaps": "https://www.google.com/maps/search/?api=1&query=FYC%2FNYC%2C%2044%20W%2017th%20St%2C%20New%20York%2C%20NY%2010011&query_place_id=ChIJ-6U6tnBZwokRb3rayV7SEJo",
+    "directions": "https://www.google.com/maps/dir/?api=1&destination=FYC%2FNYC%2C%2044%20W%2017th%20St%2C%20New%20York%2C%20NY%2010011&destination_place_id=ChIJ-6U6tnBZwokRb3rayV7SEJo",
+    "googleReviews": "https://search.google.com/local/reviews?placeid=ChIJ-6U6tnBZwokRb3rayV7SEJo",
+    "googleWriteReview": "https://search.google.com/local/writereview?placeid=ChIJ-6U6tnBZwokRb3rayV7SEJo"
+  },
+
+  "phone": "(646) 360-2411",
+  "phoneHref": "tel:+16463602411",
+  "phoneE164": "+16463602411",
+  "email": "info@thefycnyc.com",
+  "eventsEmail": "events@thefycnyc.com",
+
+  "social": {
+    "instagram": "https://www.instagram.com/thefycnyc",
+    "instagramHandle": "@thefycnyc",
+    "facebook": "https://www.facebook.com/61565856836297"
+  },
+
+  "giftCards": {
+    "buy": "https://order.toasttab.com/egiftcards/fyc-nyc-44-west-17th-street",
+    "balance": "https://www.toasttab.com/fyc-nyc-44-west-17th-street/findcard"
+  },
+
+  "booking": {
+    "_readme": "provider: 'resy' or 'opentable' (open question Q1). Leave venueId empty until decided; the drawer then shows direct links instead of the embedded widget.",
+    "provider": null,
+    "venueId": "",
+    "resyApiKey": "",
+    "resyUrl": "https://resy.com/cities/new-york-ny/venues/fyc-nyc",
+    "opentableUrl": "https://www.opentable.com/r/fyc/nyc-new-york",
+    "policy": [
+      "Tables for 2–4 guests are held for 2 hours; 5–6 guests, 2.5 hours.",
+      "Walk-ins are always welcome.",
+      "Patio tables are booked weather permitting."
+    ]
+  },
+
+  "analytics": {
+    "_readme": "Paste the GA4 Measurement ID (G-XXXXXXX). Empty = analytics off.",
+    "ga4Id": ""
+  },
+  "forms": {
+    "_readme": "Cloudflare Turnstile site key (public). The secret goes in the TURNSTILE_SECRET_KEY environment variable.",
+    "turnstileSiteKey": "",
+    "eventsReplyWindow": null,
+    "smsFrequency": null
+  },
+
+  "hero": {
+    "_readme": "Swap /public/video/hero-loop.mp4 (H.264) and hero-loop.webm (VP9) for the real bartender loop (5–8s, muted, each under 2MB). The current files are stand-ins made from the poster still.",
+    "videoMp4": "/video/hero-loop.mp4",
+    "videoWebm": "/video/hero-loop.webm"
+  },
+
+  "priceRange": "$$",
+  "servesCuisine": ["Global comfort food"],
+  "amenities": ["Wheelchair accessible", "Gender-neutral restroom", "Back patio", "Late night", "Full bar"],
+
+  "voice": {
+    "kidsTable": "Come see what being part of the Family is all about. We won't make you sit at the kid's table.",
+    "lights": "Lower the lights, turn the music up, have another glass, and feel free to dance in your chair.",
+    "cookout": "Want the invite to the family cookout?",
+    "wine": "Wines Worth Pouring",
+    "kitchen": "Ingredient driven. Fresh. Delicious."
+  }
+}

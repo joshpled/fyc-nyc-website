@@ -1,0 +1,100 @@
+---
+/** Signature dishes (white section). Pulls `featured: true` items from menus.json. */
+import { Image } from 'astro:assets';
+import menus from '../../data/menus.json';
+import Tbd from '../Tbd.astro';
+
+const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
+const img = (file?: string | null) => (file ? images[`../../assets/img/${file}`]?.default : undefined);
+
+type Item = { name: string | null; shortName?: string; description: string | null; blurb?: string; price: number | null; tags: string[]; featured?: boolean | number; image?: string | null };
+const featured = menus.food.courses.flatMap((c) => c.items as Item[]).filter((i) => i.featured)
+  .sort((a, b) => Number(a.featured === true ? 99 : a.featured) - Number(b.featured === true ? 99 : b.featured))
+  .slice(0, 4);
+const tagLabel = menus.tagLabels as Record<string, string>;
+---
+<section class="section light dishes-sec" aria-labelledby="dishes-title">
+  <div class="sh wrap">
+    <div>
+      <p class="eyebrow">From the kitchen</p>
+      <h2 id="dishes-title" class="display h2">Ingredient driven. <em>Fresh.</em> Delicious.</h2>
+    </div>
+    <a class="btn only-lg" href="/menus/">Full menu</a>
+  </div>
+
+  <div class="rail-wrap">
+    <ul class="dishes" role="list" aria-label="Signature dishes" tabindex="0">
+      {featured.map((d) => (
+        <li class="dish">
+          {img(d.image) ? (
+            <Image src={img(d.image)!} alt={d.name ?? ''} widths={[300, 600]} sizes="(min-width: 1024px) 25vw, 250px" class="dish__img" />
+          ) : (
+            <div class="dish__img ph" aria-hidden="true"></div>
+          )}
+          <h3 class="dish__name">
+            <span>{d.name}</span>
+            <span class="dish__price"><Tbd value={d.price} label="$" format={(v) => `$${v}`} /></span>
+          </h3>
+          <p class="dish__desc"><Tbd value={d.blurb ?? d.description} label="Short description" /></p>
+          {d.tags.length > 0 && (
+            <ul class="tags" role="list">
+              {d.tags.map((t) => <li class:list={['tag', { 'tag--v': t === 'vegetarian' }]}>{tagLabel[t] ?? t}</li>)}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
+  <div class="wrap only-sm dishes-more">
+    <a class="btn btn--block" href="/menus/">See the full menu</a>
+  </div>
+</section>
+
+<style>
+  .rail-wrap { max-width: var(--max); margin-inline: auto; }
+  .dishes {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 250px;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding: 0 var(--gutter) 8px;
+    scrollbar-width: none;
+  }
+  .dishes::-webkit-scrollbar { display: none; }
+  .dishes:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+  .dish { scroll-snap-align: start; }
+  .dish__img { display: block; width: 100%; height: 250px; object-fit: cover; border-radius: var(--r); margin-bottom: 12px; }
+  .dish__name {
+    font-family: var(--display);
+    font-size: 21px;
+    line-height: 1.2;
+    letter-spacing: -.01em;
+    display: grid;
+    gap: 2px;
+  }
+  .dish__price { font-family: var(--body); font-size: 16px; font-weight: 800; color: var(--gold-dk); letter-spacing: 0; }
+  .dish__desc { font-size: 15px; color: var(--paper-mute) !important; margin: 6px 0 10px; line-height: 1.5; }
+  .dish .tags { margin-top: 8px; }
+  .dishes-more { margin-top: 28px; }
+
+  @media (min-width: 1024px) {
+    .dishes {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      overflow: visible;
+    }
+    .dish__img { height: 320px; margin-bottom: 18px; }
+    .dish__name {
+      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+    }
+    .dish__price { flex: none; }
+  }
+</style>

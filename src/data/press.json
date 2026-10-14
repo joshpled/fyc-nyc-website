@@ -1,0 +1,6 @@
+{
+  "_readme": "Press coverage for /press (report Q11). Add items as { \"outlet\": \"Eater NY\", \"title\": \"Headline\", \"date\": \"2026-11-01\", \"url\": \"https://...\", \"quote\": \"optional pull quote\" }. Empty list = 'coverage to come' state.",
+  "items": [],
+  "contact": "info@thefycnyc.com",
+  "mediaKitUrl": null
+}

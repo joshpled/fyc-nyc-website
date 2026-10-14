@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import QuickFacts from '../components/home/QuickFacts.astro';
+import Bento from '../components/home/Bento.astro';
+import SignatureDishes from '../components/home/SignatureDishes.astro';
+import WineStory from '../components/home/WineStory.astro';
+import Reviews from '../components/home/Reviews.astro';
+import EventsTeaser from '../components/home/EventsTeaser.astro';
+import JoinBand from '../components/home/JoinBand.astro';
+import { heroPreload } from '../lib/hero';
+
+const preload = await heroPreload();
+---
+<Base
+  title="F.Y.C. / N.Y.C. | Wine Bar & Kitchen in Flatiron, NYC"
+  description="Mostly biodynamic wines, spirit-specific cocktails and global comfort food on West 17th St in Flatiron, near Union Square and Madison Square Park. Walk-ins welcome."
+  preloadImage={preload}
+>
+  <Hero />
+  <QuickFacts />
+  <Bento />
+  <SignatureDishes />
+  <WineStory />
+  <Reviews />
+  <EventsTeaser />
+  <JoinBand />
+</Base>

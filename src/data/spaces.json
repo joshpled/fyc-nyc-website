@@ -1,0 +1,38 @@
+{
+  "_readme": "Private event spaces. seated / standing are guest counts; minSpend values are dollars. null = visible [placeholder] (report Q2, Q3).",
+  "spaces": [
+    {
+      "id": "family-table",
+      "name": "The Family Table",
+      "kind": "Semi-private",
+      "summary": null,
+      "seated": null,
+      "standing": null,
+      "minSpendWeeknight": null,
+      "minSpendWeekend": null,
+      "image": null
+    },
+    {
+      "id": "back-patio",
+      "name": "The Back Patio",
+      "kind": "Outdoor, weather permitting",
+      "summary": null,
+      "seated": null,
+      "standing": null,
+      "minSpendWeeknight": null,
+      "minSpendWeekend": null,
+      "image": null
+    },
+    {
+      "id": "whole-house",
+      "name": "The Whole House",
+      "kind": "Full buyout",
+      "summary": null,
+      "seated": null,
+      "standing": null,
+      "minSpendWeeknight": null,
+      "minSpendWeekend": null,
+      "image": null
+    }
+  ]
+}

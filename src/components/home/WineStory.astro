@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import about from '../../assets/img/about.jpg';
+---
+<section class="section section--alt wine" aria-labelledby="wine-title">
+  <div class="wrap wine__grid">
+    <Image
+      src={about}
+      alt="A glass of orange wine and a bottle of Lo-Fi Chardonnay on the bar beside a whole roasted branzino"
+      widths={[480, 800, 1200]}
+      sizes="(min-width: 1024px) 50vw, 100vw"
+      class="wine__img"
+      quality={72}
+    />
+    <div class="wine__copy">
+      <p class="eyebrow">The list</p>
+      <h2 id="wine-title" class="display h2">Boutique wines from people who farm <em>like it matters</em></h2>
+      <p class="lead">A rotating list of mostly biodynamic vineyards and small-production bottles from every corner of the wine world, chosen to help you find a new favorite.</p>
+      <ul class="tags wine__tags" role="list" aria-label="On the list">
+        <li class="tag">Biodynamic</li>
+        <li class="tag">Skin contact</li>
+        <li class="tag">Small production</li>
+        <li class="tag">By the glass</li>
+      </ul>
+      <a class="btn" href="/menus/wine/">Explore the wine list</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .wine__grid { display: grid; gap: 32px; align-items: center; }
+  .wine :global(.wine__img) {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    object-position: 72% 50%;
+    border-radius: var(--r);
+  }
+  .wine__copy .h2 { margin: 12px 0 18px; }
+  .wine__copy .lead { max-width: 520px; }
+  .wine__tags { margin: 24px 0 30px; gap: 10px; }
+  .wine__tags .tag { font-size: 12px; padding: 5px 12px; }
+  @media (min-width: 1024px) {
+    .wine__grid { grid-template-columns: 1.1fr 1fr; gap: 72px; }
+    .wine :global(.wine__img) { height: 620px; }
+    .wine__copy .h2 { font-size: 62px; margin: 14px 0 24px; }
+  }
+</style>

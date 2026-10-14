@@ -1,0 +1,11 @@
+---
+import ThanksPage from '../../components/ThanksPage.astro';
+import site from '../../data/site.json';
+---
+<ThanksPage
+  title="Catering inquiry sent | F.Y.C. / N.Y.C."
+  heading="Got it. <em>Thank you.</em>"
+  body={`Your catering inquiry is with our team and we’ll be in touch soon. In a hurry? Call ${site.phone}.`}
+  backHref="/catering/"
+  backLabel="Back to catering"
+/>

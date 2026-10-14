@@ -1,0 +1,67 @@
+---
+/**
+ * "The F.Y.C. Family Card": loyalty tiers in brand voice (Cousin → Sibling → Family)
+ * plus member perks. Data: src/data/loyalty.json. Runs through Toast Loyalty if adopted.
+ */
+import { Image } from 'astro:assets';
+import logoGold from '../assets/img/logo_2.png';
+import Tbd from './Tbd.astro';
+import loyalty from '../data/loyalty.json';
+
+interface Props { cta?: { href: string; label: string } | null; headingLevel?: 'h2' | 'h3' }
+const { cta = { href: '/join/', label: 'Join free' }, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+---
+<div class="fcard">
+  <Image src={logoGold} alt="" widths={[188]} sizes="150px" class="fcard__mark" />
+  <p class="eyebrow">Everyone starts as</p>
+  <H class="fcard__tier">Cousin</H>
+  {loyalty.tiersEnabled && (
+    <ol class="fcard__tiers" role="list" aria-label="Family Card tiers">
+      {loyalty.tiers.map((t, i) => (
+        <li class:list={{ 'is-on': i === 0 }}>
+          <span class="fcard__bar" aria-hidden="true"></span>
+          <b>{t.name}</b>
+          <span class="fcard__unlock">
+            {t.unlock === 'visits' ? <>After <Tbd value={t.visits} label="X" /> visits</> : t.unlock}
+          </span>
+        </li>
+      ))}
+    </ol>
+  )}
+  <ul class="fcard__perks" role="list" aria-label="Member perks">
+    {loyalty.perks.map((p) => <li>{p}</li>)}
+  </ul>
+  {cta && <a class="btn btn--primary btn--block" href={cta.href}>{cta.label}</a>}
+</div>
+
+<style>
+  .fcard {
+    position: relative;
+    overflow: hidden;
+    padding: 26px 20px;
+    border: 1px solid rgba(212, 164, 58, .6);
+    border-radius: 18px;
+    background: radial-gradient(120% 80% at 100% 0%, rgba(177, 123, 9, .28), transparent 60%), #121110;
+  }
+  .fcard :global(.fcard__mark) { position: absolute; right: -24px; top: -12px; width: 190px; height: auto; opacity: .12; pointer-events: none; }
+  .fcard__tier {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 40px;
+    line-height: 1.1;
+    color: var(--gold-lt);
+    margin: 6px 0 14px;
+  }
+  .fcard__tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .fcard__tiers li { display: grid; gap: 4px; font-size: 13px; color: var(--mute); }
+  .fcard__tiers b { color: var(--bone); font-size: 14px; }
+  .fcard__bar { height: 6px; border-radius: 3px; background: var(--line); margin-bottom: 4px; }
+  .fcard__tiers li.is-on .fcard__bar { background: var(--gold-grad); }
+  .fcard__unlock { line-height: 1.35; }
+  .fcard__perks { margin: 18px 0 20px; font-size: 15px; color: var(--soft); }
+  .fcard__perks li { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px dashed var(--line); }
+  .fcard__perks li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.6; }
+  @media (min-width: 768px) { .fcard { padding: 34px; } }
+</style>

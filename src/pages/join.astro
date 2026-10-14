@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import JoinForm from '../components/JoinForm.astro';
+import FamilyCard from '../components/FamilyCard.astro';
+import Tbd from '../components/Tbd.astro';
+import site from '../data/site.json';
+import loyalty from '../data/loyalty.json';
+---
+<Base
+  title="Join the Family: Email, Texts & Birthday Perks | F.Y.C. / N.Y.C."
+  description="Get the invite to the family cookout: first dibs on holiday tables, members-only producer nights and a birthday glass on us at F.Y.C. / N.Y.C. in Flatiron."
+  crumbs={[{ name: 'Join the Family', path: '/join/' }]}
+>
+  <section class="section jn" aria-labelledby="jn-title">
+    <div class="wrap jn__grid">
+      <div class="jn__copy">
+        <p class="eyebrow">{site.voice.cookout}</p>
+        <h1 id="jn-title" class="display h1 jn__h1">Join the <em>Family</em></h1>
+        <p class="lead">{site.voice.kidsTable}</p>
+        <ul class="jn__perks" role="list" aria-label="What you get">
+          {loyalty.perks.map((p) => <li>{p}</li>)}
+        </ul>
+        <p class="jn__freq">Texts only if you opt in, up to <Tbd value={site.forms.smsFrequency} label="X" /> a month. Unsubscribe anytime.</p>
+      </div>
+      <div class="jn__form">
+        <h2 class="jn__formh">Count me in</h2>
+        <JoinForm id="join-page" layout="stacked" source="join_page" />
+      </div>
+    </div>
+  </section>
+
+  {loyalty.tiersEnabled && (
+    <section class="section jn-tiers" aria-labelledby="tiers-title">
+      <div class="wrap jn-tiers__grid">
+        <div>
+          <p class="eyebrow">Members of the family</p>
+          <h2 id="tiers-title" class="display h2 jn-tiers__h2">The F.Y.C. <em>Family Card</em></h2>
+          <p class="lead">Come back, move up.</p>
+        </div>
+        <FamilyCard cta={{ href: '#join-page-email', label: 'Join free' }} />
+      </div>
+    </section>
+  )}
+</Base>
+
+<style>
+  .jn__grid { display: grid; gap: 32px; }
+  .jn__h1 { font-size: clamp(3rem, 1.8rem + 5vw, 5.75rem); margin: 12px 0 16px; }
+  .jn__perks { display: grid; gap: 10px; margin: 24px 0 18px; }
+  .jn__perks li { display: flex; gap: 12px; align-items: baseline; color: var(--soft); }
+  .jn__perks li::before { content: '◆'; color: var(--gold); font-size: 10px; }
+  .jn__freq { font-size: 14px; color: var(--mute); }
+  .jn__form {
+    padding: 24px 18px;
+    border: 1px solid rgba(212, 164, 58, .45);
+    border-radius: var(--r);
+    background: radial-gradient(100% 70% at 50% 0%, rgba(177, 123, 9, .16), transparent 70%), var(--ink-2);
+  }
+  .jn__formh { font-family: var(--display); font-size: 28px; letter-spacing: -.02em; margin-bottom: 16px; }
+  .jn-tiers { padding-top: 0; }
+  .jn-tiers__grid { display: grid; gap: 22px; }
+  .jn-tiers__h2 { margin: 10px 0 12px; }
+  @media (min-width: 1024px) {
+    .jn__grid { grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: start; }
+    .jn__form { padding: 36px; position: sticky; top: calc(var(--header-h) + 32px); }
+    .jn-tiers__grid { grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  }
+</style>

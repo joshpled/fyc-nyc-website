@@ -1,0 +1,65 @@
+---
+/**
+ * Privacy policy TEMPLATE. Needed for the SMS program (carriers require a
+ * linked privacy policy) and for GA4. Have a lawyer review before launch.
+ */
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tbd from '../components/Tbd.astro';
+import site from '../data/site.json';
+---
+<Base
+  title="Privacy Policy | F.Y.C. / N.Y.C."
+  description="How F.Y.C. / N.Y.C. collects, uses and protects information from website visitors, guests and Join the Family members, including our SMS program terms."
+  crumbs={[{ name: 'Privacy', path: '/privacy/' }]}
+>
+  <PageHeader eyebrow="Privacy" title="Privacy <em>policy</em>" />
+  <section class="section pv" aria-label="Privacy policy">
+    <div class="wrap prose">
+      <p class="pv__draft"><Tbd value={null} label="Template: have a lawyer review and set the effective date before launch" /></p>
+      <p>Effective date: <Tbd value={null} label="date" /></p>
+
+      <h2>What we collect</h2>
+      <ul>
+        <li><strong>Things you tell us:</strong> your name, email, phone number, birthday (month and day), event details and messages when you join our list, send an inquiry or contact us.</li>
+        <li><strong>Reservations and gift cards:</strong> handled by our booking and payment partners (such as Resy or OpenTable and Toast) under their own privacy policies.</li>
+        <li><strong>Website analytics:</strong> we use Google Analytics to understand how people use the site (pages visited, device type, approximate location). It uses cookies.</li>
+      </ul>
+
+      <h2>How we use it</h2>
+      <ul>
+        <li>To reply to your inquiry and plan your event.</li>
+        <li>To send emails and, if you opt in, text messages about menus, events and offers.</li>
+        <li>To improve the website and our hospitality.</li>
+      </ul>
+      <p>We don’t sell your personal information. We share it only with service providers who help us run the business (for example, our email and SMS provider and website host), and when required by law.</p>
+
+      <h2 id="sms">Text messages (SMS)</h2>
+      <p>If you opt in, you’ll receive recurring automated marketing texts from {site.name}. Message frequency varies (up to <Tbd value={site.forms.smsFrequency} label="X" /> per month). Message and data rates may apply. Reply STOP to cancel at any time, or HELP for help. Consent isn’t a condition of purchase. Mobile numbers and opt-in information are never shared with third parties or affiliates for their own marketing.</p>
+
+      <h2>Your choices</h2>
+      <ul>
+        <li>Unsubscribe from emails with the link at the bottom of any email.</li>
+        <li>Stop texts by replying STOP.</li>
+        <li>Ask us to access, correct or delete your information by emailing <a href={`mailto:${site.email}`}>{site.email}</a>.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>{site.name}, {site.address.street}, {site.address.locality}, {site.address.region} {site.address.postalCode} · <a href={`mailto:${site.email}`}>{site.email}</a> · <a href={site.phoneHref}>{site.phone}</a></p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pv { padding-top: 24px; }
+  .prose { max-width: 760px; }
+  .prose h2 { font-family: var(--display); font-size: clamp(1.6rem, 1.3rem + 1vw, 2.2rem); margin: 36px 0 12px; letter-spacing: -.02em; }
+  .prose p, .prose li { color: var(--soft); }
+  .prose ul { display: grid; gap: 8px; list-style: none; }
+  .prose li { display: flex; gap: 12px; }
+  .prose li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.8; flex: none; }
+  .prose li strong { color: var(--bone); }
+  .prose p + p { margin-top: 12px; }
+  .prose a { color: var(--gold-lt); }
+  .pv__draft { margin-bottom: 10px; color: var(--gold-lt) !important; }
+</style>

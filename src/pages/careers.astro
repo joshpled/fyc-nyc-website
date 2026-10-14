@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tbd from '../components/Tbd.astro';
+import careers from '../data/careers.json';
+
+type Role = { title: string; type?: string; summary?: string };
+const roles = careers.roles as Role[];
+const email = careers.email as string | null;
+---
+<Base
+  title="Careers | Restaurant Jobs in Flatiron, NYC | F.Y.C. / N.Y.C."
+  description="Work at F.Y.C. / N.Y.C., a wine bar and kitchen on West 17th St in Flatiron run by five friends with about 100 years of NYC restaurant experience."
+  crumbs={[{ name: 'Careers', path: '/careers/' }]}
+>
+  <PageHeader eyebrow="Careers" title="Join the <em>crew</em>" lead="We’re a family you choose, behind the bar and in the kitchen too. Good people who love hospitality, we want to meet you." />
+  <section class="section cr" aria-label="Open roles">
+    <div class="wrap">
+      <h2 class="cr__h">Open roles</h2>
+      {roles.length ? (
+        <ul class="cr__list" role="list">
+          {roles.map((r) => (
+            <li class="cr__role">
+              <h3 class="display cr__title">{r.title}</h3>
+              {r.type && <p class="cr__type">{r.type}</p>}
+              {r.summary && <p>{r.summary}</p>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="cr__none">No open roles listed right now, but we’re always happy to meet great people.</p>
+      )}
+      <div class="cr__apply">
+        <p>Send a note and your résumé to {email ? <a href={`mailto:${email}?subject=${encodeURIComponent('Careers')}`}>{email}</a> : <Tbd value={null} label="careers email" />}.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .cr { padding-top: 32px; }
+  .cr__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 14px; }
+  .cr__list { border-top: 1px solid var(--line); }
+  .cr__role { padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .cr__title { font-size: 28px; }
+  .cr__type { font-size: 13px; color: var(--gold-lt); font-weight: 700; letter-spacing: .06em; margin: 4px 0 6px; }
+  .cr__role p { color: var(--soft); }
+  .cr__none { color: var(--soft); }
+  .cr__apply { margin-top: 32px; padding: 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); max-width: 640px; color: var(--soft); }
+  .cr__apply a { color: var(--gold-lt); font-weight: 700; }
+</style>

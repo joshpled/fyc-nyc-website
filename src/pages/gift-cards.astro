@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+---
+<Base
+  title="Gift Cards | F.Y.C. / N.Y.C. Wine Bar in Flatiron, NYC"
+  description="Give the gift of the family table: buy an F.Y.C. / N.Y.C. e-gift card online, or check a gift card balance."
+  crumbs={[{ name: 'Gift cards', path: '/gift-cards/' }]}
+>
+  <PageHeader eyebrow="Gift cards" title="Give a seat at <em>the table</em>" lead="Dinner, a bottle, a birthday round. Our e-gift cards are delivered by email." />
+
+  <section class="section gc" aria-label="Gift card options">
+    <div class="wrap gc__grid">
+      <div class="gc__card gc__card--main">
+        <span class="gc__icon" aria-hidden="true"><Icon name="gift" size={26} /></span>
+        <h2 class="display gc__h">Buy an e-gift card</h2>
+        <p>Pick an amount, add a note, and it’s sent by email.</p>
+        <a class="btn btn--primary" href={site.giftCards.buy} target="_blank" rel="noopener" data-track="gift_card_click" data-track-location="gift_page">Buy a gift card<span class="sr-only"> (opens Toast in a new tab)</span></a>
+      </div>
+      <div class="gc__card">
+        <h2 class="display gc__h">Check a balance</h2>
+        <p>Have a card already? Look up what’s left on it.</p>
+        <a class="btn" href={site.giftCards.balance} target="_blank" rel="noopener" data-track="gift_card_balance">Check balance<span class="sr-only"> (opens Toast in a new tab)</span></a>
+      </div>
+    </div>
+    <p class="wrap gc__note">Gift cards are sold and managed through Toast. Questions? <a href={`mailto:${site.email}`}>{site.email}</a></p>
+  </section>
+</Base>
+
+<style>
+  .gc { padding-top: 32px; }
+  .gc__grid { display: grid; gap: 16px; }
+  .gc__card { padding: 28px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); display: grid; gap: 12px; justify-items: start; }
+  .gc__card--main { border-color: rgba(212, 164, 58, .55); background: radial-gradient(100% 80% at 100% 0%, rgba(177, 123, 9, .22), transparent 60%), var(--ink-2); }
+  .gc__icon { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 50%; background: var(--gold-grad); color: var(--ink); }
+  .gc__h { font-size: 32px; }
+  .gc__card p { color: var(--soft); }
+  .gc__note { margin-top: 24px; font-size: 14px; color: var(--mute); }
+  .gc__note a { color: var(--soft); }
+  @media (min-width: 1024px) { .gc__grid { grid-template-columns: 1.4fr 1fr; gap: 20px; } .gc__card { padding: 44px; } }
+</style>

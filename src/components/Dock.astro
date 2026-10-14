@@ -1,0 +1,77 @@
+---
+/**
+ * Sticky mobile action bar. Reserve is gold and widest.
+ * variant="events" (on /private-events): Call · Email · Inquire
+ */
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+
+interface Props { variant?: 'default' | 'events' }
+const { variant = 'default' } = Astro.props;
+---
+<nav class="dock only-sm" aria-label="Quick actions">
+  <a href={site.phoneHref} data-track="call_click" data-track-location="dock">
+    <Icon name="phone" size={19} /> Call
+  </a>
+  {variant === 'events' ? (
+    <a href={`mailto:${site.eventsEmail}?subject=${encodeURIComponent('Private event inquiry')}`} data-track="email_click" data-track-location="dock">
+      <Icon name="mail" size={19} /> Email
+    </a>
+  ) : (
+    <a href={site.links.directions} target="_blank" rel="noopener" data-track="directions_click" data-track-location="dock">
+      <Icon name="pin" size={19} /> Directions<span class="sr-only"> (opens Google Maps in a new tab)</span>
+    </a>
+  )}
+  {variant === 'events' ? (
+    <a class="dock__cta" href="#inquire" data-track="event_inquiry_start" data-track-location="dock">
+      <Icon name="calendar" size={19} /> Inquire
+    </a>
+  ) : (
+    <a class="dock__cta" href="/reserve/" data-booking data-track="reserve_click" data-track-location="dock">
+      <Icon name="calendar" size={19} /> Reserve
+    </a>
+  )}
+</nav>
+
+<style>
+  .dock {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.25fr;
+    gap: 8px;
+    padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(10, 10, 10, .86);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border-top: 1px solid rgba(212, 164, 58, .25);
+  }
+  .dock a {
+    min-height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--bone);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: rgba(255, 255, 255, .02);
+  }
+  .dock a :global(svg) { color: var(--gold-lt); }
+  .dock .dock__cta {
+    background: var(--gold-grad);
+    color: var(--ink);
+    border: 0;
+    font-size: 13px;
+    letter-spacing: .06em;
+    box-shadow: 0 6px 18px rgba(201, 150, 46, .35);
+  }
+  .dock .dock__cta :global(svg) { color: var(--ink); }
+  .dock a:focus-visible { outline-offset: 2px; }
+</style>

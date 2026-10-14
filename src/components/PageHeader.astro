@@ -1,0 +1,29 @@
+---
+/** Standard inner-page header: eyebrow, H1 (one gold-italic accent via <em>), lead. */
+interface Props {
+  eyebrow: string;
+  /** HTML allowed for the <em> accent, e.g. 'Gift <em>cards</em>' */
+  title: string;
+  lead?: string;
+  id?: string;
+}
+const { eyebrow, title, lead, id = 'page-title' } = Astro.props;
+---
+<header class="ph-head">
+  <div class="wrap">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1 id={id} class="display ph-head__h1" set:html={title} />
+    {lead && <p class="lead ph-head__lead">{lead}</p>}
+    <slot />
+  </div>
+</header>
+
+<style>
+  .ph-head {
+    padding: 56px 0 8px;
+    background: radial-gradient(70% 120% at 0% 0%, rgba(177, 123, 9, .14), transparent 60%);
+  }
+  .ph-head__h1 { font-size: clamp(2.75rem, 1.6rem + 4.8vw, 5.5rem); margin: 12px 0 14px; letter-spacing: -.035em; }
+  .ph-head__lead { max-width: 640px; }
+  @media (min-width: 1024px) { .ph-head { padding-top: 96px; } }
+</style>

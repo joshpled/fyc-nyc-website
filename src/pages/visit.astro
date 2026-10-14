@@ -1,0 +1,178 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+import faqs from '../data/faqs.json';
+import { hours, groupWeek, fmtPeriods } from '../lib/hours';
+import { faqSchema } from '../lib/schema';
+
+const tables = [
+  { title: 'Bar', rows: groupWeek(hours.bar) },
+  { title: 'Kitchen', rows: groupWeek(hours.kitchen) },
+];
+// Nearest transit (verify before launch; see README)
+const transit = [
+  { station: '14 St / 6 Av', lines: ['F', 'M', 'L'] },
+  { station: '14 St / 7 Av', lines: ['1', '2', '3'] },
+  { station: '18 St / 7 Av', lines: ['1'] },
+  { station: '23 St / 6 Av', lines: ['F', 'M'] },
+  { station: '14 St–Union Square', lines: ['4', '5', '6', 'L', 'N', 'Q', 'R', 'W'] },
+  { station: 'PATH 14 St & 23 St', lines: ['PATH'] },
+];
+const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(`FYC/NYC, ${site.address.street}, New York, NY ${site.address.postalCode}`)}&z=16&output=embed`;
+---
+<Base
+  title="Hours & Directions | F.Y.C. / N.Y.C., 44 W 17th St, Flatiron NYC"
+  description="44 West 17th Street, between 5th & 6th Ave in Flatiron, near Union Square and Madison Square Park. Hours, subway directions and accessibility."
+  crumbs={[{ name: 'Visit', path: '/visit/' }]}
+  schema={[faqSchema(faqs.visit)]}
+>
+  <PageHeader eyebrow="Visit" title="Find <em>us</em>" lead={`${site.address.street}, ${site.address.crossStreets.replace('Between', 'between')}. ${site.address.neighborhoodLong}, near Union Square and Madison Square Park.`} />
+
+  <section class="section vs" aria-label="Location and hours">
+    <div class="wrap vs__grid">
+      <div class="vs__where">
+        <address class="vs__addr">
+          <strong>{site.name}</strong><br />
+          {site.address.street}<br />
+          {site.address.locality}, {site.address.region} {site.address.postalCode}<br />
+          <span>{site.address.crossStreets}</span>
+        </address>
+        <div class="vs__ctas">
+          <a class="btn btn--primary" href={site.links.directions} target="_blank" rel="noopener" data-track="directions_click" data-track-location="visit">Get directions<span class="sr-only"> (opens Google Maps in a new tab)</span></a>
+          <a class="btn" href={site.phoneHref} data-track="call_click" data-track-location="visit"><Icon name="phone" size={18} /> {site.phone}</a>
+        </div>
+        <div class="vs__map ph" data-map>
+          <button class="vs__mapbtn" type="button" data-map-load data-src={mapSrc}>
+            <Icon name="pin" size={20} /> Show the map
+          </button>
+          <p class="vs__mapnote">Loads Google Maps</p>
+        </div>
+      </div>
+
+      <div class="vs__hours">
+        <h2 class="vs__h">Hours</h2>
+        {tables.map((t) => (
+          <table class="hrs">
+            <caption>{t.title}</caption>
+            <tbody>
+              {t.rows.map((r) => (
+                <tr data-days={r.days.join(' ')}>
+                  <th scope="row">{r.label}</th>
+                  <td>{r.text}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ))}
+        <p class="vs__note">Weekend brunch: Sat &amp; Sun {fmtPeriods(hours.brunch.sat)}. Walk-ins always welcome.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt vs2" aria-labelledby="getting-here">
+    <div class="wrap vs2__grid">
+      <div>
+        <p class="eyebrow">Getting here</p>
+        <h2 id="getting-here" class="display h3 vs2__h">By subway</h2>
+        <ul class="transit" role="list">
+          {transit.map((t) => (
+            <li>
+              <span class="transit__st">{t.station}</span>
+              <span class="transit__lines">{t.lines.map((l) => <span class="line">{l}</span>)}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <p class="eyebrow">Accessibility</p>
+        <h2 class="display h3 vs2__h">Everyone’s <em>welcome</em></h2>
+        <ul class="amen" role="list">
+          <li>Wheelchair accessible</li>
+          <li>Gender-neutral restroom</li>
+          <li>Back patio, weather permitting</li>
+        </ul>
+        <p class="vs2__p">Need anything to make your visit easier? Call us at <a href={site.phoneHref}>{site.phone}</a>. Read our <a href="/accessibility/">accessibility statement</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section vs-faq" aria-labelledby="vfaq">
+    <div class="wrap vs-faq__grid">
+      <div>
+        <p class="eyebrow">Good to know</p>
+        <h2 id="vfaq" class="display h2">Before you <em>come by</em></h2>
+      </div>
+      <Faq items={faqs.visit} />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Highlight today's row (New York time)
+  const day = new Intl.DateTimeFormat('en-US', { timeZone: 'America/New_York', weekday: 'short' }).format(new Date()).toLowerCase().slice(0, 3);
+  document.querySelectorAll<HTMLElement>('.hrs tr[data-days]').forEach((tr) => {
+    if (tr.dataset.days!.split(' ').includes(day)) tr.classList.add('is-today');
+  });
+  // Click-to-load map (keeps Google's scripts off the page until asked)
+  document.querySelector<HTMLButtonElement>('[data-map-load]')?.addEventListener('click', (e) => {
+    const btn = e.currentTarget as HTMLButtonElement;
+    const box = btn.closest('[data-map]')!;
+    const iframe = document.createElement('iframe');
+    iframe.src = btn.dataset.src!;
+    iframe.title = 'Map showing F.Y.C. / N.Y.C. at 44 West 17th Street';
+    iframe.loading = 'lazy';
+    iframe.referrerPolicy = 'no-referrer-when-downgrade';
+    box.replaceChildren(iframe);
+    iframe.focus();
+  });
+</script>
+
+<style>
+  .vs { padding-top: 32px; }
+  .vs__grid { display: grid; gap: 36px; }
+  .vs__addr { font-style: normal; font-size: 18px; line-height: 1.7; }
+  .vs__addr strong { font-family: var(--display); font-weight: 400; font-size: 26px; }
+  .vs__addr span { color: var(--mute); font-size: 15px; }
+  .vs__ctas { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0; }
+  .vs__map { position: relative; height: 280px; display: grid; place-content: center; justify-items: center; gap: 6px; border: 1px solid var(--line); }
+  .vs__map :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: var(--r); filter: grayscale(.4) contrast(1.05); }
+  .vs__mapbtn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 48px; padding: 0 22px;
+    border: 1.5px solid rgba(255, 255, 255, .5); border-radius: 999px;
+    font-weight: 700; font-size: 14px; color: var(--bone); background: rgba(10, 10, 10, .5);
+  }
+  .vs__mapbtn:hover { border-color: var(--gold-lt); }
+  .vs__mapnote { font-size: 12px; color: var(--mute); }
+  .vs__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 14px; }
+  .hrs { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .hrs caption { text-align: left; font-family: var(--display); font-size: 24px; padding-bottom: 8px; }
+  .hrs th, .hrs td { padding: 10px 0; border-bottom: 1px solid var(--line); text-align: left; font-size: 16px; }
+  .hrs th { font-weight: 600; width: 40%; }
+  .hrs td { color: var(--soft); }
+  .hrs tr.is-today th, .hrs tr.is-today td { color: var(--gold-lt); font-weight: 700; }
+  .hrs tr.is-today th::after { content: ' · today'; font-weight: 500; font-size: 13px; }
+  .vs__note { font-size: 14px; color: var(--mute); }
+  .vs2__grid { display: grid; gap: 40px; }
+  .vs2__h { margin: 10px 0 18px; }
+  .transit li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .transit__st { font-weight: 600; }
+  .transit__lines { display: flex; flex-wrap: wrap; gap: 4px; justify-content: flex-end; }
+  .line { min-width: 26px; height: 26px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 999px; border: 1px solid var(--gold); color: var(--gold-lt); font-size: 12px; font-weight: 800; }
+  .amen { display: grid; gap: 8px; margin-bottom: 16px; }
+  .amen li { display: flex; gap: 10px; color: var(--soft); }
+  .amen li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.7; }
+  .vs2__p { color: var(--soft); }
+  .vs2__p a { color: var(--gold-lt); }
+  .vs-faq__grid { display: grid; gap: 16px; }
+  .vs-faq h2 { margin-top: 10px; }
+  @media (min-width: 1024px) {
+    .vs__grid { grid-template-columns: 1.2fr 1fr; gap: 80px; }
+    .vs__map { height: 360px; }
+    .vs2__grid { grid-template-columns: 1fr 1fr; gap: 80px; }
+    .vs-faq__grid { grid-template-columns: 1fr 1.25fr; gap: 80px; }
+  }
+</style>

@@ -1,0 +1,48 @@
+---
+/**
+ * Cloudflare Turnstile (spam protection). Renders only when a site key is set
+ * in site.json > forms.turnstileSiteKey. The script loads lazily, the first
+ * time the form scrolls near the viewport or gets focus, so it never slows
+ * the page. The serverless function verifies the token (TURNSTILE_SECRET_KEY).
+ */
+import site from '../data/site.json';
+const key = site.forms.turnstileSiteKey;
+---
+{key && (
+  <div class="ts">
+    <div class="cf-turnstile" data-sitekey={key} data-theme="dark" data-size="flexible" data-appearance="interaction-only"></div>
+  </div>
+)}
+
+<script>
+  const widgets = document.querySelectorAll<HTMLElement>('.cf-turnstile');
+  if (widgets.length) {
+    let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      const s = document.createElement('script');
+      s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    };
+    widgets.forEach((w) => {
+      const form = w.closest('form');
+      form?.addEventListener('focusin', load, { once: true });
+      if ('IntersectionObserver' in window) {
+        const io = new IntersectionObserver((es) => {
+          if (es.some((e) => e.isIntersecting)) {
+            load();
+            io.disconnect();
+          }
+        }, { rootMargin: '400px' });
+        io.observe(form ?? w);
+      } else load();
+    });
+  }
+</script>
+
+<style>
+  .ts { margin: 6px 0 4px; min-height: 0; }
+</style>

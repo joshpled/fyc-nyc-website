@@ -1,0 +1,174 @@
+---
+/**
+ * Home hero: poster image is the LCP element (preloaded in the page head);
+ * a short muted loop plays over it when the visitor allows motion and isn't
+ * on a data-saver / slow connection. Visible pause control (WCAG 2.2.2).
+ */
+import { Picture } from 'astro:assets';
+import poster from '../../assets/img/video_poster.jpg';
+import Icon from '../Icon.astro';
+import site from '../../data/site.json';
+import { HERO_WIDTHS, HERO_SIZES, HERO_QUALITY } from '../../lib/hero';
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__media">
+    <Picture
+      src={poster}
+      formats={['avif', 'webp']}
+      widths={HERO_WIDTHS}
+      sizes={HERO_SIZES}
+      alt="A bartender at F.Y.C. / N.Y.C. measures a pour into a crystal mixing glass under low light"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="hero__img"
+      quality={HERO_QUALITY}
+    />
+    <video class="hero__video" muted loop playsinline preload="none" data-mp4={site.hero.videoMp4} data-webm={site.hero.videoWebm} aria-hidden="true" tabindex="-1"></video>
+    <div class="hero__shade" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__copy wrap">
+    <p class="eyebrow"><span>Wine bar &amp; kitchen · {site.address.neighborhood}<span class="only-lg">, NYC</span></span></p>
+    <h1 id="hero-title" class="display h1 hero__title">Family.<br />You. <em>Choose.</em></h1>
+    <p class="hero__lede">
+      <span class="only-lg">Small-production, mostly biodynamic wines, spirit-specific cocktails and global comfort food, from five friends with about 100 years of New York hospitality between them.</span>
+      <span class="only-sm">Boutique, mostly biodynamic wines, spirit-specific cocktails and global comfort food on West 17th.</span>
+    </p>
+    <div class="hero__ctas">
+      <a class="btn btn--primary" href="/reserve/" data-booking data-track="reserve_click" data-track-location="hero"><span>Reserve<span class="only-lg"> a table</span></span></a>
+      <a class="btn" href="/menus/"><span class="only-lg">See tonight's menu</span><span class="only-sm">Menus</span></a>
+    </div>
+    <p class="hero__note only-lg">Back patio open, weather permitting · Groups of 8+? <a href="/private-events/">Plan a party</a></p>
+  </div>
+
+  <button class="hero__pause" type="button" hidden data-video-toggle aria-pressed="false">
+    <span class="hero__pause-icon" data-icon="pause"><Icon name="pause" size={16} /></span>
+    <span class="hero__pause-icon" data-icon="play" hidden><Icon name="play" size={16} /></span>
+    <span data-label>Pause video</span>
+  </button>
+</section>
+
+<script>
+  const video = document.querySelector<HTMLVideoElement>('.hero__video');
+  const btn = document.querySelector<HTMLButtonElement>('[data-video-toggle]');
+  const pickSrc = (v: HTMLVideoElement) =>
+    v.canPlayType('video/mp4; codecs="avc1.42E01E"') ? v.dataset.mp4 : v.canPlayType('video/webm; codecs="vp9"') ? v.dataset.webm : '';
+  const src = video ? pickSrc(video) : '';
+  if (video && btn && src) {
+    const conn = (navigator as any).connection;
+    const slow = conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || ''));
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const label = btn.querySelector('[data-label]')!;
+    const iPause = btn.querySelector<HTMLElement>('[data-icon="pause"]')!;
+    const iPlay = btn.querySelector<HTMLElement>('[data-icon="play"]')!;
+
+    const setUI = (playing: boolean) => {
+      label.textContent = playing ? 'Pause video' : 'Play video';
+      btn.setAttribute('aria-pressed', String(!playing));
+      iPause.hidden = !playing;
+      iPlay.hidden = playing;
+    };
+    const load = () => {
+      if (!video.src) video.src = src!;
+    };
+    const play = () => {
+      load();
+      video.play().then(() => setUI(true)).catch(() => setUI(false));
+    };
+
+    video.addEventListener('playing', () => video.classList.add('is-on'), { once: true });
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      if (video.paused) play();
+      else {
+        video.pause();
+        setUI(false);
+      }
+    });
+
+    if (reduce || slow) {
+      setUI(false); // poster stays; visitor can opt in
+    } else {
+      // Start after the page has settled so the video never competes with LCP
+      const start = () => play();
+      if (document.readyState === 'complete') setTimeout(start, 300);
+      else addEventListener('load', () => setTimeout(start, 300), { once: true });
+    }
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    min-height: 560px;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__media :global(img),
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 38% 30%;
+  }
+  .hero__video { opacity: 0; transition: opacity 600ms var(--ease); }
+  .hero__video:global(.is-on) { opacity: 1; }
+  .hero__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, #0A0A0A 8%, rgba(10, 10, 10, .55) 55%, rgba(10, 10, 10, .25));
+  }
+  .hero__copy { position: relative; padding-bottom: 28px; padding-top: 120px; }
+  .hero__title { margin: 12px 0 14px; }
+  .hero__lede { font-size: 16px; color: var(--soft); margin-bottom: 22px; max-width: 560px; }
+  .hero__ctas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hero__ctas .btn { padding-inline: 16px; }
+  .hero__note { margin-top: 22px; font-size: 14px; color: var(--mute); letter-spacing: .04em; }
+  .hero__note a { color: var(--soft); }
+  .hero__pause {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 0 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--soft);
+    background: rgba(10, 10, 10, .6);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+  .hero__pause:hover { color: var(--bone); border-color: var(--gold); }
+  .hero__pause-icon { display: inline-flex; }
+  .hero__pause-icon[hidden] { display: none; }
+
+  @media (min-width: 1024px) {
+    .hero { min-height: 760px; }
+    .hero__media :global(img), .hero__video { object-position: center 30%; }
+    .hero__shade {
+      background:
+        linear-gradient(90deg, rgba(10, 10, 10, .92) 0%, rgba(10, 10, 10, .55) 45%, rgba(10, 10, 10, .1) 75%),
+        linear-gradient(0deg, #0A0A0A 0%, transparent 35%);
+    }
+    .hero__copy { padding-bottom: 92px; }
+    .hero__copy > * { max-width: 780px; }
+    .hero__title { margin: 18px 0 22px; }
+    .hero__lede { font-size: 19px; color: #E6E1D8; margin-bottom: 34px; max-width: 560px; }
+    .hero__ctas { display: flex; gap: 16px; }
+    .hero__ctas .btn { padding-inline: 28px; }
+    .hero__pause { top: auto; bottom: 40px; right: var(--gutter); border-radius: 6px; }
+  }
+</style>

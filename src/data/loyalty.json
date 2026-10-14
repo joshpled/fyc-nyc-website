@@ -1,0 +1,16 @@
+{
+  "_readme": "Join the Family perks and optional loyalty tiers (open question Q8). Set tiersEnabled to false to hide the tier card if you start with a simple birthday/email program. visits: null = visible [placeholder].",
+  "perks": [
+    "Birthday glass on us",
+    "First dibs on holiday & NYE tables",
+    "Members-only producer nights",
+    "A bring-a-friend offer"
+  ],
+  "tiersEnabled": true,
+  "program": "Toast Loyalty",
+  "tiers": [
+    { "name": "Cousin", "unlock": "Free when you join", "visits": 0 },
+    { "name": "Sibling", "unlock": "visits", "visits": null },
+    { "name": "Family", "unlock": "visits", "visits": null }
+  ]
+}

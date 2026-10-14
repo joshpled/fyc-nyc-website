@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Page not found | F.Y.C. / N.Y.C." description="That page isn’t here. Find the menu, book a table or get directions to F.Y.C. / N.Y.C. in Flatiron." noindex>
+  <section class="section nf" aria-labelledby="nf-title">
+    <div class="wrap nf__inner">
+      <p class="eyebrow">404</p>
+      <h1 id="nf-title" class="display h1 nf__h1">Wrong <em>table.</em></h1>
+      <p class="lead">That page isn’t here, but the bar is. Try one of these:</p>
+      <ul class="nf__links" role="list">
+        <li><a class="btn btn--primary" href="/reserve/" data-booking data-track="reserve_click" data-track-location="404">Reserve a table</a></li>
+        <li><a class="btn" href="/menus/">Menus</a></li>
+        <li><a class="btn" href="/happenings/">Happenings</a></li>
+        <li><a class="btn" href="/visit/">Hours &amp; directions</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 60vh; display: flex; align-items: center; }
+  .nf__h1 { margin: 12px 0 16px; }
+  .nf__links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+</style>

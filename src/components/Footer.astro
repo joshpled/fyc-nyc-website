@@ -1,0 +1,176 @@
+---
+import { Image } from 'astro:assets';
+import logoGold from '../assets/img/logo_2.png';
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+import { hours, groupWeek } from '../lib/hours';
+import { footerVisit, footerFamily } from '../lib/nav';
+
+const barRows = groupWeek(hours.bar);
+const kitchenRows = groupWeek(hours.kitchen);
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="wrap ftr__grid">
+    <div class="ftr__brand">
+      <Image src={logoGold} alt={`${site.name}, established ${site.founded}`} widths={[94, 188]} sizes="94px" format="webp" quality={90} class="ftr__logo" />
+      <address>
+        {site.address.street}<br />
+        {site.address.locality}, {site.address.region} {site.address.postalCode}<br />
+        <span class="ftr__muted">{site.address.crossStreets} · {site.address.neighborhoodLong}</span><br />
+        <a href={site.phoneHref} data-track="call_click" data-track-location="footer">{site.phone}</a>{' · '}<a href={`mailto:${site.email}`}>{site.email}</a>
+      </address>
+      <a class="ftr__map ph" href={site.links.directions} target="_blank" rel="noopener" data-track="directions_click" data-track-location="footer_map">
+        <span class="ftr__map-pin" aria-hidden="true"><Icon name="pin" size={22} /></span>
+        <span class="ftr__map-label">
+          <strong>Get directions</strong>
+          <span>{site.address.landmarks}</span>
+        </span>
+        <span class="sr-only"> (opens Google Maps in a new tab)</span>
+      </a>
+    </div>
+
+    <div class="ftr__hours">
+      <h2 class="ftr__h">Bar hours</h2>
+      <table>
+        <caption class="sr-only">Bar hours</caption>
+        <tbody>
+          {barRows.map((r) => <tr><th scope="row">{r.label}</th><td>{r.text}</td></tr>)}
+        </tbody>
+      </table>
+      <h2 class="ftr__h ftr__h--sub">Kitchen</h2>
+      <table>
+        <caption class="sr-only">Kitchen hours</caption>
+        <tbody>
+          {kitchenRows.map((r) => <tr><th scope="row">{r.label}</th><td>{r.text}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+
+    <nav class="ftr__col" aria-labelledby="ftr-visit">
+      <h2 class="ftr__h" id="ftr-visit">Visit</h2>
+      <ul role="list">
+        {footerVisit.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <nav class="ftr__col" aria-labelledby="ftr-family">
+      <h2 class="ftr__h" id="ftr-family">Family</h2>
+      <ul role="list">
+        {footerFamily.map((l) => (
+          <li>
+            {l.external ? (
+              <a href={l.href} target="_blank" rel="noopener">{l.label}<span class="sr-only"> (opens in a new tab)</span></a>
+            ) : (
+              <a href={l.href}>{l.label}</a>
+            )}
+          </li>
+        ))}
+      </ul>
+      <a class="ftr__gift" href={site.giftCards.buy} target="_blank" rel="noopener" data-track="gift_card_click" data-track-location="footer">
+        <Icon name="gift" size={18} /> Buy a gift card<span class="sr-only"> (opens Toast in a new tab)</span>
+      </a>
+    </nav>
+
+    <div class="ftr__legal">
+      <p>© {year} {site.name} · {site.tagline}</p>
+      <ul role="list" class="ftr__amen" aria-label="Amenities">
+        {site.amenities.slice(0, 3).map((a) => <li>{a}</li>)}
+      </ul>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    background: var(--ink-deep);
+    border-top: 1px solid var(--line);
+    padding: 56px 0 32px;
+    font-size: 15px;
+    color: #CFC8BC;
+  }
+  .ftr__grid {
+    display: grid;
+    gap: 40px;
+  }
+  .ftr :global(.ftr__logo) { height: 70px; width: auto; margin-bottom: 18px; }
+  address { font-style: normal; line-height: 1.9; }
+  address a { color: var(--gold-lt); font-weight: 600; }
+  .ftr__muted { color: var(--mute); font-size: 14px; }
+  .ftr__map {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 180px;
+    margin-top: 18px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    transition: border-color var(--t) var(--ease);
+  }
+  .ftr__map::after { display: none; }
+  .ftr__map:hover { border-color: var(--gold); }
+  .ftr__map-pin {
+    flex: none;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--gold-grad);
+    color: var(--ink);
+  }
+  .ftr__map-label { display: grid; line-height: 1.4; }
+  .ftr__map-label strong { color: var(--bone); font-size: 15px; }
+  .ftr__map-label span { color: var(--mute); font-size: 13px; }
+  .ftr__h {
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .24em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+    margin-bottom: 16px;
+    line-height: 1.4;
+  }
+  .ftr__h--sub { margin-top: 26px; }
+  table { border-collapse: collapse; font-size: 14px; }
+  th { text-align: left; font-weight: 500; padding: 2px 18px 2px 0; color: #CFC8BC; white-space: nowrap; }
+  td { padding: 2px 0; color: #CFC8BC; }
+  .ftr__col ul { display: grid; }
+  .ftr__col a:not(.ftr__gift) { display: inline-flex; align-items: center; min-height: 36px; }
+  .ftr__col a:hover { color: var(--bone); text-decoration: underline; text-underline-offset: 3px; }
+  .ftr__gift {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    margin-top: 14px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-lt);
+  }
+  .ftr__legal {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .ftr__amen { display: flex; flex-wrap: wrap; gap: 4px 0; }
+  .ftr__amen li:not(:last-child)::after { content: '·'; margin: 0 8px; }
+
+  /* Phones: brand + hours full width, the two link lists side by side */
+  .ftr__grid { grid-template-columns: 1fr 1fr; column-gap: 20px; }
+  .ftr__brand, .ftr__hours, .ftr__legal { grid-column: 1 / -1; }
+  @media (min-width: 640px) {
+    .ftr__brand, .ftr__hours { grid-column: auto; }
+  }
+  @media (min-width: 1024px) {
+    .ftr { padding: 80px 0 40px; }
+    .ftr__grid { grid-template-columns: 1.2fr 1fr 1fr 1fr; gap: 48px; }
+  }
+</style>

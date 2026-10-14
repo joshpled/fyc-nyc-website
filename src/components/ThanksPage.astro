@@ -1,0 +1,22 @@
+---
+/** Shared confirmation page for no-JavaScript form posts. */
+import Base from '../layouts/Base.astro';
+interface Props { title: string; heading: string; body: string; backHref: string; backLabel: string }
+const { title, heading, body, backHref, backLabel } = Astro.props;
+---
+<Base title={title} description={body} noindex>
+  <section class="section thanks">
+    <div class="wrap thanks__inner">
+      <p class="eyebrow">Sent</p>
+      <h1 class="display h2" set:html={heading} />
+      <p class="lead">{body}</p>
+      <a class="btn" href={backHref}>{backLabel}</a>
+    </div>
+  </section>
+</Base>
+<style>
+  .thanks { min-height: 60vh; display: flex; align-items: center; }
+  .thanks__inner { max-width: 760px; }
+  .thanks h1 { margin: 12px 0 16px; }
+  .thanks .lead { margin-bottom: 28px; }
+</style>

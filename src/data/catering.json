@@ -1,0 +1,8 @@
+{
+  "_readme": "Catering details (report Q12: drop-off? on-site?). null = visible [placeholder]. Set services to the options you actually offer.",
+  "summary": null,
+  "services": ["Drop-off", "On-site with staff", "Not sure yet"],
+  "minimumGuests": null,
+  "leadTime": null,
+  "deliveryArea": null
+}

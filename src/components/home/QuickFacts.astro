@@ -1,0 +1,69 @@
+---
+/** Quick facts row under the hero. "Tonight" + "Kitchen" are filled in live from hours.json. */
+import site from '../../data/site.json';
+import { hours, fmtPeriods } from '../../lib/hours';
+
+const brunch = hours.brunch.sat.length ? `Sat & Sun ${fmtPeriods(hours.brunch.sat, ' – ')}` : null;
+---
+<section class="facts" aria-label="Quick facts">
+  <dl class="facts__grid">
+    <div>
+      <dt>Tonight</dt>
+      <dd data-today="bar"><a href="/visit/">Today's hours</a></dd>
+    </div>
+    <div>
+      <dt>Kitchen</dt>
+      <dd data-today="kitchen"><a href="/visit/">See hours</a></dd>
+    </div>
+    <div class="only-lg">
+      <dt>Weekend brunch</dt>
+      <dd>{brunch ?? <span class="tbd">[Brunch hours]</span>}</dd>
+    </div>
+    <div class="only-lg">
+      <dt>Find us</dt>
+      <dd><a href="/visit/">{site.address.crossStreetsShort}</a></dd>
+    </div>
+    <div class="only-sm">
+      <dt>Walk-ins</dt>
+      <dd>Always welcome</dd>
+    </div>
+    <div class="only-sm">
+      <dt>Patio</dt>
+      <dd>Weather permitting</dd>
+    </div>
+  </dl>
+</section>
+
+<style>
+  .facts { border-block: 1px solid var(--line); }
+  .facts__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--line);
+    max-width: var(--max);
+    margin-inline: auto;
+  }
+  .facts__grid > div { background: var(--ink); padding: 16px 20px; }
+  dt {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+  }
+  dd {
+    margin-top: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bone);
+  }
+  dd a { text-decoration: underline; text-decoration-color: rgba(255,255,255,.3); text-underline-offset: 4px; }
+  @media (min-width: 1024px) {
+    .facts__grid { grid-template-columns: repeat(4, 1fr); }
+    .facts__grid > div { padding: 30px 40px; }
+    dt { font-size: 11.5px; letter-spacing: .16em; }
+    dd { font-size: 21px; margin-top: 6px; }
+    dd a { text-decoration: none; }
+  }
+</style>

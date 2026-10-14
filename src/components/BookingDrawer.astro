@@ -1,0 +1,115 @@
+---
+/**
+ * Slide-up booking drawer. Native modal <dialog>: traps focus, Esc closes,
+ * background is inert. Any link with [data-booking] opens it (falls back to
+ * /reserve without JavaScript).
+ */
+import BookingWidget from './BookingWidget.astro';
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+---
+<dialog id="booking-drawer" class="drawer" aria-labelledby="booking-title">
+  <div class="drawer__inner">
+    <div class="drawer__head">
+      <div>
+        <p class="eyebrow">Reserve</p>
+        <h2 id="booking-title" class="display drawer__title">Pull up a <em>chair</em></h2>
+      </div>
+      <button class="drawer__close" type="button" data-close-dialog>
+        <Icon name="close" size={24} />
+        <span class="sr-only">Close reservations</span>
+      </button>
+    </div>
+
+    <BookingWidget id="booking-widget-drawer" />
+
+    <ul class="drawer__policy" role="list">
+      {site.booking.policy.map((line) => <li>{line}</li>)}
+    </ul>
+
+    <div class="drawer__more">
+      <a href="/private-events/" class="go">Party of 8 or more? Plan a party <span aria-hidden="true">→</span></a>
+      <a href={site.phoneHref} class="go" data-track="call_click" data-track-location="drawer">Or call {site.phone}</a>
+    </div>
+  </div>
+</dialog>
+
+<style>
+  .drawer {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100%;
+    max-width: 640px;
+    max-height: min(92dvh, 820px);
+    margin: auto auto 0;
+    padding: 0;
+    border: 1px solid rgba(212, 164, 58, .3);
+    border-bottom: 0;
+    border-radius: 22px 22px 0 0;
+    background: var(--ink-2);
+    color: var(--bone);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-shadow: 0 -20px 60px rgba(0, 0, 0, .6);
+  }
+  .drawer::backdrop {
+    background: rgba(0, 0, 0, .66);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+  }
+  .drawer__inner { padding: 22px 20px calc(24px + env(safe-area-inset-bottom)); }
+  .drawer__inner::before {
+    content: '';
+    display: block;
+    width: 44px;
+    height: 4px;
+    margin: -8px auto 16px;
+    border-radius: 4px;
+    background: var(--line);
+  }
+  .drawer__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .drawer__title { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.6rem); margin-top: 8px; }
+  .drawer__close {
+    flex: none;
+    width: 48px; height: 48px;
+    margin: -6px -8px 0 0;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    color: var(--bone);
+  }
+  .drawer__close:hover { border-color: var(--gold-lt); }
+  .drawer__policy {
+    margin-top: 22px;
+    display: grid;
+    gap: 8px;
+    font-size: 14.5px;
+    color: var(--soft);
+  }
+  .drawer__policy li { display: flex; gap: 10px; }
+  .drawer__policy li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.5; flex: none; }
+  .drawer__more {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 24px;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+  }
+  .drawer__more a { min-height: 44px; }
+  @media (min-width: 768px) {
+    .drawer__inner { padding: 30px 36px 36px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .drawer[open] { animation: drawer-up 240ms var(--ease); }
+    .drawer[open]::backdrop { animation: fade-in 200ms var(--ease); }
+  }
+  @keyframes drawer-up { from { transform: translateY(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+</style>

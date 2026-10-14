@@ -1,0 +1,31 @@
+{
+  "_readme": "Short Google review quotes. 'paraphrased: true' shows a small 'paraphrased' marker; replace with the reviewer's exact words, then set it to false. Rating and count are a snapshot (update quarterly).",
+  "google": {
+    "rating": 4.7,
+    "count": 182,
+    "asOf": "2026-10-13"
+  },
+  "quotes": [
+    {
+      "author": "Ian V.",
+      "source": "Google",
+      "rating": null,
+      "text": "The burger was fantastic, one of the best I've had. Great wine, great bartender.",
+      "paraphrased": true
+    },
+    {
+      "author": "Giulia A.",
+      "source": "Google",
+      "rating": null,
+      "text": "A gem and a great neighborhood addition. Get the meatballs, branzino and steak tartare.",
+      "paraphrased": true
+    },
+    {
+      "author": "Justin F.",
+      "source": "Google",
+      "rating": null,
+      "text": "A birthday dinner that became one of my best dining experiences in the city.",
+      "paraphrased": true
+    }
+  ]
+}

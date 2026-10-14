@@ -1,0 +1,84 @@
+---
+/** Private events teaser: capacity numbers up front, one action. */
+import spaces from '../../data/spaces.json';
+import Tbd from '../Tbd.astro';
+
+const [semi, patio, house] = spaces.spaces;
+const caps = [
+  { value: semi.seated, label: 'Seated, semi-private', short: 'Seated' },
+  { value: patio.standing, label: 'Patio, standing', short: 'Patio' },
+  { value: house.standing ?? house.seated, label: 'Full buyout', short: 'Buyout' },
+];
+---
+<section class="section ev-sec" aria-labelledby="ev-title">
+  <div class="wrap">
+    <div class="ev">
+      <div class="ev__img ph ph--alt" aria-hidden="true"></div>
+      <div class="ev__copy">
+        <p class="eyebrow">Private events</p>
+        <h2 id="ev-title" class="display h2 ev__title"><span class="only-lg">Birthdays, buyouts &amp; the office holiday party</span><span class="only-sm">Birthdays, buyouts &amp; holiday parties</span></h2>
+        <p class="lead only-lg">Semi-private tables, the back patio, or the whole place. Set menus, wine pairings, and a team that has thrown a few parties.</p>
+        <dl class="cap">
+          {caps.map((c) => (
+            <div>
+              <dt><span class="only-lg">{c.label}</span><span class="only-sm">{c.short}</span></dt>
+              <dd><Tbd value={c.value} label="XX" /></dd>
+            </div>
+          ))}
+        </dl>
+        <div class="ev__ctas">
+          <a class="btn btn--primary" href="/private-events/#inquire" data-track="event_inquiry_start" data-track-location="home">Start an inquiry</a>
+          <a class="btn only-lg" href="/private-events/#spaces">Spaces &amp; packages</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .ev {
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    overflow: hidden;
+    background: var(--ink-2);
+  }
+  .ev__img { height: 200px; border-radius: 0; }
+  .ev__copy { padding: 22px; }
+  .ev__title { font-size: 34px; margin: 10px 0 16px; }
+  .ev__copy .lead { margin-bottom: 4px; }
+  .cap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    margin: 16px 0 20px;
+  }
+  .cap > div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    background: var(--ink);
+    padding: 12px 8px;
+    text-align: center;
+  }
+  .cap dd { font-size: 22px; font-weight: 700; color: var(--bone); line-height: 1.3; }
+  .cap dt { font-size: 11px; color: var(--mute); letter-spacing: .06em; }
+  .ev__ctas { display: grid; gap: 12px; }
+  .ev__ctas .btn { width: 100%; }
+
+  @media (min-width: 1024px) {
+    .ev { display: grid; grid-template-columns: 1fr 1fr; }
+    .ev__img { height: auto; min-height: 520px; }
+    .ev__copy { padding: 64px; }
+    .ev__title { font-size: 56px; margin: 14px 0 20px; }
+    .cap { margin: 30px 0 36px; }
+    .cap > div { padding: 20px; text-align: left; }
+    .cap dd { font-size: 28px; }
+    .cap dt { font-size: 13px; letter-spacing: 0; }
+    .ev__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+    .ev__ctas .btn { width: auto; }
+  }
+</style>

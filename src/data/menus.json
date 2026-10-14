@@ -1,0 +1,324 @@
+{
+  "_readme": "Menus as real HTML text. Item fields: name, description, price (number, dollars), tags (vegetarian | gluten-free | shareable), featured (a number 1–4 = shows a photo and appears on the homepage in that order; false = regular item), pairing (by-the-glass suggestion; shown on featured items), glass / bottle (wine prices), image (file name in src/assets/img, optional). null = visible [placeholder]. 'placeholder: true' rows are stand-ins for items not yet entered.",
+  "tagLabels": {
+    "vegetarian": "Vegetarian",
+    "gluten-free": "Gluten-free",
+    "shareable": "Shareable"
+  },
+  "notes": {
+    "allergy": "Please tell us about any allergies or dietary needs before you order.",
+    "advisory": "Consuming raw or undercooked meats, poultry, seafood, shellfish or eggs may increase your risk of foodborne illness.",
+    "seasonal": "Menu changes with the seasons."
+  },
+  "food": {
+    "title": "Food",
+    "eyebrow": "From the kitchen",
+    "headline": "Ingredient driven. *Fresh.* Delicious.",
+    "intro": "Seasonal global comfort food. Ingredient driven, fresh, delicious.",
+    "courseOrderConfirmed": false,
+    "courses": [
+      {
+        "id": "firsts",
+        "name": "Firsts",
+        "items": [
+          {
+            "name": "Sully Street Baguette",
+            "description": null,
+            "price": 7,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": false,
+            "pairing": null
+          },
+          {
+            "name": "Sea Scallop Cru-Viche",
+            "description": null,
+            "price": 22,
+            "tags": [],
+            "featured": 2,
+            "pairing": null
+          },
+          {
+            "name": "Arugula Salad",
+            "description": null,
+            "price": 15,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": false,
+            "pairing": null
+          },
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "seconds",
+        "name": "Seconds",
+        "subtitle": "bigger plates",
+        "items": [
+          {
+            "name": "Spartichoke Pizza",
+            "description": null,
+            "price": 21,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": false,
+            "pairing": null
+          },
+          {
+            "name": "Stuffed 'Shrooms",
+            "description": null,
+            "price": 18,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": 3,
+            "pairing": null
+          },
+          {
+            "name": "Kilo Mushroom Tacos",
+            "description": null,
+            "price": 19,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": false,
+            "pairing": null
+          },
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "sides",
+        "name": "Sides",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          },
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "thirds",
+        "name": "Thirds",
+        "subtitle": "mains",
+        "items": [
+          {
+            "name": "F.Y.C. Wagyu Burger",
+            "description": null,
+            "price": 29,
+            "tags": [],
+            "featured": 1,
+            "pairing": null
+          },
+          {
+            "name": "Herb Roasted Chicken",
+            "description": null,
+            "price": 29,
+            "tags": [],
+            "featured": false,
+            "pairing": null
+          },
+          {
+            "name": "Center-Cut Filet Mignon",
+            "description": null,
+            "price": 59,
+            "tags": [],
+            "featured": false,
+            "pairing": null
+          }
+        ]
+      },
+      {
+        "id": "sweets",
+        "name": "Something sweet",
+        "subtitle": "to finish",
+        "items": [
+          {
+            "name": "Double-Chocolate Brownie à la Mode",
+            "shortName": "Brownie à la Mode",
+            "description": null,
+            "price": 19,
+            "tags": [
+              "vegetarian"
+            ],
+            "featured": 4,
+            "pairing": null
+          }
+        ]
+      }
+    ],
+    "chefsDinner": {
+      "name": "F.Y.C. Chef's Dinner",
+      "description": null,
+      "pricePerPerson": null,
+      "minimumGuests": null
+    }
+  },
+  "wine": {
+    "title": "Wine",
+    "eyebrow": "The list",
+    "headline": "Wines Worth *Pouring*",
+    "intro": "A rotating list of mostly biodynamic vineyards and small-production bottles from every corner of the wine world, chosen to help you find a new favorite.",
+    "sections": [
+      {
+        "id": "sparkling",
+        "name": "Sparkling",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "white",
+        "name": "White",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "skin-contact",
+        "name": "Skin contact & orange",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "rose",
+        "name": "Rosé",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "red",
+        "name": "Red",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      }
+    ],
+    "note": null
+  },
+  "cocktails": {
+    "title": "Cocktails",
+    "eyebrow": "The bar",
+    "headline": "Spirit-specific *cocktails*",
+    "intro": null,
+    "sections": [
+      {
+        "id": "house",
+        "name": "House cocktails",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "zero-proof",
+        "name": "Zero proof",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      },
+      {
+        "id": "beer",
+        "name": "Beer & cider",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      }
+    ]
+  },
+  "brunch": {
+    "title": "Brunch",
+    "eyebrow": "Sat & Sun",
+    "headline": "Weekend *brunch*",
+    "intro": null,
+    "sections": [
+      {
+        "id": "brunch",
+        "name": "Brunch",
+        "items": [
+          {
+            "placeholder": true,
+            "name": null,
+            "description": null,
+            "price": null,
+            "tags": []
+          }
+        ]
+      }
+    ]
+  }
+}

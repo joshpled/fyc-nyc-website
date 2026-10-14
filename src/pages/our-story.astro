@@ -1,0 +1,103 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tbd from '../components/Tbd.astro';
+import { Image } from 'astro:assets';
+import about from '../assets/img/about.jpg';
+import site from '../data/site.json';
+import story from '../data/story.json';
+---
+<Base
+  title="Our Story | F.Y.C. / N.Y.C., Family You Choose"
+  description="F.Y.C. / N.Y.C. means Family You Choose: five friends with about 100 years of NYC restaurant experience, pouring mostly biodynamic wine on West 17th St in Flatiron."
+  crumbs={[{ name: 'Our story', path: '/our-story/' }]}
+>
+  <PageHeader eyebrow="Our story" title="The family <em>you choose</em>" lead={`F.Y.C. stands for ${site.meaning}. It’s the idea the whole place is built on.`} />
+
+  <section class="section st" aria-labelledby="st-founders">
+    <div class="wrap st__grid">
+      <div class="st__img ph" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">Who we are</p>
+        <h2 id="st-founders" class="display h2 st__h2">Five friends, <em>one table</em></h2>
+        <blockquote class="st__quote"><p>“{site.founders}”</p></blockquote>
+        <p class="lead">{site.voice.kidsTable}</p>
+        <p class="st__names"><Tbd value={story.founders} label="Founder names & short bios" /></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt st" aria-labelledby="st-room">
+    <div class="wrap st__grid st__grid--rev">
+      <Image src={about} alt="A glass of orange wine, a bottle of Lo-Fi Chardonnay and a whole roasted branzino on the bar beside a marble bust" widths={[480, 800, 1200]} sizes="(min-width: 1024px) 50vw, 100vw" class="st__photo" quality={72} />
+      <div>
+        <p class="eyebrow">The room</p>
+        <h2 id="st-room" class="display h2 st__h2">Lights low, <em>music up</em></h2>
+        <p class="lead">{site.voice.lights}</p>
+        <p>A dimly lit, music-forward room on West 17th Street, a secluded back patio, and a bar that stays open late. Walk-ins always welcome.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section st" aria-labelledby="st-source">
+    <div class="wrap st__cols">
+      <div>
+        <p class="eyebrow">In the glass</p>
+        <h2 id="st-source" class="display h3 st__h3">Wines worth <em>pouring</em></h2>
+        <p>Mostly biodynamic, small-production boutique wines from every corner of the wine world, plus spirit-specific cocktails.</p>
+        <p class="st__tbd"><Tbd value={story.wine} label="Who picks the list, and favorite producers" /></p>
+      </div>
+      <div>
+        <p class="eyebrow">On the plate</p>
+        <h2 class="display h3 st__h3">Ingredient driven. <em>Fresh.</em></h2>
+        <p>Seasonal global comfort food that changes with the seasons.</p>
+        <p class="st__tbd"><Tbd value={story.sourcing} label="Sourcing: farms, purveyors, the chef" /></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt st" id="partners" aria-labelledby="st-partners">
+    <div class="wrap">
+      <p class="eyebrow">Our people</p>
+      <h2 id="st-partners" class="display h2 st__h2">People we f*** <em>with</em></h2>
+      <p class="lead st__lead">The farmers, winemakers, artists and neighbors who make this place what it is.</p>
+      {story.partners.length ? (
+        <ul class="partners" role="list">
+          {story.partners.map((p: { name: string; what: string; url?: string }) => (
+            <li>
+              {p.url ? <a href={p.url} target="_blank" rel="noopener">{p.name}<span class="sr-only"> (opens in a new tab)</span></a> : <b>{p.name}</b>}
+              <span>{p.what}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p><Tbd value={null} label="Partner list: name, what they do, link" /></p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .st__grid { display: grid; gap: 28px; align-items: center; }
+  .st__img { height: 280px; }
+  .st :global(.st__photo) { width: 100%; height: 300px; object-fit: cover; object-position: 60% 50%; border-radius: var(--r); }
+  .st__h2 { margin: 10px 0 18px; }
+  .st__h3 { margin: 10px 0 14px; }
+  .st__quote p { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(1.4rem, 1.1rem + 1vw, 1.9rem); line-height: 1.35; color: var(--gold-lt); margin-bottom: 18px; }
+  .st p + p { margin-top: 14px; }
+  .st p:not(.eyebrow):not(.lead) { color: var(--soft); }
+  .st__cols { display: grid; gap: 40px; }
+  .st__lead { margin-bottom: 22px; max-width: 640px; }
+  .partners { display: grid; gap: 12px; }
+  .partners li { display: grid; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .partners a, .partners b { font-weight: 700; color: var(--bone); }
+  .partners span { color: var(--mute); font-size: 14px; }
+  @media (min-width: 1024px) {
+    .st__grid { grid-template-columns: 1fr 1fr; gap: 72px; }
+    .st__grid--rev > :first-child { order: 0; }
+    .st__img { height: 520px; }
+    .st :global(.st__photo) { height: 520px; }
+    .st__cols { grid-template-columns: 1fr 1fr; gap: 72px; }
+    .partners { grid-template-columns: repeat(3, 1fr); column-gap: 32px; }
+  }
+</style>

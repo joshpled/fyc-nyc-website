@@ -1,0 +1,15 @@
+---
+/**
+ * Renders a value, or a visible [placeholder] when the fact isn't known yet.
+ * Usage: <Tbd value={space.seated} label="XX" />  ->  "[XX]"
+ * Optional `format` turns a known value into display text, e.g. v => `$${v}`.
+ */
+interface Props {
+  value: unknown;
+  label: string;
+  format?: (v: any) => string;
+}
+const { value, label, format } = Astro.props;
+const known = value !== null && value !== undefined && value !== '';
+---
+{known ? (format ? format(value) : String(value)) : <span class="tbd" title="Placeholder: confirm before launch">[{label}]</span>}

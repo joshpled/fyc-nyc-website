@@ -1,0 +1,17 @@
+{
+  "_readme": "FAQ answers. null = visible [placeholder]. Each group renders as an accordion with FAQPage JSON-LD on its page.",
+  "privateEvents": [
+    { "q": "What deposit do you take, and what's the cancellation policy?", "a": null },
+    { "q": "Can we bring a cake?", "a": null },
+    { "q": "Can you handle dietary needs and allergies?", "a": null },
+    { "q": "Can we bring our own music, AV or decorations?", "a": null },
+    { "q": "Can you invoice our company?", "a": null }
+  ],
+  "visit": [
+    { "q": "Do you take walk-ins?", "a": "Always. Walk-ins are welcome every night we're open." },
+    { "q": "How long do we get the table?", "a": "Reservations for 2–4 guests are held for 2 hours, and 2.5 hours for groups of 5–6." },
+    { "q": "Can we sit on the back patio?", "a": "Yes, weather permitting. Patio tables can be booked when you reserve." },
+    { "q": "Is F.Y.C. / N.Y.C. wheelchair accessible?", "a": "Yes. We're wheelchair accessible and have a gender-neutral restroom." },
+    { "q": "Where exactly are you?", "a": "44 West 17th Street, between 5th & 6th Avenue in Flatiron, on the Chelsea border. A short walk from Union Square and Madison Square Park." }
+  ]
+}
