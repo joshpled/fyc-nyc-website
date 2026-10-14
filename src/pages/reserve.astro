@@ -1,0 +1,111 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import BookingWidget from '../components/BookingWidget.astro';
+import Icon from '../components/Icon.astro';
+import Tbd from '../components/Tbd.astro';
+import site from '../data/site.json';
+import reviews from '../data/reviews.json';
+import menus from '../data/menus.json';
+
+const quote = reviews.quotes[2] ?? reviews.quotes[0];
+const chef = menus.food.chefsDinner;
+---
+<Base
+  title="Reservations | F.Y.C. / N.Y.C. Wine Bar in Flatiron, NYC"
+  description="Book a table at F.Y.C. / N.Y.C., 44 West 17th St between 5th & 6th Ave in Flatiron. Walk-ins always welcome; back patio tables weather permitting."
+  crumbs={[{ name: 'Reservations', path: '/reserve/' }]}
+>
+  <PageHeader eyebrow="Reservations" title="Pull up a <em>chair</em>" lead="Pick a time below. Walk-ins are always welcome, too." />
+
+  <section class="section rs" aria-label="Book a table">
+    <div class="wrap rs__grid">
+      <div class="rs__book" id="book">
+        <BookingWidget id="booking-widget-page" load="eager" />
+        <ul class="rs__policy" role="list" aria-label="Reservation policy">
+          {site.booking.policy.map((p) => <li>{p}</li>)}
+        </ul>
+      </div>
+
+      <aside class="rs__side" aria-label="Before you book">
+        <div class="rs__card">
+          <h2 class="rs__h">Today</h2>
+          <p class="rs__today"><span data-status="long">See today’s hours</span></p>
+          <a class="go" href="/visit/">Hours &amp; directions <span aria-hidden="true">→</span></a>
+        </div>
+        {reviews.google.rating && (
+          <figure class="rs__card rs__proof">
+            <p class="rs__rating"><Icon name="star" size={16} /> <strong>{reviews.google.rating}</strong> on Google from {reviews.google.count} reviews</p>
+            <blockquote><p>“{quote.text}”</p></blockquote>
+            <figcaption>{quote.author} · {quote.source}{quote.paraphrased && ' · paraphrased'}</figcaption>
+          </figure>
+        )}
+        <div class="rs__card">
+          <h2 class="rs__h">Questions?</h2>
+          <p><a href={site.phoneHref} data-track="call_click" data-track-location="reserve">{site.phone}</a></p>
+          <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section rs-occ" aria-labelledby="occ-title">
+    <div class="wrap">
+      <p class="eyebrow">Book by occasion</p>
+      <h2 id="occ-title" class="display h2 rs-occ__h2">Whatever brings you <em>in</em></h2>
+      <ul class="occ" role="list">
+        <li class="occ__card" id="patio">
+          <h3 class="display occ__title">The back patio</h3>
+          <p>Our secluded back patio is booked weather permitting. Choose a patio table when you reserve.</p>
+          <a class="go" href="#book">Book the patio <span aria-hidden="true">→</span></a>
+        </li>
+        <li class="occ__card">
+          <h3 class="display occ__title">A birthday table</h3>
+          <p>Celebrating? Mention it when you book.</p>
+          <a class="go" href="#book">Book a birthday table <span aria-hidden="true">→</span></a>
+        </li>
+        <li class="occ__card">
+          <h3 class="display occ__title">The Chef’s Dinner</h3>
+          <p><Tbd value={chef.description} label="Format" /> · <Tbd value={chef.pricePerPerson} label="$X per person" format={(v) => `$${v} per person`} />.</p>
+          <a class="go" href="#book">Book the Chef’s Dinner <span aria-hidden="true">→</span></a>
+        </li>
+        <li class="occ__card">
+          <h3 class="display occ__title">Eight or more</h3>
+          <p>Bigger groups, semi-private tables and full buyouts go through our events team.</p>
+          <a class="go" href="/private-events/">Plan a party <span aria-hidden="true">→</span></a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .rs { padding-top: 32px; }
+  .rs__grid { display: grid; gap: 28px; }
+  .rs__book { scroll-margin-top: calc(var(--header-h) + 20px); }
+  .rs__policy { display: grid; gap: 10px; margin-top: 22px; color: var(--soft); font-size: 15px; }
+  .rs__policy li { display: flex; gap: 10px; }
+  .rs__policy li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.7; flex: none; }
+  .rs__side { display: grid; gap: 14px; align-content: start; }
+  .rs__card { padding: 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); }
+  .rs__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 8px; }
+  .rs__today { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+  .rs__card a:not(.go) { color: var(--gold-lt); font-weight: 700; }
+  .rs__rating { display: flex; align-items: center; gap: 6px; font-size: 14px; color: var(--soft); }
+  .rs__rating :global(svg) { color: var(--gold-lt); }
+  .rs__proof blockquote p { font-family: var(--display); font-style: italic; font-weight: 300; font-size: 20px; line-height: 1.4; margin: 12px 0 10px; }
+  .rs__proof figcaption { font-size: 12px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--mute); }
+
+  .rs-occ { padding-top: 24px; }
+  .rs-occ__h2 { margin: 10px 0 24px; }
+  .occ { display: grid; gap: 14px; }
+  .occ__card { padding: 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); scroll-margin-top: calc(var(--header-h) + 20px); }
+  .occ__card:target { border-color: var(--gold); }
+  .occ__title { font-size: 28px; margin-bottom: 8px; }
+  .occ__card p { color: var(--soft); font-size: 15px; margin-bottom: 14px; }
+  @media (min-width: 768px) { .occ { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) {
+    .rs__grid { grid-template-columns: 1.6fr 1fr; gap: 56px; }
+    .occ { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  }
+</style>

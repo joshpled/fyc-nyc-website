@@ -1,0 +1,312 @@
+---
+/**
+ * /menus (food), /menus/wine, /menus/cocktails, /menus/brunch
+ * Real HTML text (readable by Google, AI assistants and screen readers).
+ * Dietary filter chips work without JavaScript via :target.
+ */
+import Base from '../../layouts/Base.astro';
+import MenuItem from '../../components/menu/MenuItem.astro';
+import Tbd from '../../components/Tbd.astro';
+import menus from '../../data/menus.json';
+import site from '../../data/site.json';
+import { menuSchema } from '../../lib/schema';
+import type { Item } from '../../components/menu/MenuItem.astro';
+
+type Key = 'food' | 'wine' | 'cocktails' | 'brunch';
+
+export function getStaticPaths() {
+  return [
+    { params: { menu: undefined }, props: { key: 'food' } },
+    { params: { menu: 'wine' }, props: { key: 'wine' } },
+    { params: { menu: 'cocktails' }, props: { key: 'cocktails' } },
+    { params: { menu: 'brunch' }, props: { key: 'brunch' } },
+  ];
+}
+
+const { key } = Astro.props as { key: Key };
+
+const META: Record<Key, { path: string; title: string; description: string; h1: string; filters: boolean }> = {
+  food: {
+    path: '/menus/',
+    title: 'Menu | F.Y.C. / N.Y.C. Wine Bar & Kitchen in Flatiron, NYC',
+    description: 'Seasonal global comfort food on West 17th St in Flatiron: Wagyu burger, scallop cru-viche, Spartichoke pizza, filet mignon and the Chef’s Dinner.',
+    h1: 'The <em>menu</em>',
+    filters: true,
+  },
+  wine: {
+    path: '/menus/wine/',
+    title: 'Wine List | Mostly Biodynamic Wines in Flatiron | F.Y.C. / N.Y.C.',
+    description: 'Mostly biodynamic, small-production boutique wines by the glass and bottle, poured on West 17th St between 5th & 6th Ave, near Union Square and Madison Square Park.',
+    h1: 'Wines worth <em>pouring</em>',
+    filters: false,
+  },
+  cocktails: {
+    path: '/menus/cocktails/',
+    title: 'Cocktails | F.Y.C. / N.Y.C. Bar in Flatiron, NYC',
+    description: 'Spirit-specific cocktails at F.Y.C. / N.Y.C., a wine bar and kitchen on West 17th St in Flatiron, on the Chelsea border.',
+    h1: 'Spirit-specific <em>cocktails</em>',
+    filters: false,
+  },
+  brunch: {
+    path: '/menus/brunch/',
+    title: 'Weekend Brunch in Flatiron | F.Y.C. / N.Y.C.',
+    description: 'Saturday and Sunday brunch at F.Y.C. / N.Y.C. on West 17th St in Flatiron, near Union Square and Madison Square Park.',
+    h1: 'Weekend <em>brunch</em>',
+    filters: true,
+  },
+};
+
+const TABS: { key: Key; label: string; href: string }[] = [
+  { key: 'food', label: 'Food', href: '/menus/' },
+  { key: 'wine', label: 'Wine', href: '/menus/wine/' },
+  { key: 'cocktails', label: 'Cocktails', href: '/menus/cocktails/' },
+  { key: 'brunch', label: 'Brunch', href: '/menus/brunch/' },
+];
+
+const meta = META[key];
+const menu = (menus as any)[key] as {
+  title: string; eyebrow: string; intro: string | null; note?: string;
+  courses?: { id: string; name: string; subtitle?: string; items: Item[] }[];
+  sections?: { id: string; name: string; subtitle?: string; items: Item[] }[];
+  chefsDinner?: { name: string; description: string | null; pricePerPerson: number | null };
+};
+const sections = menu.courses ?? menu.sections ?? [];
+const tagLabels = menus.tagLabels as Record<string, string>;
+const FILTERS = ['vegetarian', 'gluten-free', 'shareable'];
+const hasTag = (t: string) => sections.some((s) => s.items.some((i) => i.tags?.includes(t)));
+const schema = menuSchema({ name: `${site.name} ${menu.title} menu`, path: meta.path, sections });
+---
+<Base
+  title={meta.title}
+  description={meta.description}
+  status="kitchen"
+  crumbs={key === 'food' ? [{ name: 'Menus', path: '/menus/' }] : [{ name: 'Menus', path: '/menus/' }, { name: menu.title, path: meta.path }]}
+  schema={[schema]}
+>
+  <nav class="tabs" aria-label="Menus">
+    <ul role="list">
+      {TABS.map((t) => (
+        <li><a href={t.href} aria-current={t.key === key ? 'page' : undefined}>{t.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="light menu">
+    <header class="menu__head wrap">
+      <p class="eyebrow">{menu.eyebrow}</p>
+      <h1 class="display menu__h1" set:html={meta.h1} />
+      {menu.intro ? <p class="menu__intro">{menu.intro}</p> : <p class="menu__intro"><Tbd value={null} label={`${menu.title} intro line`} /></p>}
+    </header>
+
+    <div class="mf wrap">
+      {meta.filters && (
+        <>
+          <span id="all" class="mf__t"></span>
+          {FILTERS.map((f) => <span id={f} class="mf__t"></span>)}
+          <nav class="chips" aria-label="Filter dishes">
+            <a href="#all" class="chip chip--all" data-filter="all">All</a>
+            {FILTERS.map((f) => <a href={`#${f}`} class={`chip chip--${f}`} data-filter={f}>{tagLabels[f]}</a>)}
+          </nav>
+          <p class="sr-only" aria-live="polite" data-filter-status></p>
+          {FILTERS.filter((f) => !hasTag(f)).map((f) => (
+            <p class={`mf__empty mf__empty--${f}`}>
+              <Tbd value={null} label={`No ${tagLabels[f].toLowerCase()} dishes tagged yet`} /> Ask your server and the kitchen will steer you right.
+            </p>
+          ))}
+        </>
+      )}
+
+      <div class="menu__body">
+        {sections.map((s) => (
+          <section class:list={['course', ...FILTERS.filter((f) => s.items.some((i) => i.tags?.includes(f))).map((f) => `has-${f}`)]}>
+            <h2 class="course__h" id={`c-${s.id}`}>
+              <span class="display">{s.name}</span>
+              {s.subtitle && <small>{s.subtitle}</small>}
+            </h2>
+            <ul class="course__items" role="list">
+              {s.items.map((item) => <MenuItem item={item} tagLabels={tagLabels} />)}
+            </ul>
+          </section>
+        ))}
+      </div>
+    </div>
+
+    {menu.chefsDinner && (
+      <div class="wrap">
+        <section class="chef" aria-labelledby="chef-title">
+          <p class="eyebrow">For the table</p>
+          <h2 id="chef-title" class="display chef__h">F.Y.C. <em>Chef’s Dinner</em></h2>
+          <p class="chef__p">
+            <Tbd value={menu.chefsDinner.description} label="Format" /> · <Tbd value={menu.chefsDinner.pricePerPerson} label="$X per person" format={(v) => `$${v} per person`} />
+          </p>
+          <a class="btn btn--primary" href="/reserve/" data-booking data-track="reserve_click" data-track-location="chefs_dinner">Reserve for the Chef’s Dinner</a>
+        </section>
+      </div>
+    )}
+
+    <footer class="wrap legend" id="allergies">
+      <h2 class="legend__h">Good to know</h2>
+      <p>{menus.notes.allergy}</p>
+      {key !== 'wine' && key !== 'cocktails' && <p>{menus.notes.advisory}</p>}
+      {menu.note && <p>{menu.note}</p>}
+      <p>{menus.notes.seasonal} Prices in USD.</p>
+    </footer>
+  </div>
+</Base>
+
+<script>
+  // Progressive enhancement for the no-JS :target filters:
+  // mark the active chip for screen readers and announce the result count.
+  const nav = document.querySelector<HTMLElement>('.chips');
+  const status = document.querySelector<HTMLElement>('[data-filter-status]');
+  if (nav) {
+    const update = () => {
+      const tag = location.hash.slice(1);
+      const active = ['vegetarian', 'gluten-free', 'shareable'].includes(tag) ? tag : 'all';
+      nav.querySelectorAll<HTMLAnchorElement>('[data-filter]').forEach((a) => {
+        if (a.dataset.filter === active) a.setAttribute('aria-current', 'true');
+        else a.removeAttribute('aria-current');
+      });
+      if (status) {
+        const items = document.querySelectorAll('.menu__body .mi:not(.mi--ph)');
+        const shown = active === 'all' ? items.length : document.querySelectorAll(`.menu__body .mi.is-${active}`).length;
+        status.textContent = active === 'all' ? `Showing all ${shown} dishes` : `Showing ${shown} ${active.replace('-', ' ')} dishes`;
+      }
+    };
+    addEventListener('hashchange', update);
+    update();
+  }
+</script>
+
+<style>
+  /* ---- Sticky menu tabs ---- */
+  .tabs {
+    position: sticky;
+    top: var(--header-h);
+    z-index: 30;
+    background: var(--ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .tabs ul { display: flex; max-width: 720px; margin-inline: auto; }
+  .tabs li { flex: 1; }
+  .tabs a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--mute);
+    border-bottom: 2px solid transparent;
+    transition: color var(--t) var(--ease), border-color var(--t) var(--ease);
+  }
+  .tabs a:hover { color: var(--bone); }
+  .tabs a[aria-current='page'] { color: var(--bone); border-color: var(--gold-lt); }
+
+  .menu { padding-bottom: 56px; }
+  .menu__head { padding-top: 36px; padding-bottom: 8px; }
+  .menu__h1 { font-size: clamp(2.5rem, 1.9rem + 2.6vw, 4rem); margin: 10px 0 10px; }
+  .menu__intro { font-size: 16px; max-width: 60ch; }
+
+  /* ---- Filter chips (no-JS via :target) ---- */
+  .mf { position: relative; }
+  .mf__t { display: block; height: 0; scroll-margin-top: calc(var(--header-h) + 64px); }
+  .chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 20px 0 6px;
+    margin-inline: calc(var(--gutter) * -1);
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid #E2DCCF;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #3A362F;
+    background: #fff;
+    transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+  }
+  .chip:hover { border-color: var(--gold-dk); }
+  /* "All" is active by default; another filter in the URL hash takes over */
+  .chip--all { background: var(--gold-grad); border-color: transparent; color: var(--ink); }
+  .mf__t:not(#all):target ~ .chips .chip--all { background: #fff; color: #3A362F; border-color: #E2DCCF; }
+  #vegetarian:target ~ .chips .chip--vegetarian,
+  #gluten-free:target ~ .chips .chip--gluten-free,
+  #shareable:target ~ .chips .chip--shareable,
+  #all:target ~ .chips .chip--all { background: var(--gold-grad); border-color: transparent; color: var(--ink); }
+
+  .mf__empty { display: none; margin-top: 20px; font-size: 15px; }
+  #gluten-free:target ~ .mf__empty--gluten-free,
+  #shareable:target ~ .mf__empty--shareable,
+  #vegetarian:target ~ .mf__empty--vegetarian { display: block; }
+
+  /* .mi rows come from MenuItem.astro, so they need :global() to match */
+  #vegetarian:target ~ .menu__body :global(.mi:not(.is-vegetarian)),
+  #gluten-free:target ~ .menu__body :global(.mi:not(.is-gluten-free)),
+  #shareable:target ~ .menu__body :global(.mi:not(.is-shareable)),
+  #vegetarian:target ~ .menu__body .course:not(.has-vegetarian),
+  #gluten-free:target ~ .menu__body .course:not(.has-gluten-free),
+  #shareable:target ~ .menu__body .course:not(.has-shareable) { display: none; }
+
+  /* ---- Courses ---- */
+  .course { padding-top: 28px; }
+  .course__h { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; }
+  .course__h .display { font-size: 38px; letter-spacing: -.03em; color: var(--ink); }
+  .course__h small {
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--gold-dk);
+  }
+  .course__items { margin-top: 6px; }
+
+  /* ---- Chef's Dinner ---- */
+  .chef {
+    margin-top: 40px;
+    padding: 30px 22px;
+    text-align: center;
+    background: radial-gradient(120% 90% at 50% 0%, rgba(177, 123, 9, .22), transparent 60%), var(--ink);
+    border-radius: var(--r);
+    color: var(--bone);
+    color-scheme: dark;
+  }
+  .chef .eyebrow { color: var(--gold-lt); }
+  .chef__h { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem); margin: 10px 0 10px; color: var(--bone) !important; }
+  .chef__h em { color: var(--gold-lt) !important; }
+  .chef__p { font-size: 15px; color: var(--soft) !important; max-width: 46ch; margin: 0 auto 20px; }
+  .chef :global(:focus-visible) { outline-color: var(--gold-lt); }
+
+  /* ---- Notes ---- */
+  .legend { margin-top: 32px; font-size: 14px; display: grid; gap: 6px; scroll-margin-top: calc(var(--header-h) + 64px); }
+  .legend p { color: var(--paper-mute); }
+  .legend__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-dk); margin-bottom: 4px; }
+
+  @media (min-width: 1024px) {
+    .menu { padding-bottom: 96px; }
+    .menu__head { padding-top: 64px; text-align: center; }
+    .menu__head .menu__intro { margin-inline: auto; }
+    .menu__head .eyebrow { justify-content: center; }
+    .chips { justify-content: center; margin-inline: 0; padding-inline: 0; padding-top: 28px; }
+    .mf__empty { text-align: center; }
+    .menu__body, .legend, .chef { max-width: 1040px; margin-inline: auto; }
+    .course { padding-top: 48px; }
+    .course__h { justify-content: center; text-align: center; border-bottom: 1px solid var(--paper-line); padding-bottom: 14px; }
+    .course__h .display { font-size: 48px; }
+    .course__items { display: grid; grid-template-columns: 1fr 1fr; column-gap: 64px; }
+    .chef { padding: 48px; margin-top: 64px; }
+    .legend { margin-top: 48px; text-align: center; }
+  }
+</style>

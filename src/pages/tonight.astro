@@ -1,0 +1,124 @@
+---
+/**
+ * /tonight: landing page for the QR code on the sidewalk sign.
+ * Live hours (New York time), walk-in status, today's specials and anything
+ * on the calendar today. Specials: src/data/tonight.json
+ */
+import Base from '../layouts/Base.astro';
+import Tbd from '../components/Tbd.astro';
+import Icon from '../components/Icon.astro';
+import site from '../data/site.json';
+import tonight from '../data/tonight.json';
+import { upcoming, timeRange } from '../lib/events';
+
+const events = upcoming();
+type Special = { name: string | null; description: string | null; price: number | null };
+const specials = tonight.specials as Special[];
+---
+<Base
+  title="Tonight at F.Y.C. / N.Y.C. | Hours, Specials & Walk-ins"
+  description="Open now? Tonight’s hours, specials and walk-in status at F.Y.C. / N.Y.C., 44 West 17th Street in Flatiron."
+  crumbs={[{ name: 'Tonight', path: '/tonight/' }]}
+>
+  <section class="section tn" aria-labelledby="tn-title">
+    <div class="wrap tn__wrap">
+      <p class="eyebrow">Tonight on West 17th</p>
+      <h1 id="tn-title" class="display tn__h1">Come on <em>in</em></h1>
+      <p class="tn__status status-big" data-state="unknown">
+        <span class="tn__dot" aria-hidden="true"></span>
+        <span data-status="long">See today’s hours</span>
+      </p>
+
+      <dl class="tn__facts">
+        <div><dt>Bar today</dt><dd data-today="bar"><a href="/visit/">Hours</a></dd></div>
+        <div><dt>Kitchen today</dt><dd data-today="kitchen"><a href="/visit/">Hours</a></dd></div>
+      </dl>
+      <p class="tn__note">{tonight.note}</p>
+
+      <div class="tn__acts">
+        <a class="btn btn--primary btn--block" href="/reserve/" data-booking data-track="reserve_click" data-track-location="tonight">Reserve a table</a>
+        <a class="btn btn--block" href="/menus/">See the menu</a>
+      </div>
+
+      {specials.length > 0 && (
+        <section class="tn__block" aria-labelledby="tn-specials">
+          <h2 id="tn-specials" class="tn__h">Tonight’s specials</h2>
+          <ul role="list" class="tn__specials">
+            {specials.map((s) => (
+              <li>
+                <span class="tn__sname"><Tbd value={s.name} label="Special" /></span>
+                <span class="tn__sprice"><Tbd value={s.price} label="$" format={(v) => `${v}`} /></span>
+                <span class="tn__sdesc"><Tbd value={s.description} label="Short description" /></span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {events.length > 0 && (
+        <section class="tn__block" aria-labelledby="tn-events" hidden data-today-events>
+          <h2 id="tn-events" class="tn__h">Happening today</h2>
+          <ul role="list">
+            {events.map((e) => (
+              <li data-date={e.date} hidden><a href={`/happenings/#${e.id}`}>{e.title}</a>{timeRange(e) && <span> · {timeRange(e)}</span>}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <ul class="tn__links" role="list">
+        <li><a href={site.links.directions} target="_blank" rel="noopener" data-track="directions_click" data-track-location="tonight"><Icon name="pin" size={18} /> Directions<span class="sr-only"> (opens Google Maps in a new tab)</span></a></li>
+        <li><a href={site.phoneHref} data-track="call_click" data-track-location="tonight"><Icon name="phone" size={18} /> Call</a></li>
+        <li><a href="/join/"><Icon name="mail" size={18} /> Join the Family</a></li>
+        <li><a href={site.social.instagram} target="_blank" rel="noopener"><Icon name="instagram" size={18} /> Instagram<span class="sr-only"> (opens in a new tab)</span></a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { getStatus } from '../lib/hours';
+  const s = getStatus();
+  document.querySelectorAll<HTMLElement>('.status-big').forEach((el) => (el.dataset.state = s.open ? 'open' : 'closed'));
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  const block = document.querySelector<HTMLElement>('[data-today-events]');
+  if (block) {
+    let any = false;
+    block.querySelectorAll<HTMLElement>('li[data-date]').forEach((li) => {
+      if (li.dataset.date === today) {
+        li.hidden = false;
+        any = true;
+      }
+    });
+    block.hidden = !any;
+  }
+</script>
+
+<style>
+  .tn { padding-top: 40px; }
+  .tn__wrap { max-width: 640px; }
+  .tn__h1 { font-size: clamp(3rem, 2rem + 5vw, 5rem); margin: 10px 0 14px; }
+  .tn__status { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; color: var(--soft); }
+  .tn__dot { width: 10px; height: 10px; border-radius: 50%; background: var(--mute); flex: none; }
+  .tn__status[data-state='open'] { color: var(--open-text); }
+  .tn__status[data-state='open'] .tn__dot { background: var(--open); box-shadow: 0 0 0 4px rgba(127, 191, 115, .18); }
+  .tn__status[data-state='closed'] .tn__dot { background: var(--gold-lt); }
+  .tn__facts { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; margin: 22px 0 14px; }
+  .tn__facts div { background: var(--ink-2); padding: 16px; }
+  .tn__facts dt { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-lt); }
+  .tn__facts dd { font-size: 17px; font-weight: 600; margin-top: 2px; }
+  .tn__note { color: var(--soft); }
+  .tn__acts { display: grid; gap: 10px; margin: 24px 0 8px; }
+  .tn__block { margin-top: 32px; }
+  .tn__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 10px; }
+  .tn__specials li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+  .tn__sname { font-weight: 700; }
+  .tn__sprice { font-weight: 800; color: var(--gold-lt); }
+  .tn__sdesc { grid-column: 1 / -1; font-size: 14px; color: var(--mute); }
+  .tn__block a { color: var(--gold-lt); font-weight: 700; }
+  .tn__links { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 32px; }
+  .tn__links a { display: flex; align-items: center; gap: 8px; min-height: 52px; padding: 0 16px; border: 1px solid var(--line); border-radius: var(--r); font-weight: 700; font-size: 14px; }
+  .tn__links a :global(svg) { color: var(--gold-lt); }
+  .tn__links a:hover { border-color: var(--gold); }
+  @media (min-width: 640px) { .tn__acts { grid-template-columns: 1fr 1fr; } }
+</style>

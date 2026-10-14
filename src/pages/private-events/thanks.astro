@@ -1,0 +1,12 @@
+---
+import ThanksPage from '../../components/ThanksPage.astro';
+import site from '../../data/site.json';
+const win = site.forms.eventsReplyWindow;
+---
+<ThanksPage
+  title="Inquiry sent | F.Y.C. / N.Y.C."
+  heading="Consider it <em>handled.</em>"
+  body={`Thanks! Your inquiry is with our events team${win ? ` and we reply within ${win}` : ''}. In a hurry? Call ${site.phone}.`}
+  backHref="/private-events/"
+  backLabel="Back to private events"
+/>

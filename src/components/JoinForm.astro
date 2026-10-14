@@ -1,0 +1,135 @@
+---
+/**
+ * "Join the Family" signup: email (required), mobile (optional, with SMS
+ * consent), birthday MM/DD. Posts to /api/join, which hands off to the
+ * email/SMS provider adapter (Toast Marketing, Klaviyo or Mailchimp).
+ */
+import Tbd from './Tbd.astro';
+import Turnstile from './Turnstile.astro';
+import site from '../data/site.json';
+
+interface Props {
+  id?: string;
+  layout?: 'inline' | 'stacked';
+  source?: string;
+}
+const { id = 'join', layout = 'stacked', source = 'website' } = Astro.props;
+const f = (n: string) => `${id}-${n}`;
+---
+<form
+  id={id}
+  class:list={['join-form', `join-form--${layout}`]}
+  action="/api/join/"
+  method="post"
+  data-enhance
+  data-track-submit="join_submit"
+  data-success={f('success')}
+  data-fallback={`email ${site.email}`}
+>
+  <input type="hidden" name="source" value={source} />
+  <div class="hp" aria-hidden="true">
+    <label for={f('company_site')}>Leave this empty</label>
+    <input id={f('company_site')} name="company_site" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <div class="join-form__fields">
+    <div>
+      <div class="field">
+        <label for={f('email')}>Email</label>
+        <input id={f('email')} name="email" type="email" autocomplete="email" required aria-describedby={f('email-error')} data-msg-required="Add your email so we can send the invite." />
+      </div>
+      <span class="field-error" id={f('email-error')}></span>
+    </div>
+    <div>
+      <div class="field">
+        <label for={f('mobile')}>Mobile <span class="opt">(optional, for texts)</span></label>
+        <input id={f('mobile')} name="mobile" type="tel" autocomplete="tel-national" inputmode="tel" data-sms-number aria-describedby={f('mobile-error')} />
+      </div>
+      <span class="field-error" id={f('mobile-error')}></span>
+    </div>
+    <div class="join-form__bday">
+      <div class="field">
+        <label for={f('birthday')}>Birthday <span class="opt">(MM/DD)</span></label>
+        <input id={f('birthday')} name="birthday" type="text" inputmode="numeric" autocomplete="off" placeholder="MM/DD" maxlength="5"
+          pattern="(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])" data-msg-pattern="Use MM/DD, like 07/14." aria-describedby={f('birthday-error')} />
+      </div>
+      <span class="field-error" id={f('birthday-error')}></span>
+    </div>
+  </div>
+
+  <div class="join-form__consent">
+    <label class="check" for={f('sms')}>
+      <input id={f('sms')} name="sms_consent" type="checkbox" value="yes" data-sms-consent aria-describedby={f('sms-error') + ' ' + f('sms-terms')} />
+      <span>Yes, text me too.</span>
+    </label>
+    <p class="join-form__terms" id={f('sms-terms')}>
+      By checking the box, you agree to receive recurring automated marketing texts from {site.name} at the number provided.
+      Msg frequency varies (up to <Tbd value={site.forms.smsFrequency} label="X" />/month). Msg &amp; data rates may apply.
+      Reply STOP to cancel, HELP for help. Consent isn’t a condition of purchase. See our <a href="/privacy/">privacy policy</a>.
+    </p>
+    <span class="field-error" id={f('sms-error')}></span>
+  </div>
+  <Turnstile />
+  <button class="btn btn--primary join-form__submit" type="submit">Count me in</button>
+
+  <p class="join-form__status" role="alert" data-form-status></p>
+</form>
+
+<div id={f('success')} class="join-success" hidden>
+  <p class="display join-success__title" tabindex="-1">Welcome to the <em>Family.</em></p>
+  <p>You’re on the list. Watch your inbox for the cookout invite.</p>
+</div>
+
+<script>
+  import { initForms } from '../scripts/forms';
+  initForms();
+  // Auto-insert the slash in MM/DD
+  document.querySelectorAll<HTMLInputElement>('input[name="birthday"]').forEach((el) => {
+    el.addEventListener('input', (e) => {
+      if ((e as InputEvent).inputType?.startsWith('delete')) return;
+      const d = el.value.replace(/\D/g, '').slice(0, 4);
+      el.value = d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
+    });
+  });
+</script>
+
+<style>
+  .join-form { display: grid; gap: 14px; }
+  .join-form__fields { display: grid; gap: 12px; }
+  .opt { text-transform: none; letter-spacing: .02em; font-weight: 600; }
+  .join-form__submit { width: 100%; min-height: 56px; }
+  .join-form__consent { display: grid; gap: 6px; }
+  .join-form__consent .check { font-size: 14px; color: var(--soft); font-weight: 600; min-height: 44px; align-items: center; }
+  .join-form__terms { font-size: 12px; line-height: 1.6; color: var(--mute); text-align: left; }
+  .join-form__terms a { color: var(--soft); }
+  .join-form__status:empty { display: none; }
+  .join-form__status { font-size: 14px; font-weight: 600; color: #FF9D8F; }
+  .join-success { text-align: center; padding: 24px 0; }
+  .join-success__title { font-size: clamp(2rem, 1.5rem + 2vw, 3rem); margin-bottom: 8px; }
+  .join-success__title:focus { outline: none; }
+
+  @media (min-width: 1024px) {
+    /* Inline (homepage band): fields + button on one row, consent underneath.
+       DOM order stays fields → consent → button so keyboard users meet consent first. */
+    .join-form--inline {
+      grid-template-columns: 280px 280px 190px auto;
+      justify-content: center;
+      align-items: start;
+      column-gap: 12px;
+    }
+    .join-form--inline .join-form__fields { display: contents; }
+    .join-form--inline .join-form__submit { grid-column: 4; grid-row: 1; width: auto; padding-inline: 32px; }
+    .join-form--inline .join-form__consent,
+    .join-form--inline .join-form__status,
+    .join-form--inline :global(.ts) { grid-column: 1 / -1; }
+    .join-form--inline .join-form__consent {
+      max-width: 760px;
+      margin: 6px auto 0;
+      grid-template-columns: auto 1fr;
+      column-gap: 18px;
+      align-items: start;
+    }
+    .join-form--inline .join-form__consent .check { min-height: 0; padding-top: 2px; }
+    .join-form--inline .join-form__consent .field-error { grid-column: 1 / -1; }
+  }
+</style>

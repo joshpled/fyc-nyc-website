@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /private-events/thanks/
+Disallow: /join/thanks/
+Disallow: /catering/thanks/
+
+Sitemap: https://thefycnyc.com/sitemap-index.xml

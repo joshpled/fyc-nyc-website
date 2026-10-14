@@ -1,0 +1,90 @@
+---
+/**
+ * One menu row. Featured items get a small photo and a "Pairs with" line.
+ * Prices print without "$" (menu convention); screen readers still hear dollars.
+ */
+import { Image } from 'astro:assets';
+import Tbd from '../Tbd.astro';
+
+export interface Item {
+  name: string | null;
+  description?: string | null;
+  price?: number | null;
+  glass?: number | null;
+  bottle?: number | null;
+  tags?: string[];
+  featured?: boolean | number;
+  pairing?: string | null;
+  image?: string | null;
+  placeholder?: boolean;
+}
+interface Props {
+  item: Item;
+  tagLabels: Record<string, string>;
+}
+const { item, tagLabels } = Astro.props;
+
+const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = item.image ? images[`../../assets/img/${item.image}`]?.default : undefined;
+const tags = item.tags ?? [];
+const featured = Boolean(item.featured);
+const isWine = item.glass !== undefined || item.bottle !== undefined;
+---
+<li class:list={['mi', { 'mi--feat': featured, 'mi--ph': item.placeholder }, ...tags.map((t) => `is-${t}`)]}>
+  {featured && (photo
+    ? <Image src={photo} alt={item.name ?? ''} widths={[96, 192]} sizes="96px" class="mi__img" />
+    : <div class="mi__img ph" aria-hidden="true"></div>)}
+  <div class="mi__body">
+    <div class="mi__top">
+      <h3 class="mi__name"><Tbd value={item.name} label="Menu item" /></h3>
+      <span class="mi__price">
+        {isWine ? (
+          <>
+            {item.glass != null && <span><span class="sr-only">Glass $</span>{item.glass}</span>}
+            {item.glass != null && item.bottle != null && <span aria-hidden="true"> / </span>}
+            {item.bottle != null && <span><span class="sr-only">, bottle $</span>{item.bottle}</span>}
+            {item.glass == null && item.bottle == null && <Tbd value={null} label="glass / bottle" />}
+          </>
+        ) : item.price != null ? (
+          <><span class="sr-only">$</span>{item.price}</>
+        ) : (
+          <Tbd value={null} label="$" />
+        )}
+      </span>
+    </div>
+    <p class="mi__desc"><Tbd value={item.description} label="Short description" /></p>
+    {featured && <p class="mi__pair">Pairs with: <Tbd value={item.pairing} label="by-the-glass pick" /></p>}
+    {tags.length > 0 && (
+      <ul class="tags mi__tags" role="list">
+        {tags.map((t) => <li class:list={['tag', { 'tag--v': t === 'vegetarian' }]}>{tagLabels[t] ?? t}</li>)}
+      </ul>
+    )}
+  </div>
+</li>
+
+<style>
+  .mi {
+    padding: 16px 0;
+    border-bottom: 1px solid var(--paper-line);
+    list-style: none;
+  }
+  .mi--feat { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; }
+  .mi__img { width: 96px; height: 96px; object-fit: cover; border-radius: var(--r-sm); }
+  .mi__img.ph::after { display: none; }
+  .mi__top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .mi__name {
+    font-family: var(--body);
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: .005em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+  .mi__price { flex: none; font-weight: 800; color: var(--gold-dk); font-size: 16px; font-variant-numeric: tabular-nums; }
+  .mi__desc { font-size: 15px; color: var(--paper-mute) !important; margin: 3px 0 6px; line-height: 1.5; }
+  .mi__pair { font-size: 13.5px; font-weight: 600; color: var(--gold-dk) !important; margin-top: 2px; }
+  .mi__pair::before { content: '◆ '; font-size: 9px; vertical-align: 2px; }
+  .mi__tags { margin-top: 8px; }
+  .mi--ph .mi__name { color: var(--paper-mute); font-weight: 600; }
+</style>

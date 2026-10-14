@@ -1,0 +1,266 @@
+---
+/**
+ * Private event inquiry: two short steps.
+ *   1. date (+ flexible), guests, occasion, budget per guest
+ *   2. name, email, phone, company (optional), notes
+ * Posts to /api/inquiry (serverless function → email to events@).
+ * Without JavaScript both steps show at once and the form still submits.
+ */
+import Turnstile from '../Turnstile.astro';
+import Tbd from '../Tbd.astro';
+import site from '../../data/site.json';
+
+const id = 'inquiry';
+const f = (n: string) => `${id}-${n}`;
+const guests = ['Under 8', '8–12', '13–20', '21–30', '31–50', '51–75', '76+'];
+const occasions = ['Birthday', 'Work / team', 'Holiday party', 'Rehearsal dinner', 'Other'];
+const budgets = ['Under $50', '$50–$75', '$75–$100', '$100–$150', '$150+', 'Not sure yet'];
+---
+<div class="inq">
+  <form
+    id={id}
+    class="inq__form"
+    action="/api/inquiry/"
+    method="post"
+    data-enhance
+    data-track-submit="event_inquiry_submit"
+    data-success={f('success')}
+    data-fallback={`email ${site.eventsEmail}`}
+  >
+    <input type="hidden" name="type" value="private_event" />
+    <div class="hp" aria-hidden="true">
+      <label for={f('website_url')}>Leave this empty</label>
+      <input id={f('website_url')} name="website_url" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="inq__progress">
+      <p class="eyebrow"><span>Start an inquiry · <span data-step-label aria-live="polite">Step 1 of 2</span></span></p>
+      <div class="inq__bars js-only" aria-hidden="true"><i class="is-on"></i><i data-bar-2></i></div>
+    </div>
+
+    <fieldset data-step class="inq__step">
+      <legend class="inq__legend" tabindex="-1" data-step-heading>Your event</legend>
+
+      <div class="inq__row">
+        <div>
+          <div class="field">
+            <label for={f('date')}>Date</label>
+            <input id={f('date')} name="date" type="date" required aria-describedby={f('date-error')} data-msg-required="Pick a date, or your best guess." />
+          </div>
+          <span class="field-error" id={f('date-error')}></span>
+        </div>
+        <label class="check inq__flex" for={f('flexible')}>
+          <input id={f('flexible')} name="flexible" type="checkbox" value="yes" />
+          <span>My date is flexible</span>
+        </label>
+      </div>
+
+      <div>
+        <div class="field field--select">
+          <label for={f('guests')}>Guests</label>
+          <select id={f('guests')} name="guests" required aria-describedby={f('guests-error')} data-msg-required="Roughly how many guests?">
+            <option value="">Choose a range</option>
+            {guests.map((g) => <option value={g}>{g}</option>)}
+          </select>
+        </div>
+        <span class="field-error" id={f('guests-error')}></span>
+      </div>
+
+      <fieldset class="choice-group" aria-describedby={f('occasion-error')}>
+        <legend class="choice-group__legend">Occasion</legend>
+        <div class="chips-row">
+          {occasions.map((o, i) => (
+            <span class="chip-radio">
+              <input type="radio" id={f(`occ-${i}`)} name="occasion" value={o} data-group-required={i === 0 ? '' : undefined}
+                aria-describedby={i === 0 ? f('occasion-error') : undefined} data-msg-required="Pick the occasion." required={i === 0} />
+              <label for={f(`occ-${i}`)}>{o}</label>
+            </span>
+          ))}
+        </div>
+        <span class="field-error" id={f('occasion-error')}></span>
+      </fieldset>
+
+      <div>
+        <div class="field field--select">
+          <label for={f('budget')}>Budget per guest</label>
+          <select id={f('budget')} name="budget" required aria-describedby={f('budget-error')} data-msg-required="A ballpark helps us suggest the right package.">
+            <option value="">Choose a range</option>
+            {budgets.map((b) => <option value={b}>{b}</option>)}
+          </select>
+        </div>
+        <span class="field-error" id={f('budget-error')}></span>
+      </div>
+
+      <button class="btn btn--primary btn--block js-only" type="button" data-next>Next: your details</button>
+    </fieldset>
+
+    <fieldset data-step class="inq__step">
+      <legend class="inq__legend" tabindex="-1" data-step-heading>Your details</legend>
+      <div>
+        <div class="field">
+          <label for={f('name')}>Name</label>
+          <input id={f('name')} name="name" type="text" autocomplete="name" required aria-describedby={f('name-error')} data-msg-required="Who should we reply to?" />
+        </div>
+        <span class="field-error" id={f('name-error')}></span>
+      </div>
+      <div class="inq__row inq__row--2">
+        <div>
+          <div class="field">
+            <label for={f('email')}>Email</label>
+            <input id={f('email')} name="email" type="email" autocomplete="email" required aria-describedby={f('email-error')} data-msg-required="Add your email so we can reply." />
+          </div>
+          <span class="field-error" id={f('email-error')}></span>
+        </div>
+        <div>
+          <div class="field">
+            <label for={f('phone')}>Phone</label>
+            <input id={f('phone')} name="phone" type="tel" autocomplete="tel-national" inputmode="tel" required aria-describedby={f('phone-error')} data-msg-required="Add a phone number in case it’s quicker to call." />
+          </div>
+          <span class="field-error" id={f('phone-error')}></span>
+        </div>
+      </div>
+      <div class="field">
+        <label for={f('company')}>Company <span class="opt">(optional)</span></label>
+        <input id={f('company')} name="company" type="text" autocomplete="organization" />
+      </div>
+      <div class="field">
+        <label for={f('notes')}>Anything else? <span class="opt">(optional)</span></label>
+        <textarea id={f('notes')} name="notes" rows="3" maxlength="2000" placeholder="Dietary needs, timing, the vibe you’re after…"></textarea>
+      </div>
+      <Turnstile />
+      <div class="inq__actions">
+        <button class="btn js-only" type="button" data-back>Back</button>
+        <button class="btn btn--primary" type="submit">Send inquiry</button>
+      </div>
+    </fieldset>
+
+    <p class="inq__status" role="alert" data-form-status></p>
+    <p class="inq__trust">
+      <span>We reply within <Tbd value={site.forms.eventsReplyWindow} label="reply time" /></span>
+      <span>Or email <a href={`mailto:${site.eventsEmail}`}>{site.eventsEmail}</a></span>
+    </p>
+  </form>
+
+  <div id={f('success')} class="inq__success" hidden>
+    <p class="eyebrow">Inquiry sent</p>
+    <p class="display inq__success-h" tabindex="-1">Consider it <em>handled.</em></p>
+    <p>Thanks! Your note is with our events team. We reply within <Tbd value={site.forms.eventsReplyWindow} label="reply time" />.</p>
+    <p>In a hurry? Call <a href={site.phoneHref}>{site.phone}</a>.</p>
+  </div>
+</div>
+
+<script>
+  import { initForms } from '../../scripts/forms';
+  initForms();
+  // Progress bar follows the current step; earliest pickable date is today
+  const form = document.getElementById('inquiry') as HTMLFormElement | null;
+  if (form) {
+    const bar2 = form.querySelector('[data-bar-2]');
+    new MutationObserver(() => bar2?.classList.toggle('is-on', form.dataset.currentStep === '1')).observe(form, {
+      attributes: true,
+      attributeFilter: ['data-current-step'],
+    });
+    const date = form.querySelector<HTMLInputElement>('input[type="date"]');
+    if (date) date.min = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  }
+</script>
+
+<style>
+  .inq {
+    border: 1px solid rgba(212, 164, 58, .55);
+    border-radius: var(--r);
+    padding: 22px 18px;
+    background: linear-gradient(180deg, rgba(177, 123, 9, .12), transparent 45%), var(--ink-2);
+  }
+  .inq__form, .inq__step { display: grid; gap: 14px; }
+  .inq__step { border: 0; min-width: 0; }
+  .inq__legend {
+    font-family: var(--display);
+    font-size: 26px;
+    letter-spacing: -.02em;
+    color: var(--bone);
+    margin-bottom: 10px;
+    padding: 0;
+  }
+  .inq__legend:focus { outline: none; }
+  .inq__bars { display: flex; gap: 6px; margin-top: 10px; }
+  .inq__bars i { flex: 1; height: 3px; border-radius: 3px; background: var(--line); }
+  .inq__bars i:global(.is-on) { background: var(--gold-grad); }
+  html:not(.js) .js-only { display: none !important; }
+  .inq__row { display: grid; gap: 10px; }
+  .inq__flex { min-height: 44px; align-items: center; color: var(--soft); font-size: 14.5px; font-weight: 600; }
+  .opt { text-transform: none; letter-spacing: .02em; font-weight: 600; }
+
+  .field--select { position: relative; }
+  .field--select::after {
+    content: '';
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    width: 8px; height: 8px;
+    border-right: 1.5px solid var(--gold-lt);
+    border-bottom: 1.5px solid var(--gold-lt);
+    transform: translateY(-20%) rotate(45deg);
+    pointer-events: none;
+  }
+  .field select { appearance: none; -webkit-appearance: none; padding-right: 28px; cursor: pointer; }
+  .field select option { background: var(--ink-2); color: var(--bone); }
+  .field input[type='date'] { color-scheme: dark; min-height: 26px; }
+  .field textarea { resize: vertical; min-height: 72px; }
+
+  .choice-group { border: 0; min-width: 0; }
+  .choice-group__legend {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 8px;
+  }
+  .chips-row { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip-radio { position: relative; }
+  .chip-radio input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+  .chip-radio label {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--bone);
+    cursor: pointer;
+    transition: background-color var(--t) var(--ease), border-color var(--t) var(--ease);
+  }
+  .chip-radio label:hover { border-color: var(--gold-lt); }
+  .chip-radio input:checked + label { background: var(--gold-grad); color: var(--ink); border-color: transparent; }
+  .chip-radio input:focus-visible + label { outline: 2px solid var(--gold-lt); outline-offset: 3px; }
+  .choice-group:global([data-invalid]) .chip-radio label { border-color: #FF8A7A; }
+
+  .inq__actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; }
+  html:not(.js) .inq__actions { grid-template-columns: 1fr; }
+  .inq__status:empty { display: none; }
+  .inq__status { color: #FF9D8F; font-weight: 600; font-size: 14px; }
+  .inq__trust {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 6px 16px;
+    font-size: 13px;
+    color: var(--mute);
+  }
+  .inq__trust a { color: var(--soft); }
+  .inq__success { padding: 12px 4px; }
+  .inq__success-h { font-size: clamp(2rem, 1.6rem + 1.6vw, 2.75rem); margin: 10px 0 12px; }
+  .inq__success-h:focus { outline: none; }
+  .inq__success p:not(.eyebrow):not(.display) { color: var(--soft); margin-top: 8px; }
+  .inq__success a { color: var(--gold-lt); }
+
+  @media (min-width: 640px) {
+    .inq { padding: 32px; }
+    .inq__row { grid-template-columns: 1fr auto; align-items: start; }
+    .inq__row--2 { grid-template-columns: 1fr 1fr; }
+    .inq__flex { min-height: 56px; }
+  }
+</style>

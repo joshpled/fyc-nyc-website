@@ -1,0 +1,113 @@
+---
+/** Reviews (white section): short Google quotes, rating snapshot, link to the profile. */
+import reviews from '../../data/reviews.json';
+import site from '../../data/site.json';
+import Icon from '../Icon.astro';
+
+const g = reviews.google;
+---
+<section class="section light reviews-sec" aria-labelledby="reviews-title">
+  <div class="sh wrap">
+    <div>
+      <p class="eyebrow">They said</p>
+      <h2 id="reviews-title" class="display h2">Loved by <em>the neighborhood</em></h2>
+      {g.rating && (
+        <p class="rating">
+          <span class="rating__stars" aria-hidden="true"><Icon name="star" size={16} /></span>
+          <strong>{g.rating}</strong> on Google from {g.count} reviews
+        </p>
+      )}
+    </div>
+    <a class="btn" href={site.links.googleReviews} target="_blank" rel="noopener">Read on Google<span class="sr-only"> (opens in a new tab)</span></a>
+  </div>
+
+  <div class="rail-wrap">
+    <ul class="reviews" role="list" aria-label="Guest reviews" tabindex="0">
+      {reviews.quotes.map((r) => (
+        <li class="rv">
+          <figure>
+            {r.rating ? (
+              <p class="rv__stars" role="img" aria-label={`${r.rating} out of 5 stars`}>{Array.from({ length: r.rating }).map(() => <Icon name="star" size={15} />)}</p>
+            ) : (
+              <span class="rv__mark" aria-hidden="true">“</span>
+            )}
+            <blockquote><p>{r.text}</p></blockquote>
+            <figcaption>{r.author} · {r.source}{r.paraphrased && <span class="rv__para"> · paraphrased</span>}</figcaption>
+          </figure>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .rating {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 14px;
+    font-size: 14px;
+    color: var(--paper-text);
+  }
+  .rating strong { color: var(--ink); }
+  .rating__stars { display: inline-flex; gap: 2px; color: var(--gold); margin-right: 4px; }
+  .rail-wrap { max-width: var(--max); margin-inline: auto; }
+  .reviews {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: min(86%, 360px);
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--gutter);
+    padding: 4px var(--gutter) 24px;
+    scrollbar-width: none;
+  }
+  .reviews::-webkit-scrollbar { display: none; }
+  .reviews:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .rv {
+    scroll-snap-align: start;
+    background: #fff;
+    border: 1px solid var(--paper-line);
+    border-radius: var(--r);
+    box-shadow: 0 10px 30px rgba(20, 16, 8, .07);
+    padding: 22px;
+  }
+  .rv__stars { display: flex; gap: 3px; color: var(--gold); }
+  .rv__mark {
+    display: block;
+    height: 30px;
+    font-family: var(--display);
+    font-size: 64px;
+    line-height: 1;
+    color: var(--gold);
+  }
+  blockquote p {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 21px;
+    line-height: 1.35;
+    color: var(--ink) !important;
+    margin: 10px 0 14px;
+  }
+  figcaption {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--paper-mute);
+  }
+  .rv__para { text-transform: none; letter-spacing: .02em; font-weight: 500; }
+  @media (min-width: 1024px) {
+    .reviews {
+      grid-auto-flow: row;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      overflow: visible;
+    }
+    .rv { padding: 34px; }
+    blockquote p { font-size: 23px; }
+  }
+</style>

@@ -1,0 +1,122 @@
+---
+/**
+ * Shared page shell: SEO head, skip link, status strip, header, footer,
+ * mobile action dock, booking drawer, analytics.
+ */
+import '../styles/global.css';
+import StatusStrip from '../components/StatusStrip.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Dock from '../components/Dock.astro';
+import BookingDrawer from '../components/BookingDrawer.astro';
+import site from '../data/site.json';
+import { restaurantSchema, breadcrumbSchema } from '../lib/schema';
+import { cleanPath } from '../lib/url';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Path under /public, e.g. /og/og-menus.jpg */
+  ogImage?: string;
+  dock?: 'default' | 'events';
+  /** Status strip mode: 'kitchen' on menus pages */
+  status?: 'default' | 'kitchen';
+  /** Breadcrumb trail for BreadcrumbList JSON-LD (Home is added automatically) */
+  crumbs?: { name: string; path: string }[];
+  /** Extra JSON-LD objects for this page (Restaurant is always included) */
+  schema?: (Record<string, unknown> | null)[];
+  noindex?: boolean;
+  /** Image URL + srcset to preload as the LCP element */
+  preloadImage?: { href: string; srcset?: string; sizes?: string; type?: string };
+}
+
+const { title, description, ogImage = '/og/og-default.jpg', dock = 'default', status = 'default', crumbs, schema = [], noindex = false, preloadImage } = Astro.props;
+
+const canonical = new URL(cleanPath(Astro.url.pathname), site.url).toString();
+const ogUrl = new URL(ogImage, site.url).toString();
+const jsonLd = [
+  restaurantSchema(),
+  crumbs?.length ? breadcrumbSchema([{ name: 'Home', path: '/' }, ...crumbs]) : null,
+  ...schema,
+].filter(Boolean);
+const ga4 = site.analytics.ga4Id;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
+    <meta name="theme-color" content="#0A0A0A" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="format-detection" content="telephone=no" />
+
+    <link rel="preload" href="/fonts/fraunces-latin-opsz-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    {preloadImage && (
+      <link rel="preload" as="image" href={preloadImage.href} imagesrcset={preloadImage.srcset} imagesizes={preloadImage.sizes} type={preloadImage.type} fetchpriority="high" />
+    )}
+
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name}, wine bar and kitchen in Flatiron, NYC`} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogUrl} />
+
+    {jsonLd.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    {ga4 && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${ga4}`}></script>
+        <script is:inline define:vars={{ ga4 }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          window.gtag = gtag;
+          gtag('js', new Date());
+          gtag('config', ga4);
+        </script>
+      </>
+    )}
+  </head>
+  <body data-dock={dock}>
+    <a class="skip-link" href="#main">Skip to main content</a>
+    <StatusStrip mode={status} />
+    <Header />
+    <main id="main" tabindex="-1">
+      <slot />
+    </main>
+    <Footer />
+    <Dock variant={dock} />
+    <BookingDrawer />
+
+    <script>
+      import { initSite } from '../scripts/main';
+      initSite();
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @media (max-width: 1023.98px) {
+    body { padding-bottom: calc(80px + env(safe-area-inset-bottom)); }
+  }
+  main:focus { outline: none; }
+</style>

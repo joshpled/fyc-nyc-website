@@ -1,0 +1,62 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import site from '../data/site.json';
+import Tbd from '../components/Tbd.astro';
+
+// Update whenever an audit is run (keep audit records; see README)
+const reviewed = 'October 2026';
+---
+<Base
+  title="Accessibility Statement | F.Y.C. / N.Y.C."
+  description="F.Y.C. / N.Y.C.’s commitment to an accessible website and restaurant: our WCAG 2.1 AA goal, what we’ve done, known limitations and how to reach us."
+  crumbs={[{ name: 'Accessibility', path: '/accessibility/' }]}
+>
+  <PageHeader eyebrow="Accessibility" title="A seat for <em>everyone</em>" lead="We want everyone to be able to find us, read the menu, book a table and feel at home, online and in the room." />
+  <section class="section ac" aria-label="Accessibility statement">
+    <div class="wrap prose">
+      <h2>Our goal</h2>
+      <p>We aim for this website to conform to the Web Content Accessibility Guidelines (WCAG) 2.1, Level AA, and we work toward WCAG 2.2. Accessibility was built into the site from the start rather than added with an overlay or widget.</p>
+
+      <h2>What we’ve done</h2>
+      <ul>
+        <li>Menus are real text, not PDFs or images, so screen readers and search tools can read them.</li>
+        <li>Every page can be used with a keyboard alone, with visible focus outlines and a “Skip to main content” link.</li>
+        <li>Text meets a contrast ratio of at least 4.5:1, and we use a darker gold for small gold text on white.</li>
+        <li>Meaningful images have descriptive alternative text; decorative images are hidden from screen readers.</li>
+        <li>The homepage video is muted, has a visible pause button, and doesn’t autoplay if your device asks for reduced motion.</li>
+        <li>Forms have visible labels and tell you what to fix, next to the field that needs it.</li>
+        <li>We test with automated tools (axe and Lighthouse) and with keyboard-only navigation.</li>
+      </ul>
+
+      <h2>Known limitations</h2>
+      <p>Reservations, gift cards and some sign-ups run on third-party services (such as Resy or OpenTable and Toast). We choose providers that support accessibility and test their widgets, but we don’t control their code. If anything gets in your way, call us at <a href={site.phoneHref}>{site.phone}</a> and we’ll help you over the phone.</p>
+
+      <h2>In the restaurant</h2>
+      <ul>
+        <li>Wheelchair accessible</li>
+        <li>Gender-neutral restroom</li>
+      </ul>
+      <p>If there’s anything that would make your visit easier, tell us when you book or call ahead.</p>
+
+      <h2>Tell us what we missed</h2>
+      <p>If you hit a barrier on this site, please let us know and we’ll work to fix it. Email <a href={`mailto:${site.email}?subject=${encodeURIComponent('Website accessibility')}`}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a>. We aim to respond within <Tbd value={null} label="response time" />.</p>
+
+      <p class="ac__date">This statement was last reviewed in {reviewed}.</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ac { padding-top: 24px; }
+  .prose { max-width: 760px; }
+  .prose h2 { font-family: var(--display); font-size: clamp(1.6rem, 1.3rem + 1vw, 2.2rem); margin: 36px 0 12px; letter-spacing: -.02em; }
+  .prose h2:first-child { margin-top: 0; }
+  .prose p, .prose li { color: var(--soft); }
+  .prose ul { display: grid; gap: 8px; padding-left: 0; list-style: none; }
+  .prose li { display: flex; gap: 12px; }
+  .prose li::before { content: '◆'; color: var(--gold); font-size: 9px; line-height: 2.8; flex: none; }
+  .prose p + p { margin-top: 12px; }
+  .prose a { color: var(--gold-lt); }
+  .ac__date { margin-top: 32px !important; font-size: 14px; color: var(--mute) !important; }
+</style>

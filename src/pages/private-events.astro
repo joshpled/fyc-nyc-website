@@ -1,0 +1,209 @@
+---
+import Base from '../layouts/Base.astro';
+import Tbd from '../components/Tbd.astro';
+import Faq from '../components/Faq.astro';
+import InquiryForm from '../components/events/InquiryForm.astro';
+import spaces from '../data/spaces.json';
+import packages from '../data/packages.json';
+import faqs from '../data/faqs.json';
+import site from '../data/site.json';
+import { faqSchema } from '../lib/schema';
+import { Image } from 'astro:assets';
+
+// Space photos: drop files in src/assets/img and set "image" in spaces.json
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = (file: string | null) => (file ? images[`../assets/img/${file}`]?.default : undefined);
+
+const money = (v: number) => `$${v.toLocaleString('en-US')}`;
+---
+<Base
+  title="Private Events & Party Venue in Flatiron, NYC | F.Y.C. / N.Y.C."
+  description="Birthdays, rehearsal dinners, team nights and full buyouts at F.Y.C. / N.Y.C. on West 17th St in Flatiron: semi-private tables, the back patio or the whole house."
+  dock="events"
+  crumbs={[{ name: 'Private events', path: '/private-events/' }]}
+  schema={[faqSchema(faqs.privateEvents)]}
+>
+  <section class="pe-hero" aria-labelledby="pe-title">
+    <div class="pe-hero__bg ph" aria-hidden="true"></div>
+    <div class="wrap pe-hero__copy">
+      <p class="eyebrow">Private events &amp; large parties</p>
+      <h1 id="pe-title" class="display pe-hero__h1">Pick your path.<br /><em>We’ll throw the party.</em></h1>
+    </div>
+  </section>
+
+  <div class="wrap pe-intro">
+    <p class="lead">Birthdays, rehearsal dinners, team nights and full buyouts, with five friends and about 100 years of NYC hospitality running the room.</p>
+    <div class="pe-intro__ctas only-lg">
+      <a class="btn btn--primary" href="#inquire" data-track="event_inquiry_start" data-track-location="pe_intro">Start an inquiry</a>
+      <a class="btn" href={`mailto:${site.eventsEmail}`} data-track="email_click">{site.eventsEmail}</a>
+    </div>
+  </div>
+
+  <section class="section pe-spaces" id="spaces" aria-labelledby="spaces-title">
+    <div class="wrap">
+      <p class="eyebrow">The spaces</p>
+      <h2 id="spaces-title" class="display h2 pe-h2">Three ways <em>to gather</em></h2>
+      <ul class="spaces" role="list">
+        {spaces.spaces.map((sp, i) => (
+          <li class="space">
+            {photo(sp.image) ? (
+              <Image src={photo(sp.image)!} alt={`${sp.name} set for a private event`} widths={[480, 800]} sizes="(min-width: 768px) 33vw, 100vw" class="space__img" />
+            ) : (
+              <div class:list={['space__img ph', { 'ph--alt': i % 2 }]} aria-hidden="true"></div>
+            )}
+            <div class="space__body">
+              <p class="space__kind">{sp.kind}</p>
+              <h3 class="display space__name">{sp.name}</h3>
+              <p class="space__sum"><Tbd value={sp.summary} label="One-line description" /></p>
+              <dl class="spec">
+                <div><dt>Seated</dt><dd><Tbd value={sp.seated} label="XX" /></dd></div>
+                <div><dt>Standing</dt><dd><Tbd value={sp.standing} label="XX" /></dd></div>
+                <div><dt>Min. spend</dt><dd><Tbd value={sp.minSpendWeeknight} label="$X" format={money} /></dd></div>
+              </dl>
+              <p class="space__note">Weekend minimum: <Tbd value={sp.minSpendWeekend} label="$X" format={money} /></p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section light pe-packages" id="packages" aria-labelledby="pk-title">
+    <div class="wrap pk-wrap">
+      <div class="pk-head">
+        <p class="eyebrow">Packages</p>
+        <h2 id="pk-title" class="display h2 pe-h2">Set <em>menus</em></h2>
+        <p>Set formats for groups. Questions? Ask in your inquiry.</p>
+      </div>
+      <ul class="pk" role="list">
+        {packages.packages.map((p) => (
+          <li class="pk__row">
+            <div>
+              <h3 class="pk__name">{p.name}</h3>
+              <p class="pk__sum">
+                <Tbd value={p.summary} label="What’s included" />
+                {p.duration && <> · {p.duration}</>}
+              </p>
+            </div>
+            <span class="pk__price"><Tbd value={p.pricePerPerson} label="$X" format={money} /> pp</span>
+          </li>
+        ))}
+      </ul>
+      <a class="btn btn--block pk__cta" href="#inquire">Ask about packages</a>
+    </div>
+  </section>
+
+  <section class="section pe-inquire" id="inquire" aria-labelledby="inq-title">
+    <div class="wrap pe-inquire__grid">
+      <div class="pe-inquire__copy">
+        <p class="eyebrow">Inquire</p>
+        <h2 id="inq-title" class="display h2 pe-h2">Tell us about <em>your night</em></h2>
+        <p class="lead">Four quick questions, then where to reach you. We’ll come back with availability and options.</p>
+        <ul class="pe-steps only-lg" role="list">
+          <li><b>1</b> <span>Date, guests, occasion and budget</span></li>
+          <li><b>2</b> <span>Your contact details</span></li>
+          <li><b>3</b> <span>We reply within <Tbd value={site.forms.eventsReplyWindow} label="reply time" /> with options</span></li>
+        </ul>
+      </div>
+      <InquiryForm />
+    </div>
+  </section>
+
+  <section class="section pe-faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap pe-faq__grid">
+      <div>
+        <p class="eyebrow">Good to know</p>
+        <h2 id="faq-title" class="display h2 pe-h2">Planner <em>questions</em></h2>
+      </div>
+      <Faq items={faqs.privateEvents} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pe-hero { position: relative; min-height: 330px; display: flex; align-items: flex-end; isolation: isolate; }
+  .pe-hero__bg { position: absolute; inset: 0; border-radius: 0; z-index: -2; }
+  .pe-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, var(--ink) 5%, transparent 70%);
+  }
+  .pe-hero__copy { padding-bottom: 18px; }
+  .pe-hero__h1 { font-size: clamp(2.75rem, 1.6rem + 4.8vw, 5.5rem); margin-top: 10px; letter-spacing: -.035em; }
+  .pe-intro { padding-top: 22px; }
+  .pe-intro .lead { max-width: 640px; }
+  .pe-intro__ctas { display: flex; gap: 12px; margin-top: 28px; }
+  .pe-h2 { margin: 10px 0 22px; }
+
+  .pe-spaces { padding-top: 44px; }
+  .spaces { display: grid; gap: 14px; }
+  .space { border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; background: var(--ink-2); }
+  .space :global(.space__img) { display: block; width: 100%; height: 160px; object-fit: cover; border-radius: 0; }
+  .space__body { padding: 18px; }
+  .space__kind { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
+  .space__name { font-size: 28px; margin: 4px 0 4px; }
+  .space__sum { font-size: 14.5px; color: var(--mute); }
+  .spec {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 14px 0 6px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .spec div { display: flex; flex-direction: column-reverse; }
+  .spec dt { font-size: 12px; color: var(--mute); letter-spacing: .04em; }
+  .spec dd { font-size: 20px; font-weight: 700; color: var(--bone); }
+  .space__note { font-size: 13px; color: var(--mute); }
+
+  .pk-head p:not(.eyebrow) { margin-top: -8px; }
+  .pk { margin-top: 18px; border-top: 1px solid var(--paper-line); }
+  .pk__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--paper-line);
+  }
+  .pk__name { font-family: var(--body); font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+  .pk__sum { font-size: 14px; color: var(--paper-mute) !important; }
+  .pk__price { font-weight: 800; color: var(--gold-dk); white-space: nowrap; font-size: 17px; }
+  .pk__cta { margin-top: 22px; }
+
+  .pe-inquire__grid { display: grid; gap: 24px; }
+  .pe-steps { display: grid; gap: 14px; margin-top: 28px; }
+  .pe-steps li { display: flex; align-items: center; gap: 14px; color: var(--soft); }
+  .pe-steps b {
+    flex: none;
+    width: 34px; height: 34px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    border: 1px solid var(--gold);
+    color: var(--gold-lt);
+    font-size: 14px;
+  }
+
+  .pe-faq { padding-top: 0; }
+  .pe-faq__grid { display: grid; gap: 8px; }
+
+  @media (min-width: 768px) {
+    .spaces { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  }
+  @media (min-width: 1024px) {
+    .pe-hero { min-height: 560px; }
+    .pe-hero__copy { padding-bottom: 48px; }
+    .pe-intro { padding-top: 36px; display: flex; justify-content: space-between; align-items: center; gap: 48px; }
+    .pe-intro__ctas { margin-top: 0; flex: none; }
+    .space :global(.space__img) { height: 240px; }
+    .space__body { padding: 26px; }
+    .pk-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
+    .pk { margin-top: 0; }
+    .pk-wrap .pk__cta { grid-column: 2; width: auto; justify-self: start; margin-top: 0; }
+    .pk__name { font-size: 20px; }
+    .pe-inquire__grid { grid-template-columns: 1fr 1.25fr; gap: 80px; align-items: start; }
+    .pe-inquire__copy { position: sticky; top: calc(var(--header-h) + 40px); }
+    .pe-faq__grid { grid-template-columns: 1fr 1.25fr; gap: 80px; }
+  }
+</style>

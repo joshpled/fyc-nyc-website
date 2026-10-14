@@ -1,0 +1,206 @@
+---
+/**
+ * Frosted sticky header.
+ * Desktop: Menus · Wine · Happenings · [logo] · Private Events · Join the Family · [Reserve]
+ * Mobile: logo + accessible menu button (opens a modal <dialog>).
+ */
+import { Image } from 'astro:assets';
+import logoWhite from '../assets/img/logo_1.png';
+import Icon from './Icon.astro';
+import site from '../data/site.json';
+import { navLeft, navRight, mobilePrimary, mobileSecondary, isCurrent } from '../lib/nav';
+
+const path = Astro.url.pathname;
+---
+<header class="hdr">
+  <div class="hdr__row">
+    <nav class="hdr__nav hdr__nav--l only-lg" aria-label="Primary">
+      <ul role="list">
+        {navLeft.map((l) => (
+          <li><a href={l.href} aria-current={isCurrent(l.href, path) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="hdr__logo" href="/" aria-label={`${site.name} home`}>
+      <Image src={logoWhite} alt="" widths={[94, 188]} sizes="(min-width: 1024px) 94px, 60px" loading="eager" format="webp" quality={90} />
+    </a>
+
+    <nav class="hdr__nav hdr__nav--r only-lg" aria-label="Secondary">
+      <ul role="list">
+        {navRight.map((l) => (
+          <li><a href={l.href} aria-current={isCurrent(l.href, path) ? 'page' : undefined}>{l.label}</a></li>
+        ))}
+        <li><a class="btn btn--primary btn--sm hdr__reserve" href="/reserve/" data-booking data-track="reserve_click" data-track-location="header">Reserve</a></li>
+      </ul>
+    </nav>
+
+    <button class="hdr__burger only-sm" type="button" aria-haspopup="dialog" aria-controls="mobile-nav" aria-expanded="false" data-open-dialog="mobile-nav">
+      <Icon name="menu" size={26} />
+      <span class="sr-only">Open menu</span>
+    </button>
+  </div>
+</header>
+
+<dialog id="mobile-nav" class="mnav" aria-label="Menu">
+  <div class="mnav__top">
+    <a class="hdr__logo" href="/" aria-label={`${site.name} home`}>
+      <Image src={logoWhite} alt="" widths={[60, 120]} sizes="60px" format="webp" quality={90} />
+    </a>
+    <button class="mnav__close" type="button" data-close-dialog>
+      <Icon name="close" size={26} />
+      <span class="sr-only">Close menu</span>
+    </button>
+  </div>
+  <nav aria-label="Mobile">
+    <ul role="list" class="mnav__primary">
+      {mobilePrimary.map((l) => (
+        <li><a class="display" href={l.href} aria-current={isCurrent(l.href, path) ? 'page' : undefined}>{l.label}</a></li>
+      ))}
+    </ul>
+    <ul role="list" class="mnav__secondary">
+      {mobileSecondary.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="mnav__foot">
+    <a class="btn btn--primary btn--block" href="/reserve/" data-booking data-track="reserve_click" data-track-location="mobile_menu">Reserve a table</a>
+    <p>
+      {site.address.street} · {site.address.crossStreets}<br />
+      <a href={site.phoneHref} data-track="call_click">{site.phone}</a>
+    </p>
+  </div>
+</dialog>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 10, 10, .82);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+    border-bottom: 1px solid var(--line);
+  }
+  .hdr__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: var(--header-h);
+    padding-inline: 18px;
+    max-width: var(--max);
+    margin-inline: auto;
+  }
+  .hdr__logo { display: block; }
+  .hdr__logo :global(img) { height: 44px; width: auto; }
+  .hdr__burger {
+    width: 48px;
+    height: 48px;
+    margin-right: -10px;
+    display: grid;
+    place-items: center;
+    color: var(--bone);
+    border-radius: 12px;
+  }
+  .hdr__nav ul { display: flex; align-items: center; gap: 34px; }
+  .hdr__nav a:not(.btn) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 13.5px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--bone);
+    transition: color var(--t) var(--ease);
+  }
+  .hdr__nav a:not(.btn)::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: 8px;
+    height: 1.5px;
+    background: var(--gold-grad);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--t) var(--ease);
+  }
+  .hdr__nav a:not(.btn):hover::after,
+  .hdr__nav a[aria-current='page']::after { transform: scaleX(1); }
+  .hdr__nav a[aria-current='page'] { color: var(--gold-lt); }
+  .hdr__reserve { min-height: 52px; padding-inline: 32px; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
+
+  @media (min-width: 1024px) {
+    .hdr__row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      padding-inline: var(--gutter);
+    }
+    .hdr__nav--r ul { justify-content: flex-end; }
+    .hdr__logo :global(img) { height: 70px; }
+  }
+
+  /* ----- Mobile menu (modal dialog) ----- */
+  .mnav {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    max-height: none;
+    margin: 0;
+    padding: 0 20px calc(24px + env(safe-area-inset-bottom));
+    border: 0;
+    background: rgba(10, 10, 10, .97);
+    color: var(--bone);
+    overflow-y: auto;
+    flex-direction: column;
+  }
+  .mnav[open] { display: flex; }
+  .mnav::backdrop { background: rgba(0, 0, 0, .6); }
+  .mnav__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    flex: none;
+  }
+  .mnav__top :global(img) { height: 44px; width: auto; }
+  .mnav__close {
+    width: 48px; height: 48px;
+    margin-right: -10px;
+    display: grid; place-items: center;
+    color: var(--bone);
+    border-radius: 12px;
+  }
+  .mnav__primary { margin-top: 24px; border-top: 1px solid var(--line); }
+  .mnav__primary li { border-bottom: 1px solid var(--line); }
+  .mnav__primary a {
+    display: flex;
+    align-items: center;
+    min-height: 64px;
+    font-size: 32px;
+    letter-spacing: -.02em;
+  }
+  .mnav__primary a[aria-current='page'] { color: var(--gold-lt); font-style: italic; font-weight: 300; }
+  .mnav__secondary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 22px;
+    margin: 22px 0 28px;
+  }
+  .mnav__secondary a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--soft);
+  }
+  .mnav__foot { margin-top: auto; }
+  .mnav__foot p { margin-top: 18px; font-size: 14px; color: var(--mute); }
+  .mnav__foot p a { color: var(--gold-lt); text-decoration: none; font-weight: 700; }
+  @media (prefers-reduced-motion: no-preference) {
+    .mnav[open] { animation: fade-up var(--t) var(--ease); }
+  }
+  @keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+</style>

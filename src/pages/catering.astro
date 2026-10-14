@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tbd from '../components/Tbd.astro';
+import Turnstile from '../components/Turnstile.astro';
+import site from '../data/site.json';
+import catering from '../data/catering.json';
+
+const f = (n: string) => `catering-${n}`;
+const guests = ['Under 20', '20–40', '41–75', '76–150', '150+'];
+---
+<Base
+  title="Catering in Flatiron & NYC | F.Y.C. / N.Y.C."
+  description="Catering from F.Y.C. / N.Y.C., the Flatiron wine bar and kitchen on West 17th St: seasonal global comfort food. Send a catering inquiry."
+  crumbs={[{ name: 'Catering', path: '/catering/' }]}
+>
+  <PageHeader eyebrow="Catering" title="Catering from <em>our kitchen</em>" lead="Seasonal global comfort food for your next gathering. Tell us what you’re planning.">
+    <p class="ct__sum"><Tbd value={catering.summary} label="What catering includes: drop-off, on-site staff, menus" /></p>
+  </PageHeader>
+
+  <section class="section ct" aria-labelledby="ct-form">
+    <div class="wrap ct__grid">
+      <dl class="ct__facts">
+        <div><dt>Minimum</dt><dd><Tbd value={catering.minimumGuests} label="XX guests" format={(v) => `${v} guests`} /></dd></div>
+        <div><dt>Lead time</dt><dd><Tbd value={catering.leadTime} label="X days" /></dd></div>
+        <div><dt>Delivery area</dt><dd><Tbd value={catering.deliveryArea} label="Neighborhoods" /></dd></div>
+      </dl>
+
+      <div class="ct__card">
+        <h2 id="ct-form" class="display ct__h">Catering inquiry</h2>
+        <form id="catering" action="/api/inquiry/" method="post" data-enhance data-track-submit="catering_inquiry_submit" data-success={f('success')} data-fallback={`email ${site.eventsEmail}`} class="ct__form">
+          <input type="hidden" name="type" value="catering" />
+          <div class="hp" aria-hidden="true">
+            <label for={f('website_url')}>Leave this empty</label>
+            <input id={f('website_url')} name="website_url" type="text" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="ct__row">
+            <div>
+              <div class="field"><label for={f('date')}>Date</label><input id={f('date')} name="date" type="date" required aria-describedby={f('date-error')} data-msg-required="Pick a date, or your best guess." /></div>
+              <span class="field-error" id={f('date-error')}></span>
+            </div>
+            <div>
+              <div class="field field--select"><label for={f('guests')}>Guests</label>
+                <select id={f('guests')} name="guests" required aria-describedby={f('guests-error')} data-msg-required="Roughly how many people?">
+                  <option value="">Choose a range</option>
+                  {guests.map((g) => <option value={g}>{g}</option>)}
+                </select>
+              </div>
+              <span class="field-error" id={f('guests-error')}></span>
+            </div>
+          </div>
+          <div class="field field--select"><label for={f('service')}>Service</label>
+            <select id={f('service')} name="service">
+              {catering.services.map((s) => <option value={s}>{s}</option>)}
+            </select>
+          </div>
+          <div>
+            <div class="field"><label for={f('name')}>Name</label><input id={f('name')} name="name" type="text" autocomplete="name" required aria-describedby={f('name-error')} data-msg-required="Who should we reply to?" /></div>
+            <span class="field-error" id={f('name-error')}></span>
+          </div>
+          <div class="ct__row">
+            <div>
+              <div class="field"><label for={f('email')}>Email</label><input id={f('email')} name="email" type="email" autocomplete="email" required aria-describedby={f('email-error')} data-msg-required="Add your email so we can reply." /></div>
+              <span class="field-error" id={f('email-error')}></span>
+            </div>
+            <div>
+              <div class="field"><label for={f('phone')}>Phone</label><input id={f('phone')} name="phone" type="tel" autocomplete="tel-national" inputmode="tel" required aria-describedby={f('phone-error')} data-msg-required="Add a phone number." /></div>
+              <span class="field-error" id={f('phone-error')}></span>
+            </div>
+          </div>
+          <div class="field"><label for={f('notes')}>Tell us about it <span class="opt">(optional)</span></label><textarea id={f('notes')} name="notes" rows="3" maxlength="2000" placeholder="Address, timing, dietary needs…"></textarea></div>
+          <Turnstile />
+          <button class="btn btn--primary btn--block" type="submit">Send inquiry</button>
+          <p class="ct__status" role="alert" data-form-status></p>
+        </form>
+        <div id={f('success')} hidden>
+          <p class="display ct__h" tabindex="-1">Got it. <em>Thank you.</em></p>
+          <p class="ct__ok">We’ll be in touch soon. In a hurry? Call <a href={site.phoneHref}>{site.phone}</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  import { initForms } from '../scripts/forms';
+  initForms();
+</script>
+
+<style>
+  .ct__sum { margin-top: 10px; color: var(--soft); }
+  .ct { padding-top: 32px; }
+  .ct__grid { display: grid; gap: 28px; }
+  .ct__facts { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; align-self: start; }
+  .ct__facts div { background: var(--ink-2); padding: 18px 20px; }
+  .ct__facts dt { font-size: 11px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
+  .ct__facts dd { font-size: 18px; font-weight: 600; margin-top: 4px; }
+  .ct__card { padding: 24px 18px; border: 1px solid rgba(212, 164, 58, .45); border-radius: var(--r); background: var(--ink-2); }
+  .ct__h { font-size: 30px; margin-bottom: 16px; }
+  .ct__h:focus { outline: none; }
+  .ct__form { display: grid; gap: 12px; }
+  .ct__row { display: grid; gap: 12px; }
+  .opt { text-transform: none; letter-spacing: .02em; font-weight: 600; }
+  .field--select { position: relative; }
+  .field--select::after { content: ''; position: absolute; right: 18px; top: 50%; width: 8px; height: 8px; border-right: 1.5px solid var(--gold-lt); border-bottom: 1.5px solid var(--gold-lt); transform: translateY(-20%) rotate(45deg); pointer-events: none; }
+  .field select { appearance: none; -webkit-appearance: none; padding-right: 28px; cursor: pointer; }
+  .field select option { background: var(--ink-2); color: var(--bone); }
+  .field input[type='date'] { color-scheme: dark; }
+  .ct__status:empty { display: none; }
+  .ct__status { color: #FF9D8F; font-weight: 600; font-size: 14px; }
+  .ct__ok { color: var(--soft); }
+  .ct__ok a { color: var(--gold-lt); }
+  @media (min-width: 640px) { .ct__row { grid-template-columns: 1fr 1fr; } .ct__card { padding: 36px; } }
+  @media (min-width: 1024px) { .ct__grid { grid-template-columns: 1fr 1.4fr; gap: 64px; } }
+</style>

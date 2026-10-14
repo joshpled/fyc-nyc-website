@@ -1,0 +1,83 @@
+---
+/**
+ * Top strip on every page. Live "Open now · Bar until 1am" is computed in the
+ * browser (New York time) from hours.json; the server-rendered fallback is
+ * time-agnostic so a cached page never shows the wrong day.
+ */
+import site from '../data/site.json';
+
+interface Props {
+  /** 'kitchen' (menus pages): mobile shows kitchen status + an Allergies link */
+  mode?: 'default' | 'kitchen';
+}
+const { mode = 'default' } = Astro.props;
+---
+<aside class="status" data-state="unknown" aria-label="Hours and location">
+  <div class="status__row">
+    <p class="status__now">
+      <span class="status__dot" aria-hidden="true"></span>
+      <span class="only-sm" data-status={mode === 'kitchen' ? 'kitchen' : 'short'}>{mode === 'kitchen' ? 'See kitchen hours' : 'Walk-ins always welcome'}</span>
+      <span class="only-lg" data-status="long"><a href="/visit/">Today's hours</a></span>
+    </p>
+    <a class="only-lg" href={site.links.directions} data-track="directions_click" rel="noopener" target="_blank">
+      {site.address.streetShort}, {site.address.neighborhood}<span class="sr-only"> (opens Google Maps directions in a new tab)</span>
+    </a>
+    <span class="only-lg status__walkins" data-walkins>Walk-ins always welcome</span>
+    <a class="only-lg" href={site.phoneHref} data-track="call_click">{site.phone}</a>
+    {mode === 'kitchen' ? (
+      <a class="only-sm status__dir" href="#allergies">Allergies?</a>
+    ) : (
+      <a class="only-sm status__dir" href={site.links.directions} data-track="directions_click" rel="noopener" target="_blank">
+        Directions<span class="sr-only"> (opens Google Maps in a new tab)</span>
+      </a>
+    )}
+  </div>
+</aside>
+
+<style>
+  .status {
+    background: var(--ink-deep);
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    color: var(--mute);
+  }
+  .status__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 38px;
+    padding: 6px 18px;
+  }
+  .status__now {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--soft);
+  }
+  .status__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--gold-lt);
+    flex: none;
+  }
+  .status[data-state='unknown'] .status__dot { background: var(--mute); }
+  .status[data-state='open'] .status__now { color: var(--open-text); }
+  .status[data-state='open'] .status__dot { background: var(--open); }
+  .status a:hover { color: var(--bone); }
+  .status__dir {
+    color: var(--mute);
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* When the walk-in note is already the fallback status, avoid saying it twice */
+  .status[data-state='unknown'] .status__walkins { display: none !important; }
+  @media (min-width: 1024px) {
+    .status { font-size: 13px; font-weight: 500; letter-spacing: .08em; }
+    .status__row { justify-content: center; gap: 28px; padding-inline: var(--gutter); }
+  }
+</style>

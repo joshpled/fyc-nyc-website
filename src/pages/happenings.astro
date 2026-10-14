@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+import Tbd from '../components/Tbd.astro';
+import Icon from '../components/Icon.astro';
+import FamilyCard from '../components/FamilyCard.astro';
+import { weekly, upcoming, dateParts, timeRange, eventSchema } from '../lib/events';
+import { DAY_SHORT, DAY_LONG, hours, fmtPeriods, type DayKey } from '../lib/hours';
+
+const detailFor = (w: { day: string; detail: string | null }) =>
+  w.detail ?? (hours.brunch[w.day as DayKey]?.length ? `Kitchen ${fmtPeriods(hours.brunch[w.day as DayKey])}` : null);
+
+const events = upcoming();
+const schema = events.map(eventSchema).filter(Boolean);
+---
+<Base
+  title="Happenings: Events, Brunch & Late Nights in Flatiron | F.Y.C. / N.Y.C."
+  description="What’s on at F.Y.C. / N.Y.C. on West 17th St in Flatiron: the weekly rhythm, holiday suppers and special events. Reserve, get tickets, add to your calendar."
+  crumbs={[{ name: 'Happenings', path: '/happenings/' }]}
+  schema={schema}
+>
+  <section class="section hap" aria-labelledby="hap-title">
+    <div class="wrap">
+      <p class="eyebrow">Happenings</p>
+      <h1 id="hap-title" class="display h1 hap__h1">What’s on <em>at the house</em></h1>
+      <p class="lead hap__lead">Lower the lights, turn the music up, have another glass. Here’s what’s coming up.</p>
+
+      <h2 class="hap__sub">Every week</h2>
+      <ol class="wk" role="list">
+        {weekly.map((w) => (
+          <li class:list={['wk__day', { 'is-hot': w.featured }]}>
+            <abbr title={DAY_LONG[w.day as DayKey]}>{DAY_SHORT[w.day as DayKey].toUpperCase()}</abbr>
+            <b><Tbd value={w.title} label="TBD" /></b>
+            {detailFor(w) && <span class="wk__detail only-lg">{detailFor(w)}</span>}
+          </li>
+        ))}
+      </ol>
+
+      <h2 class="hap__sub">Coming up</h2>
+      {events.length === 0 ? (
+        <p class="hap__empty">Nothing on the calendar right now. <a href="/join/">Join the Family</a> to hear first.</p>
+      ) : (
+        <ul class="evts" role="list">
+          {events.map((e) => {
+            const d = dateParts(e.date);
+            const time = timeRange(e);
+            return (
+              <li class="evt" id={e.id} data-date={e.date}>
+                <p class="evt__date" aria-hidden="true"><small>{d.month}</small><b>{d.day}</b></p>
+                <div class="evt__body">
+                  <h3 class="evt__title">
+                    {e.title}
+                    {e.draft && <span class="evt__draft">Draft: confirm details</span>}
+                  </h3>
+                  <p class="evt__when">
+                    <span class="sr-only">{d.long}. </span>
+                    <span aria-hidden="true">{d.weekday}</span>
+                    {' · '}{time ?? <Tbd value={null} label="time" />}
+                  </p>
+                  <p class="evt__sum"><Tbd value={e.summary} label="One-line description" /></p>
+                  <p class="evt__meta">
+                    <Tbd value={e.price} label="$XX" format={(v) => `$${v}`} /> · <Tbd value={e.seats} label="XX" format={(v) => `${v}`} /> seats
+                  </p>
+                  <div class="evt__acts">
+                    {e.cta === 'tickets' ? (
+                      e.ticketUrl ? (
+                        <a class="btn btn--primary btn--sm" href={e.ticketUrl} target="_blank" rel="noopener" data-track="ticket_click">Get tickets<span class="sr-only"> for {e.title} (opens in a new tab)</span></a>
+                      ) : (
+                        <span class="btn btn--primary btn--sm is-disabled" aria-disabled="true">Get tickets <Tbd value={null} label="link" /></span>
+                      )
+                    ) : (
+                      <a class="btn btn--primary btn--sm" href="/reserve/" data-booking data-track="reserve_click" data-track-location={`event_${e.id}`}>Reserve<span class="sr-only"> for {e.title}</span></a>
+                    )}
+                    <a class="btn btn--sm" href={`/happenings/${e.id}.ics`} download={`${e.id}.ics`} data-track="add_to_calendar">
+                      <Icon name="calendar" size={16} /> Calendar<span class="sr-only">: add {e.title} to your calendar</span>
+                    </a>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  </section>
+
+  <section class="section fam" aria-labelledby="fam-title">
+    <div class="wrap fam__grid">
+      <div>
+        <p class="eyebrow">Members of the family</p>
+        <h2 id="fam-title" class="display h2 fam__h2">The F.Y.C. <em>Family Card</em></h2>
+        <p class="lead">Members hear about happenings first.</p>
+      </div>
+      <FamilyCard cta={{ href: '/join/', label: 'Join the Family' }} />
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Hide events that have passed since the last deploy (New York time)
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'America/New_York' });
+  document.querySelectorAll<HTMLElement>('.evt[data-date]').forEach((el) => {
+    if ((el.dataset.date ?? '') < today) el.hidden = true;
+  });
+</script>
+
+<style>
+  .hap { padding-bottom: 32px; }
+  .hap__h1 { font-size: clamp(2.75rem, 1.6rem + 4.8vw, 5.5rem); margin: 10px 0 14px; }
+  .hap__lead { max-width: 560px; }
+  .hap__sub {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 36px 0 14px;
+    font-family: var(--body);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+    color: var(--gold-lt);
+  }
+  .hap__sub::before { content: ''; width: 22px; height: 1.5px; background: var(--gold-grad); }
+
+  .wk { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .wk__day {
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 10px 2px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    color: var(--mute);
+  }
+  .wk__day abbr { text-decoration: none; }
+  .wk__day b { font-size: 11px; font-weight: 700; letter-spacing: -.01em; color: var(--bone); line-height: 1.25; }
+  @media (min-width: 400px) { .wk__day b { font-size: 12px; } }
+  .wk__day.is-hot { background: var(--gold-grad); border-color: transparent; color: var(--ink); }
+  .wk__day.is-hot b { color: var(--ink); }
+  .wk__detail { font-size: 12px; letter-spacing: 0; color: var(--mute); font-weight: 500; }
+
+  .evts { border-top: 1px solid var(--line); }
+  .evt {
+    display: grid;
+    grid-template-columns: 72px 1fr;
+    gap: 14px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    scroll-margin-top: calc(var(--header-h) + 20px);
+  }
+  .evt__date {
+    display: grid;
+    place-content: center;
+    height: 72px;
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    text-align: center;
+    line-height: 1.1;
+  }
+  .evt__date small { font-size: 11px; font-weight: 700; letter-spacing: .2em; color: var(--gold-lt); }
+  .evt__date b { font-size: 26px; font-weight: 800; color: var(--bone); }
+  .evt__title { font-family: var(--body); font-size: 18px; font-weight: 700; line-height: 1.35; color: var(--bone); }
+  .evt__draft {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 2px 8px;
+    border: 1px dashed var(--gold-lt);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--gold-lt);
+    vertical-align: 3px;
+  }
+  .evt__when { font-size: 14px; color: var(--soft); margin-top: 2px; }
+  .evt__sum, .evt__meta { font-size: 14px; color: var(--mute); margin-top: 2px; }
+  .evt__acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .evt__acts .btn { min-height: 44px; font-size: 13px; padding: 0 16px; }
+  .evt__acts :global(svg) { margin-right: -2px; }
+  .is-disabled { opacity: .55; cursor: not-allowed; }
+
+  .fam { padding-top: 40px; }
+  .fam__grid { display: grid; gap: 22px; }
+  .fam__h2 { margin: 10px 0 12px; }
+
+  @media (min-width: 1024px) {
+    .wk { gap: 12px; }
+    .wk__day { padding: 22px 8px; border-radius: var(--r); gap: 6px; }
+    .wk__day abbr { font-size: 12px; }
+    .wk__day b { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: -.01em; }
+    .evts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; border: 0; }
+    .evt { grid-template-columns: 1fr; border: 1px solid var(--line); border-radius: var(--r); padding: 24px; background: var(--ink-2); }
+    .evt__date { width: 72px; }
+    .fam__grid { grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+  }
+</style>

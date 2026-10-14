@@ -1,0 +1,38 @@
+{
+  "_readme": "The ONE source of hours. Status strip, quick facts, footer, /visit, /tonight and JSON-LD all read this file. Times are 24h 'HH:MM' in New York time. A close time earlier than the open time (e.g. 16:00 to 01:00) means after midnight. An empty list [] means closed that day.",
+  "timezone": "America/New_York",
+  "confirmed": false,
+  "source": "Current thefycnyc.com (Oct 2026). Google, OpenTable and Birdeye list different hours; confirm one master set (report Q9).",
+
+  "bar": {
+    "mon": [{ "open": "16:00", "close": "22:00" }],
+    "tue": [{ "open": "16:00", "close": "22:00" }],
+    "wed": [{ "open": "16:00", "close": "23:00" }],
+    "thu": [{ "open": "16:00", "close": "00:00" }],
+    "fri": [{ "open": "16:00", "close": "01:00" }],
+    "sat": [{ "open": "11:30", "close": "01:00" }],
+    "sun": [{ "open": "11:30", "close": "21:00" }]
+  },
+
+  "kitchen": {
+    "mon": [{ "open": "17:00", "close": "21:00" }],
+    "tue": [{ "open": "17:00", "close": "21:00" }],
+    "wed": [{ "open": "17:00", "close": "22:00" }],
+    "thu": [{ "open": "17:00", "close": "23:00" }],
+    "fri": [{ "open": "17:00", "close": "23:00" }],
+    "sat": [{ "open": "11:30", "close": "15:00" }, { "open": "17:00", "close": "23:00" }],
+    "sun": [{ "open": "11:30", "close": "15:00" }, { "open": "17:00", "close": "20:00" }]
+  },
+
+  "brunch": {
+    "_readme": "Weekend daytime kitchen service. Confirm (report Q10).",
+    "confirmed": false,
+    "sat": [{ "open": "11:30", "close": "15:00" }],
+    "sun": [{ "open": "11:30", "close": "15:00" }]
+  },
+
+  "exceptions": {
+    "_readme": "Holiday closures or special hours, keyed by date YYYY-MM-DD. Example: \"2026-11-26\": { \"note\": \"Thanksgiving Family Supper\", \"bar\": [{ \"open\": \"16:00\", \"close\": \"22:00\" }], \"kitchen\": [] }",
+    "dates": {}
+  }
+}

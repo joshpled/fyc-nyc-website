@@ -1,0 +1,122 @@
+---
+/**
+ * "Pick your night" occasion grid. Each card routes one intent to its page.
+ * Cards without real photography show the gold-gradient placeholder
+ * (see README > Photo shot list).
+ */
+import { Image } from 'astro:assets';
+import about from '../../assets/img/about.jpg';
+
+const cards = [
+  {
+    eyebrow: 'Dinner', title: 'The Family Table', href: '/reserve/', booking: true, cta: 'Reserve',
+    text: 'Seasonal global comfort food. Ingredient driven, fresh, delicious.',
+    img: about, alt: 'Whole roasted branzino with lemon, a bottle of Lo-Fi Chardonnay and a glass of orange wine beside a marble bust',
+    pos: '30% 60%', big: true,
+  },
+  { eyebrow: 'Wine bar', title: 'Wines Worth Pouring', href: '/menus/wine/', cta: 'The list' },
+  { eyebrow: 'Al fresco', title: 'The Back Patio', href: '/reserve/#patio', booking: true, cta: 'Book patio', alt2: true },
+  { eyebrow: 'Sat & Sun', title: 'Brunch', href: '/menus/brunch/', cta: 'Brunch menu', alt2: true },
+  { eyebrow: 'Groups of 8+', title: 'Throw a Party', href: '/private-events/', cta: 'Plan it' },
+];
+---
+<section class="section bento-sec" aria-labelledby="bento-title">
+  <div class="wrap">
+    <div class="sh">
+      <div>
+        <p class="eyebrow">Pick your night</p>
+        <h2 id="bento-title" class="display h2">However you like <em>to gather</em></h2>
+      </div>
+      <a class="btn only-lg" href="/happenings/">All happenings</a>
+    </div>
+
+    <ul class="bento" role="list">
+      {cards.map((c) => (
+        <li class:list={['card', { 'card--big': c.big }]}>
+          {c.img ? (
+            <Image src={c.img} alt="" widths={[400, 640, 900, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" class="card__bg" style={`object-position:${c.pos}`} quality={72} />
+          ) : (
+            <div class:list={['card__bg ph', { 'ph--alt': c.alt2 }]} aria-hidden="true"></div>
+          )}
+          <div class="card__in">
+            <div>
+              <p class="eyebrow">{c.eyebrow}</p>
+              <h3 class="display card__title">
+                <a href={c.href} data-booking={c.booking ? '' : undefined} data-track={c.booking ? 'reserve_click' : undefined} data-track-location={c.booking ? `bento_${c.title}` : undefined}>{c.title}</a>
+              </h3>
+              {c.text && <p class="card__text only-lg">{c.text}</p>}
+              <span class="go only-lg" aria-hidden="true">{c.cta} →</span>
+            </div>
+            <span class="card__arrow only-sm" aria-hidden="true">→</span>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bento { display: grid; gap: 12px; margin-top: 4px; }
+  .card {
+    position: relative;
+    min-height: 190px;
+    display: flex;
+    align-items: flex-end;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    overflow: hidden;
+    isolation: isolate;
+  }
+  .card :global(.card__bg) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0;
+    z-index: -2;
+    transition: transform 400ms var(--ease);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(0deg, rgba(10, 10, 10, .95), rgba(10, 10, 10, 0) 75%);
+  }
+  .card__in { width: 100%; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .card__title { font-size: 28px; margin-top: 4px; letter-spacing: -.02em; }
+  /* Stretched link: the whole card is clickable, one clean link name */
+  .card__title a::after { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: var(--r); }
+  .card__title a:focus-visible { outline: none; }
+  .card__title a:focus-visible::after { outline: 2px solid var(--gold-lt); outline-offset: -2px; }
+  .card__text { font-size: 15px; color: var(--soft); margin-top: 6px; max-width: 46ch; }
+  .card .go { margin-top: 14px; }
+  .card__arrow {
+    flex: none;
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: var(--gold-grad);
+    color: var(--ink);
+    font-weight: 800;
+  }
+  @media (hover: hover) and (prefers-reduced-motion: no-preference) {
+    .card:hover :global(.card__bg) { transform: scale(1.03); }
+  }
+  @media (min-width: 640px) and (max-width: 1023.98px) {
+    .bento { grid-template-columns: 1fr 1fr; }
+    .card--big { grid-column: 1 / -1; min-height: 280px; }
+  }
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: 1.4fr 1fr 1fr;
+      grid-template-rows: 300px 300px;
+      gap: 16px;
+    }
+    .card { padding: 28px; min-height: 0; }
+    .card--big { grid-row: span 2; }
+    .card__title { font-size: 36px; margin: 6px 0; }
+  }
+</style>

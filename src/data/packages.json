@@ -1,0 +1,29 @@
+{
+  "_readme": "Event packages. pricePerPerson in dollars; null = visible [placeholder] (report Q4).",
+  "packages": [
+    {
+      "id": "the-cookout",
+      "name": "The Cookout",
+      "summary": "Passed bites with wine and beer.",
+      "duration": "2 hours",
+      "includes": null,
+      "pricePerPerson": null
+    },
+    {
+      "id": "family-style",
+      "name": "Family Style",
+      "summary": null,
+      "duration": null,
+      "includes": null,
+      "pricePerPerson": null
+    },
+    {
+      "id": "down-the-rabbit-hole",
+      "name": "Down the Rabbit Hole",
+      "summary": "The F.Y.C. Chef's Dinner with wine pairings.",
+      "duration": null,
+      "includes": null,
+      "pricePerPerson": null
+    }
+  ]
+}

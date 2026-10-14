@@ -1,0 +1,76 @@
+---
+/**
+ * <BookingWidget provider="resy|opentable" venueId="" />
+ *
+ * Renders a mount point. The provider's script is injected by
+ * src/scripts/booking.ts only when the booking drawer opens or on /reserve,
+ * so third-party JS never loads on page view.
+ *
+ * Until a provider + venue ID are set in site.json, guests get direct links
+ * to the existing Resy and OpenTable pages, so booking still works.
+ */
+import site from '../data/site.json';
+
+interface Props {
+  provider?: 'resy' | 'opentable' | null;
+  venueId?: string;
+  /** 'eager' loads the provider script right away (for /reserve) */
+  load?: 'on-open' | 'eager';
+  id?: string;
+}
+const {
+  provider = site.booking.provider as Props['provider'],
+  venueId = site.booking.venueId,
+  load = 'on-open',
+  id = 'booking-widget',
+} = Astro.props;
+const configured = Boolean(provider && venueId);
+---
+<div
+  class="bw"
+  id={id}
+  data-booking-widget
+  data-provider={provider ?? ''}
+  data-venue-id={venueId}
+  data-resy-key={site.booking.resyApiKey}
+  data-load={load}
+>
+  {configured ? (
+    <div class="bw__mount" data-booking-mount>
+      <p class="bw__loading">Loading live availability…</p>
+    </div>
+  ) : (
+    <div class="bw__fallback">
+      <p class="bw__note">
+        <span class="tbd" title="Placeholder: choose Resy or OpenTable (open question Q1)">[Live booking widget: Resy or OpenTable, venue ID pending]</span>
+      </p>
+      <p class="bw__lead">Pick a time on either platform.</p>
+      <div class="bw__links">
+        <a class="btn btn--primary btn--block" href={site.booking.resyUrl} target="_blank" rel="noopener" data-track="booking_start" data-track-provider="resy">
+          Book on Resy<span class="sr-only"> (opens in a new tab)</span>
+        </a>
+        <a class="btn btn--block" href={site.booking.opentableUrl} target="_blank" rel="noopener" data-track="booking_start" data-track-provider="opentable">
+          Book on OpenTable<span class="sr-only"> (opens in a new tab)</span>
+        </a>
+      </div>
+    </div>
+  )}
+</div>
+
+<style>
+  .bw { min-height: 140px; }
+  .bw__mount { min-height: 320px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: var(--r); }
+  .bw__loading { color: var(--mute); font-size: 14px; }
+  .bw__fallback {
+    border: 1px dashed rgba(212, 164, 58, .45);
+    border-radius: var(--r);
+    padding: 20px;
+  }
+  .bw__note { font-size: 12.5px; color: var(--gold-lt); letter-spacing: .02em; }
+  .bw__note .tbd { white-space: normal; }
+  .bw__lead { margin: 10px 0 18px; color: var(--soft); font-size: 15px; }
+  .bw__links { display: grid; gap: 10px; }
+  @media (min-width: 560px) {
+    .bw__links { grid-template-columns: 1fr 1fr; }
+  }
+</style>

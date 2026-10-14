@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tbd from '../components/Tbd.astro';
+import press from '../data/press.json';
+
+type Item = { outlet: string; title: string; date: string; url: string; quote?: string };
+const items = (press.items as Item[]).slice().sort((a, b) => b.date.localeCompare(a.date));
+const fmt = (iso: string) => new Date(`${iso}T12:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+---
+<Base
+  title="Press | F.Y.C. / N.Y.C. Wine Bar & Kitchen, Flatiron NYC"
+  description="Press coverage and media contacts for F.Y.C. / N.Y.C., the wine bar and kitchen at 44 West 17th Street in Flatiron."
+  crumbs={[{ name: 'Press', path: '/press/' }]}
+>
+  <PageHeader eyebrow="Press" title="In the <em>news</em>" lead="What people are saying about the family on West 17th." />
+  <section class="section pr" aria-label="Coverage">
+    <div class="wrap">
+      {items.length ? (
+        <ul class="pr__list" role="list">
+          {items.map((i) => (
+            <li class="pr__item">
+              <p class="pr__outlet">{i.outlet} · <time datetime={i.date}>{fmt(i.date)}</time></p>
+              <h2 class="display pr__title"><a href={i.url} target="_blank" rel="noopener">{i.title}<span class="sr-only"> (opens in a new tab)</span></a></h2>
+              {i.quote && <blockquote><p>“{i.quote}”</p></blockquote>}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="pr__empty"><Tbd value={null} label="Press coverage and awards to feature" /></p>
+      )}
+      <div class="pr__contact">
+        <h2 class="pr__h">Media inquiries</h2>
+        <p><a href={`mailto:${press.contact}?subject=${encodeURIComponent('Press inquiry')}`}>{press.contact}</a></p>
+        <p>Media kit: <Tbd value={press.mediaKitUrl} label="link" /></p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .pr { padding-top: 32px; }
+  .pr__list { display: grid; gap: 0; border-top: 1px solid var(--line); }
+  .pr__item { padding: 26px 0; border-bottom: 1px solid var(--line); }
+  .pr__outlet { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
+  .pr__title { font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.2rem); margin-top: 8px; }
+  .pr__title a:hover { color: var(--gold-lt); }
+  .pr__item blockquote p { margin-top: 10px; color: var(--soft); font-style: italic; }
+  .pr__empty { color: var(--soft); }
+  .pr__contact { margin-top: 48px; padding: 24px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); max-width: 520px; }
+  .pr__h { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-lt); margin-bottom: 8px; }
+  .pr__contact a { color: var(--gold-lt); font-weight: 700; }
+  .pr__contact p { color: var(--soft); margin-top: 4px; }
+</style>
