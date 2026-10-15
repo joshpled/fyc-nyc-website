@@ -1,29 +1,19 @@
 {
-  "_readme": "Event packages. pricePerPerson in dollars; null = visible [placeholder] (report Q4).",
-  "packages": [
-    {
-      "id": "the-cookout",
-      "name": "The Cookout",
-      "summary": "Passed bites with wine and beer.",
-      "duration": "2 hours",
-      "includes": null,
-      "pricePerPerson": null
-    },
-    {
-      "id": "family-style",
-      "name": "Family Style",
-      "summary": null,
-      "duration": null,
-      "includes": null,
-      "pricePerPerson": null
-    },
-    {
-      "id": "down-the-rabbit-hole",
-      "name": "Down the Rabbit Hole",
-      "summary": "The F.Y.C. Chef's Dinner with wine pairings.",
-      "duration": null,
-      "includes": null,
-      "pricePerPerson": null
-    }
+  "_readme": "Food and bar packages, from the owners' events deck (public/docs/fyc-private-dining-and-events.pdf, Sep 2026). price: a number in dollars, or text such as \"Market price\". unit: how the price is charged.",
+  "food": [
+    { "group": "Passed bites & grazing", "name": "Pass the Dutchie", "price": 35, "unit": "per person / hour", "description": "Choose five passed appetizers, served for as long as you book the package." },
+    { "group": "Passed bites & grazing", "name": "Graze Me Baby", "price": "Market price", "unit": "", "description": "An edible grazing table. Ask the team for the menu and a quote." },
+    { "group": "Dinner", "name": "Who Needs a Chair?", "price": 75, "unit": "per person / hour", "description": "Buffet dinner, replenished twice an hour." },
+    { "group": "Dinner", "name": "I Want a Chair!", "price": 105, "unit": "per person", "description": "Seated family-style dinner." },
+    { "group": "Dinner", "name": "We Take the Throne", "price": 140, "unit": "per person", "description": "The broadest dinner option." }
+  ],
+  "bar": [
+    { "name": "The Recent Grad", "price": 25, "unit": "per person / hour", "description": "Sparkling, one white, one red, three beer or cider selections and non-alcoholic drinks." },
+    { "name": "Limited Partner", "price": 35, "unit": "per person / hour", "description": "Standard liquor and calls, plus two specialty cocktails." },
+    { "name": "The Boss Bitch", "price": 45, "unit": "per person / hour", "description": "Run of the house, excluding bottled wine." }
+  ],
+  "notes": [
+    "Bottled wine list and event minimums are available on request.",
+    "Extra courses, mains and supplements (long-bone ribeye, Dover sole) are listed in the events deck."
   ]
 }

@@ -1,11 +1,5 @@
 {
   "_readme": "The sidewalk-sign QR page (/tonight). Update specials daily, or leave the list empty to hide the section. null = visible [placeholder].",
-  "specials": [
-    {
-      "name": null,
-      "description": null,
-      "price": null
-    }
-  ],
+  "specials": [],
   "note": "Walk-ins always welcome. Back patio open weather permitting."
 }

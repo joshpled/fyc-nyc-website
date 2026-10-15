@@ -75,7 +75,7 @@ fyc-nyc-website/
    └─ styles/global.css    Design tokens and base styles
 ```
 
-**Pages:** `/`, `/menus/` (+ `wine/`, `cocktails/`, `brunch/`), `/reserve/`, `/private-events/`, `/happenings/`, `/join/`, `/our-story/`, `/gift-cards/`, `/catering/`, `/visit/`, `/press/`, `/accessibility/`, `/careers/`, `/tonight/` (sidewalk‑sign QR page), `/privacy/`, the three form thank‑you pages and a 404.
+**Pages:** `/`, `/menus/` (+ `wine/`, `cocktails/`), `/reserve/`, `/private-events/`, `/happenings/`, `/join/`, `/our-story/`, `/gift-cards/`, `/catering/`, `/visit/`, `/press/`, `/accessibility/`, `/careers/`, `/tonight/` (sidewalk‑sign QR page), `/privacy/`, the three form thank‑you pages and a 404.
 
 URLs end in a slash (`/menus/`). Every host serves that form directly, and the old slash‑less SpotHopper URLs still reach their redirects.
 
@@ -89,10 +89,10 @@ Edit the JSON, save, and redeploy (push to Git, or run `npm run build`). Any val
 |---|---|
 | `site.json` | Name, address, phone, emails, social links, gift-card links, booking provider, GA4 ID, Turnstile site key, SMS frequency, events reply time, hero video, amenities, brand lines |
 | `hours.json` | **The only place hours live.** Status strip, quick facts, footer, `/visit/`, `/tonight/` and the Google structured data all read it |
-| `menus.json` | Food courses, wine, cocktails, brunch; tags, featured dishes, pairings, Chef’s Dinner |
+| `menus.json` | Food courses, wine, cocktails; tags, featured dishes, pairings, Chef’s Dinner |
 | `events.json` | Weekly rhythm + dated events (feeds `/happenings/`, the `.ics` calendar files and Google Event data) |
-| `spaces.json` | Private event spaces: seated, standing, minimum spends, photo |
-| `packages.json` | Event packages and price per person |
+| `spaces.json` | Private event spaces from the events deck: seated, standing, seasonal buyout counts, photo, event length, deck link |
+| `packages.json` | Food and bar packages from the events deck, with prices and notes |
 | `faqs.json` | Private-events FAQ and Visit FAQ |
 | `reviews.json` | Review quotes and the Google rating snapshot |
 | `loyalty.json` | Join perks and the Cousin → Sibling → Family tiers (set `tiersEnabled: false` to hide) |
@@ -144,8 +144,10 @@ Each item: `name`, `description`, `price` (number), `tags` (`vegetarian`, `glute
   - **Our Story founders photo:** replace the placeholder `div` in `src/pages/our-story.astro`.
 
   Every photo slot without real photography shows a dark‑gold gradient. The [shot list](#photo-shot-list) says what goes where.
+- **Photo library:** the old site's other food and cocktail shots are in `src/assets/img/library/` (burrata, pear salad, whipped ricotta, bruschetta, sole in parchment, smoked salmon, sandwich, whole branzino and three cocktails). Files there aren't built until you move one up into `src/assets/img/` and point an item at it.
 - **Hero video:** replace both `public/video/hero-loop.mp4` (H.264) and `public/video/hero-loop.webm` (VP9). Use the bartender loop: 5–8 s, muted, each under 2 MB, about 1280×720.
-  - The current files are a stand‑in: a slow push‑in made from the poster still.
+  - The current files are the first 6 seconds of the house film from the old site (the bartender shaking, garnishing and pouring, then the bar room): MP4 0.96 MB, WebM 1.06 MB.
+- **House film:** `public/video/fyc-film.mp4` is the full 35‑second video from the old site, with sound, re‑encoded to 1280×720 (7.8 MB). It plays on `/our-story/` with controls and only downloads when someone presses play. A “What’s in the film” text description sits under it. If the film ever includes speech, add captions (a `.vtt` track) before launch.
   - The poster stays `src/assets/img/video_poster.jpg`.
   - Example encode:
     ```bash
@@ -272,6 +274,7 @@ Put the Measurement ID in `site.json → analytics.ga4Id` (`"G-XXXXXXX"`). Leave
 | `catering_inquiry_submit` | Catering form sent |
 | `join_submit` | Join form sent |
 | `gift_card_click` / `gift_card_balance` | Toast links |
+| `events_deck_download` | Events deck PDF links on `/private-events/` |
 | `add_to_calendar` / `ticket_click` | Happenings buttons |
 
 Mark `reserve_click`, `event_inquiry_submit` and `join_submit` as key events in GA4.
@@ -346,6 +349,8 @@ Run October 13, 2026 against the production build, served with compression:
 | `/catering/thanks/` | 100 / 100 / 100 / 69* | 1.5 s | 0 | 100 / 100 / 100 / 69* |
 | `/404.html` | 99 / 100 / 100 / 69* | 2.0 s | 0 | 100 / 100 / 100 / 69* |
 
+`/menus/brunch/` was removed on Oct 15, 2026 after the owners confirmed there’s no brunch service.
+
 \* Thank‑you pages and the 404 are deliberately `noindex`. Lighthouse marks that down under SEO, but it’s correct.
 
 Also checked:
@@ -373,39 +378,42 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 
 ## Before launch checklist
 
-`npm run placeholders` prints the live list from the data files (133 items at hand‑off). Grouped:
+`npm run placeholders` prints the live list from the data files: 133 items at hand‑off, 94 after the owners' first answers on Oct 15, 2026, and 68 once the events deck filled the private‑events page. Some of what's left is deliberately deferred (menus, weekly programming, Our Story); those sections fill in over time. Grouped:
 
 ### Facts to fill in
 
-- [ ] **Hours:** confirm the master bar, kitchen and brunch hours (Q9, Q10), then set `hours.json → confirmed: true`.
-  - Google currently lists different hours (Tue 4–11pm, Sun 4–9pm) from the website.
-  - Update Google Business Profile, Apple Maps, Yelp, Resy, OpenTable, Instagram and Birdeye the same day.
-- [ ] **Booking:** pick the provider and add the venue ID / API key (Q1).
-- [ ] **Event spaces:** seated and standing capacity, weeknight and weekend minimum spend, one‑line description and photo for each space (Q2, Q3).
-- [ ] **Packages:** what’s included, duration and price per person (Q4).
-- [ ] **Private‑events FAQ answers:** deposit and cancellation, cake fee, dietary needs, music/AV/decor, company invoicing (Q3).
-- [ ] **Events reply window** (`forms.eventsReplyWindow`).
-- [ ] **Weekly programming** Mon–Fri, plus confirm or delete the three draft events: Halloween, Thanksgiving Family Supper, NYE (Q5).
-- [ ] **Menus:**
-  - Dish descriptions, the remaining items, wine / cocktail / brunch lists, “Pairs with” picks.
+- [x] **Hours:** confirmed by the owners (Q9). There's no brunch service (Q10), so `/menus/brunch/`, the brunch hours and the homepage brunch card are gone.
+- [ ] **Listings:** make Google Business Profile, Apple Maps, Yelp, Resy, OpenTable, Instagram and Birdeye match the website hours the same day. Google currently shows Tue 4–11pm and Sun 4–9pm.
+- [x] **Booking platform:** Resy is primary (Q1).
+- [ ] **Resy widget:** add the venue ID and widget API key to `site.json → booking`. Until then the drawer shows direct Resy / OpenTable links.
+- [x] **Events deck:** `public/docs/fyc-private-dining-and-events.pdf` (compressed from 3.7 MB to 1.4 MB) is linked twice on `/private-events/`. Its spaces, capacities, food packages and bar packages now fill the page (Q2, Q4). To update the deck, replace that file and edit `spaces.json` / `packages.json` to match.
+- [ ] **Deck inquiry link:** page 1 of the deck points “Group event inquiry” at the SpotHopper form (`tmt.spotapps.co`). Re-export it pointing at `https://thefycnyc.com/private-events/#inquire` before SpotHopper is cancelled.
+- [x] **Private‑events FAQ:** deposit and cancellation, service charge (new question), cake fee, dietary needs, music/AV/decor, invoicing.
+- [x] **Events reply window:** 2 hours.
+- [x] **Holiday events:** Halloween, Thanksgiving and NYE drafts cancelled. Halloween may be added back later.
+- [ ] **Weekly programming** (Q5): deferred, the owners will add it over time. The “Every week” strip on `/happenings/` stays hidden until a day has a title.
+- [ ] **Menus:** deferred because the menu changes often. Still needed:
+  - Dish descriptions, the remaining items, wine and cocktail lists, “Pairs with” picks.
   - Gluten‑free and shareable tags.
   - Chef’s Dinner format and price.
   - Confirm which course each dish is in, plus the “Something sweet” section and the “bigger plates” / “mains” subtitles (added from the mockup).
 - [ ] **Reviews:** paste the exact wording of the three Google reviews and each star rating, then set `paraphrased: false`.
   - Giulia A.’s quote names meatballs, branzino and steak tartare. Confirm they’re still on the menu, or choose another quote.
   - Refresh the 4.7 ★ / 182 snapshot.
-- [ ] **Email / SMS tool** (Q7), SMS frequency, and whether to show the loyalty tiers and how many visits each needs (Q8).
-- [ ] **Join perks:** confirm the birthday glass, holiday and NYE first dibs, producer nights and bring‑a‑friend offer (from the report).
-- [ ] **Our Story:** founder names and bios, sourcing, wine copy, the “People we f*** with” partner list.
-- [ ] **Press coverage, awards and media kit** (Q11).
-- [ ] **Catering:** what you offer (drop‑off? on‑site?), minimum, lead time, delivery area (Q12). The service options in `catering.json` are a guess, so edit them.
-- [ ] **Careers:** email for applications, open roles.
-- [ ] **`/tonight/`:** daily specials (or leave the list empty).
-- [ ] **Accessibility statement:** response time for accessibility emails.
+- [ ] **Email / SMS tool** (Q7): not decided yet, so signups keep going to `JOIN_TO_EMAIL`.
+- [x] **SMS frequency:** up to 4 a month.
+- [x] **Loyalty** (Q8): simple birthday and email program first. Tiers are hidden (`tiersEnabled: false`).
+- [x] **Join perks:** all four confirmed.
+- [ ] **Our Story:** founder names and bios, sourcing, wine copy, the “People we f*** with” partner list. Owners: TBD.
+- [x] **Press** (Q11): none yet. The page shows an empty‑state line; the media kit line appears once `mediaKitUrl` is set.
+- [x] **Catering** (Q12): drop‑off and on‑site. Minimums, lead time and delivery area are handled per inquiry.
+- [x] **Careers:** applications go to info@thefycnyc.com. No open roles right now.
+- [x] **`/tonight/`:** Josh posts daily specials. An empty list hides the section.
+- [x] **Accessibility statement:** “We aim to respond within an hour.”
 
 ### Setup
 
-- [ ] Domain / DNS control and SpotHopper contract (Q6). See [DNS cutover](#dns-cutover-from-spothopper).
+- [ ] Domain / DNS: Josh holds the registrar login (Q6). Still need the SpotHopper contract. See [DNS cutover](#dns-cutover-from-spothopper).
 - [ ] Resend account + verified domain; set `RESEND_API_KEY`, `FORMS_FROM_EMAIL`.
 - [ ] Create the `events@thefycnyc.com` inbox, if it doesn’t exist.
 - [ ] Turnstile site key (`site.json`) + secret (env).
@@ -419,20 +427,20 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 
 ### Open questions from the report (Section 14)
 
-| # | Question | Where it goes |
-|---|---|---|
-| Q1 | Resy or OpenTable as primary? | `site.json → booking` |
-| Q2 | Capacities: semi‑private section, back patio, full buyout | `spaces.json` |
-| Q3 | Minimum spends, deposit %, cancellation window, service charge | `spaces.json`, `faqs.json` |
-| Q4 | Package names, contents, price per person | `packages.json` |
-| Q5 | Real recurring programming (happy hour, music, wine classes, brunch) | `events.json → weekly` |
-| Q6 | Who controls domain/DNS; what the SpotHopper contract covers | [DNS cutover](#dns-cutover-from-spothopper) |
-| Q7 | Email/SMS tool | `SUBSCRIBER_PROVIDER` env |
-| Q8 | Loyalty tiers (Toast Loyalty) or simple birthday/email first? | `loyalty.json` |
-| Q9 | Master hours | `hours.json` |
-| Q10 | Weekend brunch service and menu | `hours.json → brunch`, `menus.json → brunch` |
-| Q11 | Press and awards to feature | `press.json` |
-| Q12 | Catering scope | `catering.json` |
+| # | Question | Status | Where it goes |
+|---|---|---|---|
+| Q1 | Resy or OpenTable as primary? | **Resy** | `site.json → booking` |
+| Q2 | Capacities: semi‑private section, back patio, full buyout | **From the events deck**: dining room, rear patio, both, full buyout (seasonal) | `spaces.json` |
+| Q3 | Minimum spends, deposit %, cancellation window, service charge | Deposit, cancellation and service charge answered; minimums “on request” per the deck | `spaces.json`, `faqs.json` |
+| Q4 | Package names, contents, price per person | **From the events deck**: 5 food formats, 3 bar packages | `packages.json` |
+| Q5 | Real recurring programming (happy hour, music, wine classes) | Deferred | `events.json → weekly` |
+| Q6 | Who controls domain/DNS; what the SpotHopper contract covers | Josh holds the domain; contract open | [DNS cutover](#dns-cutover-from-spothopper) |
+| Q7 | Email/SMS tool | Not decided | `SUBSCRIBER_PROVIDER` env |
+| Q8 | Loyalty tiers (Toast Loyalty) or simple birthday/email first? | **Birthday/email first** | `loyalty.json` |
+| Q9 | Master hours | **Confirmed** | `hours.json` |
+| Q10 | Weekend brunch service and menu | **No brunch** | (removed) |
+| Q11 | Press and awards to feature | None yet | `press.json` |
+| Q12 | Catering scope | **Drop‑off and on‑site** | `catering.json` |
 
 ### Photo shot list
 
@@ -442,14 +450,33 @@ Every gold‑gradient box on the site is waiting for one of these.
 |---|---|---|
 | 1 | Bartender pour loop, 5–8 s, plus a still frame | Home hero (`public/video/`) |
 | 2 | Wide shot of the dining room, lights low, people present | Our Story (“Who we are”), Pick your night |
-| 3 | Back patio at dusk, set and occupied | Pick your night (“The Back Patio”), The Back Patio space card |
+| 3 | Back patio at dusk, set and occupied | Pick your night (“The Back Patio”), Rear patio space card |
 | 4 | Glass pour at the bar, close‑up | Pick your night (“Wines Worth Pouring”) |
 | 5 | Signature dishes overhead and at 45°: burger, meatballs, branzino, steak tartare, scallop cru‑viche, brownie | Homepage dishes, featured menu items |
 | 6 | Long table mid‑toast (real event, with permission) | Private Events hero, homepage events teaser |
 | 7 | Each event space set for a party | Private Events space cards |
 | 8 | The five founders together, candid | Our Story |
-| 9 | Brunch spread | Pick your night (“Brunch”) |
+| 9 | The bar late at night, busy | Pick your night (“Late Nights”) |
 | 10 | Exterior and sidewalk sign at night | Visit page, Google Business Profile |
 | 11 | Vertical 9:16 versions of 1, 3, 5 and 6 | Instagram / TikTok |
 
-The only real photos on the site today are the bartender still (`video_poster.jpg`) and the branzino / orange wine shot (`about.jpg`), both taken from the current site.
+**What's on the site now (Oct 15, 2026):** the old site's photos and stills from its house film fill most slots:
+
+| Slot | File | Source |
+|---|---|---|
+| Home hero | `video_poster.jpg` + `hero-loop.*` | Old site photo + film |
+| Pick your night: The Family Table | `about.jpg` | Old site photo |
+| Pick your night: Wines Worth Pouring | `wine-bottle-brick.jpg` | Old site photo |
+| Pick your night: The Back Patio; Rear patio space card | `video-patio.jpg` | Film still |
+| Dining room space card | `video-dining-room.jpg` | Film still |
+| Dining room + rear patio space card | `video-table-friends.jpg` | Film still |
+| Pick your night: Late Nights | `video-late-night.jpg` | Film still |
+| Pick your night: Throw a Party | `video-table-friends.jpg` | Film still |
+| Homepage events teaser | `video-toast.jpg` | Film still |
+| Private Events hero | `long-table.jpg` | Old site photo |
+| Full buyout space card | `video-bar-room.jpg` | Film still |
+| Our Story, Who we are | `dining-room-candles.jpg` | Old site photo |
+| Our Story film poster | `video-sign.jpg` | Film still |
+| Burger, scallop cru‑viche, brownie, mushroom tacos | `dish-*.jpg` | Old site photos |
+
+Still gold: Stuffed ’Shrooms. Film stills are 1280×720, so a proper shoot (shots 2–7 and 10) would still sharpen those cards.

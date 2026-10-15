@@ -1,5 +1,5 @@
 {
   "_readme": "Open roles for /careers. email: where applications go (null = visible placeholder). roles: [{ \"title\": \"Server\", \"type\": \"Full-time\", \"summary\": \"...\" }]. Empty list = 'always meeting good people' state.",
-  "email": null,
+  "email": "info@thefycnyc.com",
   "roles": []
 }

@@ -6,6 +6,10 @@
  */
 import { Image } from 'astro:assets';
 import about from '../../assets/img/about.jpg';
+import wine from '../../assets/img/wine-bottle-brick.jpg';
+import patio from '../../assets/img/video-patio.jpg';
+import lateNight from '../../assets/img/video-late-night.jpg';
+import party from '../../assets/img/video-table-friends.jpg';
 
 const cards = [
   {
@@ -14,10 +18,10 @@ const cards = [
     img: about, alt: 'Whole roasted branzino with lemon, a bottle of Lo-Fi Chardonnay and a glass of orange wine beside a marble bust',
     pos: '30% 60%', big: true,
   },
-  { eyebrow: 'Wine bar', title: 'Wines Worth Pouring', href: '/menus/wine/', cta: 'The list' },
-  { eyebrow: 'Al fresco', title: 'The Back Patio', href: '/reserve/#patio', booking: true, cta: 'Book patio', alt2: true },
-  { eyebrow: 'Sat & Sun', title: 'Brunch', href: '/menus/brunch/', cta: 'Brunch menu', alt2: true },
-  { eyebrow: 'Groups of 8+', title: 'Throw a Party', href: '/private-events/', cta: 'Plan it' },
+  { eyebrow: 'Wine bar', title: 'Wines Worth Pouring', href: '/menus/wine/', cta: 'The list', img: wine, pos: '50% 60%' },
+  { eyebrow: 'Al fresco', title: 'The Back Patio', href: '/reserve/#patio', booking: true, cta: 'Book patio', img: patio, pos: '50% 60%' },
+  { eyebrow: 'Fri & Sat', title: 'Late Nights', href: '/visit/', cta: 'Bar until 1am', img: lateNight, pos: '40% 50%' },
+  { eyebrow: 'Groups of 8+', title: 'Throw a Party', href: '/private-events/', cta: 'Plan it', img: party, pos: '40% 40%' },
 ];
 ---
 <section class="section bento-sec" aria-labelledby="bento-title">
@@ -36,7 +40,7 @@ const cards = [
           {c.img ? (
             <Image src={c.img} alt="" widths={[400, 640, 900, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" class="card__bg" style={`object-position:${c.pos}`} quality={72} />
           ) : (
-            <div class:list={['card__bg ph', { 'ph--alt': c.alt2 }]} aria-hidden="true"></div>
+            <div class="card__bg ph" aria-hidden="true"></div>
           )}
           <div class="card__in">
             <div>

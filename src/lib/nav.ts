@@ -48,7 +48,7 @@ export function isCurrent(href: string, path: string): boolean {
   const p = cleanPath(path);
   const h = cleanPath(href);
   if (h === '/') return p === '/';
-  // "Menus" covers food, cocktails and brunch; "Wine" has its own nav item
-  if (h === '/menus/') return p === '/menus/' || p === '/menus/cocktails/' || p === '/menus/brunch/';
+  // "Menus" covers food and cocktails; "Wine" has its own nav item
+  if (h === '/menus/') return p === '/menus/' || p === '/menus/cocktails/';
   return p === h || p.startsWith(h);
 }

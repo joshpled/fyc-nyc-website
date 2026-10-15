@@ -1,11 +1,12 @@
 {
   "_readme": "FAQ answers. null = visible [placeholder]. Each group renders as an accordion with FAQPage JSON-LD on its page.",
   "privateEvents": [
-    { "q": "What deposit do you take, and what's the cancellation policy?", "a": null },
-    { "q": "Can we bring a cake?", "a": null },
-    { "q": "Can you handle dietary needs and allergies?", "a": null },
-    { "q": "Can we bring our own music, AV or decorations?", "a": null },
-    { "q": "Can you invoice our company?", "a": null }
+    { "q": "What deposit do you take, and what's the cancellation policy?", "a": "We take a 25% deposit to hold the date. Cancel 10 or more days before your event for a full refund, or 3 to 9 days before for a 50% refund. Within 48 hours of the start time, the deposit is non-refundable." },
+    { "q": "Is there a service charge?", "a": "Events add a 5% administrative fee and 20% gratuity, plus sales tax." },
+    { "q": "Can we bring a cake?", "a": "Yes. There's a $4 per person fee for cutting and plating." },
+    { "q": "Can you handle dietary needs and allergies?", "a": "Yes. Gluten-free, vegan and vegetarian options are always available, and we can adjust dishes for other needs." },
+    { "q": "Can we bring our own music, AV or decorations?", "a": "Usually, yes, depending on the setup. Just let us know ahead of time." },
+    { "q": "Can you invoice our company?", "a": "Yes. We send a contract for both sides to sign, and we can send the final receipt to whichever email you need." }
   ],
   "visit": [
     { "q": "Do you take walk-ins?", "a": "Always. Walk-ins are welcome every night we're open." },

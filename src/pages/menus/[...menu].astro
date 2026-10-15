@@ -1,6 +1,6 @@
 ---
 /**
- * /menus (food), /menus/wine, /menus/cocktails, /menus/brunch
+ * /menus (food), /menus/wine, /menus/cocktails
  * Real HTML text (readable by Google, AI assistants and screen readers).
  * Dietary filter chips work without JavaScript via :target.
  */
@@ -12,14 +12,13 @@ import site from '../../data/site.json';
 import { menuSchema } from '../../lib/schema';
 import type { Item } from '../../components/menu/MenuItem.astro';
 
-type Key = 'food' | 'wine' | 'cocktails' | 'brunch';
+type Key = 'food' | 'wine' | 'cocktails';
 
 export function getStaticPaths() {
   return [
     { params: { menu: undefined }, props: { key: 'food' } },
     { params: { menu: 'wine' }, props: { key: 'wine' } },
     { params: { menu: 'cocktails' }, props: { key: 'cocktails' } },
-    { params: { menu: 'brunch' }, props: { key: 'brunch' } },
   ];
 }
 
@@ -47,20 +46,12 @@ const META: Record<Key, { path: string; title: string; description: string; h1: 
     h1: 'Spirit-specific <em>cocktails</em>',
     filters: false,
   },
-  brunch: {
-    path: '/menus/brunch/',
-    title: 'Weekend Brunch in Flatiron | F.Y.C. / N.Y.C.',
-    description: 'Saturday and Sunday brunch at F.Y.C. / N.Y.C. on West 17th St in Flatiron, near Union Square and Madison Square Park.',
-    h1: 'Weekend <em>brunch</em>',
-    filters: true,
-  },
 };
 
 const TABS: { key: Key; label: string; href: string }[] = [
   { key: 'food', label: 'Food', href: '/menus/' },
   { key: 'wine', label: 'Wine', href: '/menus/wine/' },
   { key: 'cocktails', label: 'Cocktails', href: '/menus/cocktails/' },
-  { key: 'brunch', label: 'Brunch', href: '/menus/brunch/' },
 ];
 
 const meta = META[key];

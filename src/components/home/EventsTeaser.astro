@@ -2,22 +2,24 @@
 /** Private events teaser: capacity numbers up front, one action. */
 import spaces from '../../data/spaces.json';
 import Tbd from '../Tbd.astro';
+import { Image } from 'astro:assets';
+import toast from '../../assets/img/video-toast.jpg';
 
-const [semi, patio, house] = spaces.spaces;
+const byId = (id: string) => spaces.spaces.find((s) => s.id === id)!;
 const caps = [
-  { value: semi.seated, label: 'Seated, semi-private', short: 'Seated' },
-  { value: patio.standing, label: 'Patio, standing', short: 'Patio' },
-  { value: house.standing ?? house.seated, label: 'Full buyout', short: 'Buyout' },
+  { value: byId('dining-room').seated, label: 'Dining room, seated', short: 'Seated' },
+  { value: byId('rear-patio').standing, label: 'Patio, standing', short: 'Patio' },
+  { value: byId('full-buyout').standing, label: 'Full buyout, up to', short: 'Buyout' },
 ];
 ---
 <section class="section ev-sec" aria-labelledby="ev-title">
   <div class="wrap">
     <div class="ev">
-      <div class="ev__img ph ph--alt" aria-hidden="true"></div>
+      <Image src={toast} alt="" widths={[480, 800, 1280]} sizes="(min-width: 1024px) 50vw, 100vw" class="ev__img" quality={72} />
       <div class="ev__copy">
         <p class="eyebrow">Private events</p>
         <h2 id="ev-title" class="display h2 ev__title"><span class="only-lg">Birthdays, buyouts &amp; the office holiday party</span><span class="only-sm">Birthdays, buyouts &amp; holiday parties</span></h2>
-        <p class="lead only-lg">Semi-private tables, the back patio, or the whole place. Set menus, wine pairings, and a team that has thrown a few parties.</p>
+        <p class="lead only-lg">The dining room, the rear patio, or the whole house. Passed bites to seated dinners, bar packages to match, and a team that has thrown a few parties.</p>
         <dl class="cap">
           {caps.map((c) => (
             <div>
@@ -42,7 +44,7 @@ const caps = [
     overflow: hidden;
     background: var(--ink-2);
   }
-  .ev__img { height: 200px; border-radius: 0; }
+  .ev :global(.ev__img) { display: block; width: 100%; height: 200px; object-fit: cover; object-position: 50% 35%; border-radius: 0; }
   .ev__copy { padding: 22px; }
   .ev__title { font-size: 34px; margin: 10px 0 16px; }
   .ev__copy .lead { margin-bottom: 4px; }
@@ -71,7 +73,7 @@ const caps = [
 
   @media (min-width: 1024px) {
     .ev { display: grid; grid-template-columns: 1fr 1fr; }
-    .ev__img { height: auto; min-height: 520px; }
+    .ev :global(.ev__img) { height: 100%; min-height: 520px; }
     .ev__copy { padding: 64px; }
     .ev__title { font-size: 56px; margin: 14px 0 20px; }
     .cap { margin: 30px 0 36px; }

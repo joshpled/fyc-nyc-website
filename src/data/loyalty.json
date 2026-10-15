@@ -6,7 +6,7 @@
     "Members-only producer nights",
     "A bring-a-friend offer"
   ],
-  "tiersEnabled": true,
+  "tiersEnabled": false,
   "program": "Toast Loyalty",
   "tiers": [
     { "name": "Cousin", "unlock": "Free when you join", "visits": 0 },
