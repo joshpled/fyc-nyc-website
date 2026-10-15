@@ -37,7 +37,8 @@
             "price": 22,
             "tags": [],
             "featured": 2,
-            "pairing": null
+            "pairing": null,
+            "image": "dish-scallop-cru-viche.jpg"
           },
           {
             "name": "Arugula Salad",
@@ -91,7 +92,8 @@
               "vegetarian"
             ],
             "featured": false,
-            "pairing": null
+            "pairing": null,
+            "image": "dish-mushroom-tacos.jpg"
           },
           {
             "placeholder": true,
@@ -133,7 +135,8 @@
             "price": 29,
             "tags": [],
             "featured": 1,
-            "pairing": null
+            "pairing": null,
+            "image": "dish-wagyu-burger.jpg"
           },
           {
             "name": "Herb Roasted Chicken",
@@ -167,7 +170,8 @@
               "vegetarian"
             ],
             "featured": 4,
-            "pairing": null
+            "pairing": null,
+            "image": "dish-brownie.jpg"
           }
         ]
       }
@@ -288,27 +292,6 @@
       {
         "id": "beer",
         "name": "Beer & cider",
-        "items": [
-          {
-            "placeholder": true,
-            "name": null,
-            "description": null,
-            "price": null,
-            "tags": []
-          }
-        ]
-      }
-    ]
-  },
-  "brunch": {
-    "title": "Brunch",
-    "eyebrow": "Sat & Sun",
-    "headline": "Weekend *brunch*",
-    "intro": null,
-    "sections": [
-      {
-        "id": "brunch",
-        "name": "Brunch",
         "items": [
           {
             "placeholder": true,

@@ -49,8 +49,8 @@
   },
 
   "booking": {
-    "_readme": "provider: 'resy' or 'opentable' (open question Q1). Leave venueId empty until decided; the drawer then shows direct links instead of the embedded widget.",
-    "provider": null,
+    "_readme": "provider: 'resy' or 'opentable'. Resy is primary (Q1, confirmed Oct 2026). Add Resy's venue ID and widget API key to embed the widget; until both are set the drawer shows direct links.",
+    "provider": "resy",
     "venueId": "",
     "resyApiKey": "",
     "resyUrl": "https://resy.com/cities/new-york-ny/venues/fyc-nyc",
@@ -69,12 +69,12 @@
   "forms": {
     "_readme": "Cloudflare Turnstile site key (public). The secret goes in the TURNSTILE_SECRET_KEY environment variable.",
     "turnstileSiteKey": "",
-    "eventsReplyWindow": null,
-    "smsFrequency": null
+    "eventsReplyWindow": "2 hours",
+    "smsFrequency": "4"
   },
 
   "hero": {
-    "_readme": "Swap /public/video/hero-loop.mp4 (H.264) and hero-loop.webm (VP9) for the real bartender loop (5–8s, muted, each under 2MB). The current files are stand-ins made from the poster still.",
+    "_readme": "Swap /public/video/hero-loop.mp4 (H.264) and hero-loop.webm (VP9) for the real bartender loop (5–8s, muted, each under 2MB). The current files are the first 6 seconds of the old site's house film (bartender sequence). The full film is /public/video/fyc-film.mp4 on /our-story.",
     "videoMp4": "/video/hero-loop.mp4",
     "videoWebm": "/video/hero-loop.webm"
   },

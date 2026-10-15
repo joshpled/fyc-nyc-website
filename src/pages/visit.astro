@@ -5,7 +5,7 @@ import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import site from '../data/site.json';
 import faqs from '../data/faqs.json';
-import { hours, groupWeek, fmtPeriods } from '../lib/hours';
+import { hours, groupWeek } from '../lib/hours';
 import { faqSchema } from '../lib/schema';
 
 const tables = [
@@ -67,7 +67,7 @@ const mapSrc = `https://maps.google.com/maps?q=${encodeURIComponent(`FYC/NYC, ${
             </tbody>
           </table>
         ))}
-        <p class="vs__note">Weekend brunch: Sat &amp; Sun {fmtPeriods(hours.brunch.sat)}. Walk-ins always welcome.</p>
+        <p class="vs__note">Walk-ins always welcome.</p>
       </div>
     </div>
   </section>

@@ -1,9 +1,6 @@
 ---
 /** Quick facts row under the hero. "Tonight" + "Kitchen" are filled in live from hours.json. */
 import site from '../../data/site.json';
-import { hours, fmtPeriods } from '../../lib/hours';
-
-const brunch = hours.brunch.sat.length ? `Sat & Sun ${fmtPeriods(hours.brunch.sat, ' – ')}` : null;
 ---
 <section class="facts" aria-label="Quick facts">
   <dl class="facts__grid">
@@ -15,17 +12,13 @@ const brunch = hours.brunch.sat.length ? `Sat & Sun ${fmtPeriods(hours.brunch.sa
       <dt>Kitchen</dt>
       <dd data-today="kitchen"><a href="/visit/">See hours</a></dd>
     </div>
-    <div class="only-lg">
-      <dt>Weekend brunch</dt>
-      <dd>{brunch ?? <span class="tbd">[Brunch hours]</span>}</dd>
+    <div>
+      <dt>Walk-ins</dt>
+      <dd>Always welcome</dd>
     </div>
     <div class="only-lg">
       <dt>Find us</dt>
       <dd><a href="/visit/">{site.address.crossStreetsShort}</a></dd>
-    </div>
-    <div class="only-sm">
-      <dt>Walk-ins</dt>
-      <dd>Always welcome</dd>
     </div>
     <div class="only-sm">
       <dt>Patio</dt>

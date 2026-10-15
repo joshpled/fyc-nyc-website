@@ -1,5 +1,5 @@
 {
-  "_readme": "Weekly rhythm + dated events. One file feeds /happenings, .ics calendar files and Event JSON-LD. Dates are YYYY-MM-DD; start/end are 24h 'HH:MM' New York time (end may be after midnight). price: number in dollars or null. cta: 'reserve' (opens booking) or 'tickets' (ticketUrl). 'draft: true' marks ideas from the marketing calendar: they show a Draft tag and are left out of Google's Event data until confirmed. Past events hide automatically. Weekly 'detail' left null on Sat/Sun shows the brunch kitchen hours from hours.json.",
+  "_readme": "Weekly rhythm + dated events. One file feeds /happenings, .ics calendar files and Event JSON-LD. Dates are YYYY-MM-DD; start/end are 24h 'HH:MM' New York time (end may be after midnight). price: number in dollars or null. cta: 'reserve' (opens booking) or 'tickets' (ticketUrl). 'draft: true' marks ideas from the marketing calendar: they show a Draft tag and are left out of Google's Event data until confirmed. Past events hide automatically. The 'Every week' strip on /happenings stays hidden until at least one day has a title.",
   "weekly": [
     {
       "day": "mon",
@@ -33,56 +33,16 @@
     },
     {
       "day": "sat",
-      "title": "Brunch",
+      "title": null,
       "detail": null,
       "featured": false
     },
     {
       "day": "sun",
-      "title": "Brunch",
+      "title": null,
       "detail": null,
       "featured": false
     }
   ],
-  "events": [
-    {
-      "id": "halloween-2026",
-      "draft": true,
-      "title": "Halloween at F.Y.C.",
-      "date": "2026-10-31",
-      "start": null,
-      "end": null,
-      "summary": null,
-      "price": null,
-      "seats": null,
-      "cta": "reserve",
-      "ticketUrl": null
-    },
-    {
-      "id": "thanksgiving-family-supper-2026",
-      "draft": true,
-      "title": "Thanksgiving Family Supper",
-      "date": "2026-11-26",
-      "start": null,
-      "end": null,
-      "summary": null,
-      "price": null,
-      "seats": null,
-      "cta": "reserve",
-      "ticketUrl": null
-    },
-    {
-      "id": "nye-2026",
-      "draft": true,
-      "title": "New Year's Eve",
-      "date": "2026-12-31",
-      "start": null,
-      "end": null,
-      "summary": null,
-      "price": null,
-      "seats": null,
-      "cta": "tickets",
-      "ticketUrl": null
-    }
-  ]
+  "events": []
 }

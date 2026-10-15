@@ -14,17 +14,21 @@ import { Image } from 'astro:assets';
 const images = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
 const photo = (file: string | null) => (file ? images[`../assets/img/${file}`]?.default : undefined);
 
-const money = (v: number) => `$${v.toLocaleString('en-US')}`;
+import longTable from '../assets/img/long-table.jpg';
+
+const price = (v: number | string) => (typeof v === 'number' ? `$${v.toLocaleString('en-US')}` : v);
+const foodGroups = [...new Set(packages.food.map((p) => p.group))];
+const deckSize = '1.4 MB';
 ---
 <Base
   title="Private Events & Party Venue in Flatiron, NYC | F.Y.C. / N.Y.C."
-  description="Birthdays, rehearsal dinners, team nights and full buyouts at F.Y.C. / N.Y.C. on West 17th St in Flatiron: semi-private tables, the back patio or the whole house."
+  description="Birthdays, rehearsal dinners, team nights and full buyouts at F.Y.C. / N.Y.C. on West 17th St in Flatiron: the dining room, the rear patio or the whole house, for up to 100 guests."
   dock="events"
   crumbs={[{ name: 'Private events', path: '/private-events/' }]}
   schema={[faqSchema(faqs.privateEvents)]}
 >
   <section class="pe-hero" aria-labelledby="pe-title">
-    <div class="pe-hero__bg ph" aria-hidden="true"></div>
+    <Image src={longTable} alt="" widths={[480, 800, 1333]} sizes="100vw" class="pe-hero__bg" loading="eager" fetchpriority="high" quality={70} />
     <div class="wrap pe-hero__copy">
       <p class="eyebrow">Private events &amp; large parties</p>
       <h1 id="pe-title" class="display pe-hero__h1">Pick your path.<br /><em>We’ll throw the party.</em></h1>
@@ -32,39 +36,44 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
   </section>
 
   <div class="wrap pe-intro">
-    <p class="lead">Birthdays, rehearsal dinners, team nights and full buyouts, with five friends and about 100 years of NYC hospitality running the room.</p>
-    <div class="pe-intro__ctas only-lg">
-      <a class="btn btn--primary" href="#inquire" data-track="event_inquiry_start" data-track-location="pe_intro">Start an inquiry</a>
-      <a class="btn" href={`mailto:${site.eventsEmail}`} data-track="email_click">{site.eventsEmail}</a>
+    <div>
+      <p class="lead">Birthdays, rehearsal dinners, team nights and full buyouts, with five friends and about 100 years of NYC hospitality running the room.</p>
+      <p class="pe-intro__how">Every event is booked for {spaces.eventLength}. Choose your space, a food format and a drinks package.</p>
+    </div>
+    <div class="pe-intro__ctas">
+      <a class="btn btn--primary only-lg" href="#inquire" data-track="event_inquiry_start" data-track-location="pe_intro">Start an inquiry</a>
+      <a class="btn" href={spaces.deck} download data-track="events_deck_download" data-track-location="pe_intro">Events deck (PDF, {deckSize})</a>
     </div>
   </div>
 
   <section class="section pe-spaces" id="spaces" aria-labelledby="spaces-title">
     <div class="wrap">
       <p class="eyebrow">The spaces</p>
-      <h2 id="spaces-title" class="display h2 pe-h2">Three ways <em>to gather</em></h2>
+      <h2 id="spaces-title" class="display h2 pe-h2">Four ways <em>to gather</em></h2>
       <ul class="spaces" role="list">
-        {spaces.spaces.map((sp, i) => (
-          <li class="space">
-            {photo(sp.image) ? (
-              <Image src={photo(sp.image)!} alt={`${sp.name} set for a private event`} widths={[480, 800]} sizes="(min-width: 768px) 33vw, 100vw" class="space__img" />
-            ) : (
-              <div class:list={['space__img ph', { 'ph--alt': i % 2 }]} aria-hidden="true"></div>
-            )}
-            <div class="space__body">
-              <p class="space__kind">{sp.kind}</p>
-              <h3 class="display space__name">{sp.name}</h3>
-              <p class="space__sum"><Tbd value={sp.summary} label="One-line description" /></p>
-              <dl class="spec">
-                <div><dt>Seated</dt><dd><Tbd value={sp.seated} label="XX" /></dd></div>
-                <div><dt>Standing</dt><dd><Tbd value={sp.standing} label="XX" /></dd></div>
-                <div><dt>Min. spend</dt><dd><Tbd value={sp.minSpendWeeknight} label="$X" format={money} /></dd></div>
-              </dl>
-              <p class="space__note">Weekend minimum: <Tbd value={sp.minSpendWeekend} label="$X" format={money} /></p>
-            </div>
-          </li>
-        ))}
+        {spaces.spaces.map((sp, i) => {
+          const off = (sp as { offSeason?: { label: string; seated: number; standing: number } }).offSeason;
+          return (
+            <li class="space">
+              {photo(sp.image) ? (
+                <Image src={photo(sp.image)!} alt={sp.imageAlt} widths={[480, 800]} sizes="(min-width: 1280px) 25vw, (min-width: 768px) 50vw, 100vw" class="space__img" />
+              ) : (
+                <div class:list={['space__img ph', { 'ph--alt': i % 2 }]} aria-hidden="true"></div>
+              )}
+              <div class="space__body">
+                <p class="space__kind">{sp.kind}</p>
+                <h3 class="display space__name">{sp.name}</h3>
+                <dl class="spec">
+                  <div><dt>Seated</dt><dd>{sp.seated}</dd></div>
+                  <div><dt>Standing</dt><dd>{sp.standing}</dd></div>
+                </dl>
+                {off && <p class="space__note">{off.label}: {off.seated} seated / {off.standing} standing</p>}
+              </div>
+            </li>
+          );
+        })}
       </ul>
+      <p class="spaces__note">{spaces.note}</p>
     </div>
   </section>
 
@@ -72,24 +81,45 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
     <div class="wrap pk-wrap">
       <div class="pk-head">
         <p class="eyebrow">Packages</p>
-        <h2 id="pk-title" class="display h2 pe-h2">Set <em>menus</em></h2>
-        <p>Set formats for groups. Questions? Ask in your inquiry.</p>
+        <h2 id="pk-title" class="display h2 pe-h2">Food &amp; <em>drinks</em></h2>
+        <p>Pick one food format and one bar package. The full menu selections, specialty cocktails and extras are in the <a href={spaces.deck} download data-track="events_deck_download" data-track-location="pe_packages">events deck (PDF, {deckSize})</a>.</p>
       </div>
-      <ul class="pk" role="list">
-        {packages.packages.map((p) => (
-          <li class="pk__row">
-            <div>
-              <h3 class="pk__name">{p.name}</h3>
-              <p class="pk__sum">
-                <Tbd value={p.summary} label="What’s included" />
-                {p.duration && <> · {p.duration}</>}
-              </p>
-            </div>
-            <span class="pk__price"><Tbd value={p.pricePerPerson} label="$X" format={money} /> pp</span>
-          </li>
+      <div class="pk-lists">
+        {foodGroups.map((g) => (
+          <div class="pk-group">
+            <h3 class="pk__group">{g}</h3>
+            <ul class="pk" role="list">
+              {packages.food.filter((p) => p.group === g).map((p) => (
+                <li class="pk__row">
+                  <div>
+                    <h4 class="pk__name">{p.name}</h4>
+                    <p class="pk__sum">{p.description}</p>
+                  </div>
+                  <span class="pk__price">{price(p.price)}{p.unit && <small>{p.unit}</small>}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
-      <a class="btn btn--block pk__cta" href="#inquire">Ask about packages</a>
+        <div class="pk-group">
+          <h3 class="pk__group">Bar packages</h3>
+          <ul class="pk" role="list">
+            {packages.bar.map((p) => (
+              <li class="pk__row">
+                <div>
+                  <h4 class="pk__name">{p.name}</h4>
+                  <p class="pk__sum">{p.description}</p>
+                </div>
+                <span class="pk__price">{price(p.price)}<small>{p.unit}</small></span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <ul class="pk__notes" role="list">
+          {packages.notes.map((n) => <li>{n}</li>)}
+        </ul>
+        <a class="btn btn--block pk__cta" href="#inquire">Ask about packages</a>
+      </div>
     </div>
   </section>
 
@@ -122,7 +152,7 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
 
 <style>
   .pe-hero { position: relative; min-height: 330px; display: flex; align-items: flex-end; isolation: isolate; }
-  .pe-hero__bg { position: absolute; inset: 0; border-radius: 0; z-index: -2; }
+  .pe-hero :global(.pe-hero__bg) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 62%; border-radius: 0; z-index: -2; }
   .pe-hero::before {
     content: '';
     position: absolute;
@@ -144,10 +174,9 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
   .space__body { padding: 18px; }
   .space__kind { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
   .space__name { font-size: 28px; margin: 4px 0 4px; }
-  .space__sum { font-size: 14.5px; color: var(--mute); }
   .spec {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     margin: 14px 0 6px;
     padding-top: 14px;
     border-top: 1px solid var(--line);
@@ -156,6 +185,13 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
   .spec dt { font-size: 12px; color: var(--mute); letter-spacing: .04em; }
   .spec dd { font-size: 20px; font-weight: 700; color: var(--bone); }
   .space__note { font-size: 13px; color: var(--mute); }
+  .spaces__note { margin-top: 16px; font-size: 14px; color: var(--mute); }
+  .pe-intro__how { margin-top: 8px; color: var(--soft); }
+  .pk-lists { display: grid; gap: 28px; margin-top: 18px; }
+  .pk__group { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-dk); margin-bottom: 4px; }
+  .pk__price small { display: block; font-size: 12px; font-weight: 600; color: var(--paper-mute); text-align: right; }
+  .pk-head a { color: var(--gold-dk); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+  .pk__notes { font-size: 14px; color: var(--paper-mute); display: grid; gap: 4px; }
 
   .pk-head p:not(.eyebrow) { margin-top: -8px; }
   .pk { margin-top: 18px; border-top: 1px solid var(--paper-line); }
@@ -169,7 +205,7 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
   }
   .pk__name { font-family: var(--body); font-size: 17px; font-weight: 700; color: var(--ink); line-height: 1.4; }
   .pk__sum { font-size: 14px; color: var(--paper-mute) !important; }
-  .pk__price { font-weight: 800; color: var(--gold-dk); white-space: nowrap; font-size: 17px; }
+  .pk__price { font-weight: 800; color: var(--gold-dk); white-space: nowrap; font-size: 17px; text-align: right; }
   .pk__cta { margin-top: 22px; }
 
   .pe-inquire__grid { display: grid; gap: 24px; }
@@ -189,7 +225,10 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
   .pe-faq__grid { display: grid; gap: 8px; }
 
   @media (min-width: 768px) {
-    .spaces { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .spaces { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  }
+  @media (min-width: 1280px) {
+    .spaces { grid-template-columns: repeat(4, 1fr); }
   }
   @media (min-width: 1024px) {
     .pe-hero { min-height: 560px; }
@@ -200,7 +239,8 @@ const money = (v: number) => `$${v.toLocaleString('en-US')}`;
     .space__body { padding: 26px; }
     .pk-wrap { display: grid; grid-template-columns: 1fr 1.4fr; gap: 80px; align-items: start; }
     .pk { margin-top: 0; }
-    .pk-wrap .pk__cta { grid-column: 2; width: auto; justify-self: start; margin-top: 0; }
+    .pk-lists { margin-top: 0; }
+    .pk-wrap .pk__cta { width: auto; justify-self: start; margin-top: 0; }
     .pk__name { font-size: 20px; }
     .pe-inquire__grid { grid-template-columns: 1fr 1.25fr; gap: 80px; align-items: start; }
     .pe-inquire__copy { position: sticky; top: calc(var(--header-h) + 40px); }

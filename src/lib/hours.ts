@@ -21,7 +21,6 @@ export const hours = {
   confirmed: hoursData.confirmed,
   bar: pick(hoursData.bar),
   kitchen: pick(hoursData.kitchen),
-  brunch: pick(hoursData.brunch),
   exceptions: hoursData.exceptions.dates as Record<string, { note?: string; bar?: Period[]; kitchen?: Period[] }>,
 };
 

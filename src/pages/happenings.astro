@@ -4,16 +4,16 @@ import Tbd from '../components/Tbd.astro';
 import Icon from '../components/Icon.astro';
 import FamilyCard from '../components/FamilyCard.astro';
 import { weekly, upcoming, dateParts, timeRange, eventSchema } from '../lib/events';
-import { DAY_SHORT, DAY_LONG, hours, fmtPeriods, type DayKey } from '../lib/hours';
+import { DAY_SHORT, DAY_LONG, type DayKey } from '../lib/hours';
 
-const detailFor = (w: { day: string; detail: string | null }) =>
-  w.detail ?? (hours.brunch[w.day as DayKey]?.length ? `Kitchen ${fmtPeriods(hours.brunch[w.day as DayKey])}` : null);
+// The weekly strip stays hidden until at least one day has something on
+const hasWeekly = weekly.some((w) => w.title);
 
 const events = upcoming();
 const schema = events.map(eventSchema).filter(Boolean);
 ---
 <Base
-  title="Happenings: Events, Brunch & Late Nights in Flatiron | F.Y.C. / N.Y.C."
+  title="Happenings: Events & Late Nights in Flatiron | F.Y.C. / N.Y.C."
   description="What’s on at F.Y.C. / N.Y.C. on West 17th St in Flatiron: the weekly rhythm, holiday suppers and special events. Reserve, get tickets, add to your calendar."
   crumbs={[{ name: 'Happenings', path: '/happenings/' }]}
   schema={schema}
@@ -24,16 +24,20 @@ const schema = events.map(eventSchema).filter(Boolean);
       <h1 id="hap-title" class="display h1 hap__h1">What’s on <em>at the house</em></h1>
       <p class="lead hap__lead">Lower the lights, turn the music up, have another glass. Here’s what’s coming up.</p>
 
-      <h2 class="hap__sub">Every week</h2>
-      <ol class="wk" role="list">
-        {weekly.map((w) => (
-          <li class:list={['wk__day', { 'is-hot': w.featured }]}>
-            <abbr title={DAY_LONG[w.day as DayKey]}>{DAY_SHORT[w.day as DayKey].toUpperCase()}</abbr>
-            <b><Tbd value={w.title} label="TBD" /></b>
-            {detailFor(w) && <span class="wk__detail only-lg">{detailFor(w)}</span>}
-          </li>
-        ))}
-      </ol>
+      {hasWeekly && (
+        <>
+          <h2 class="hap__sub">Every week</h2>
+          <ol class="wk" role="list">
+            {weekly.map((w) => (
+              <li class:list={['wk__day', { 'is-hot': w.featured }]}>
+                <abbr title={DAY_LONG[w.day as DayKey]}>{DAY_SHORT[w.day as DayKey].toUpperCase()}</abbr>
+                <b><Tbd value={w.title} label="TBD" /></b>
+                {w.detail && <span class="wk__detail only-lg">{w.detail}</span>}
+              </li>
+            ))}
+          </ol>
+        </>
+      )}
 
       <h2 class="hap__sub">Coming up</h2>
       {events.length === 0 ? (

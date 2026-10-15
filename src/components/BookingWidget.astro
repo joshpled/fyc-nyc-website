@@ -42,7 +42,11 @@ const configured = Boolean(provider && venueId);
   ) : (
     <div class="bw__fallback">
       <p class="bw__note">
-        <span class="tbd" title="Placeholder: choose Resy or OpenTable (open question Q1)">[Live booking widget: Resy or OpenTable, venue ID pending]</span>
+        {provider ? (
+          <span class="tbd" title={`Placeholder: add the ${provider === 'resy' ? 'Resy venue ID and widget API key' : 'OpenTable restaurant ID'} in site.json`}>[Live {provider === 'resy' ? 'Resy' : 'OpenTable'} widget: venue ID pending]</span>
+        ) : (
+          <span class="tbd" title="Placeholder: choose Resy or OpenTable (open question Q1)">[Live booking widget: Resy or OpenTable, venue ID pending]</span>
+        )}
       </p>
       <p class="bw__lead">Pick a time on either platform.</p>
       <div class="bw__links">

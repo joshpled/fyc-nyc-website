@@ -1,38 +1,45 @@
 {
-  "_readme": "Private event spaces. seated / standing are guest counts; minSpend values are dollars. null = visible [placeholder] (report Q2, Q3).",
+  "_readme": "Private event spaces, from the owners' events deck (public/docs/fyc-private-dining-and-events.pdf, Sep 2026). seated / standing are guest counts. 'offSeason' holds counts for a space whose capacity changes in October–April. image: a file in src/assets/img; imageAlt: describe what the photo shows.",
+  "deck": "/docs/fyc-private-dining-and-events.pdf",
+  "eventLength": "3 hours and 15 minutes",
+  "note": "Patio availability and event minimums are available on request.",
   "spaces": [
     {
-      "id": "family-table",
-      "name": "The Family Table",
-      "kind": "Semi-private",
-      "summary": null,
-      "seated": null,
-      "standing": null,
-      "minSpendWeeknight": null,
-      "minSpendWeekend": null,
-      "image": null
+      "id": "dining-room",
+      "name": "Dining room",
+      "kind": "Indoors",
+      "seated": 40,
+      "standing": 50,
+      "image": "video-dining-room.jpg",
+      "imageAlt": "The dining room set for dinner: wine glasses on dark tables along an exposed-brick wall"
     },
     {
-      "id": "back-patio",
-      "name": "The Back Patio",
-      "kind": "Outdoor, weather permitting",
-      "summary": null,
-      "seated": null,
-      "standing": null,
-      "minSpendWeeknight": null,
-      "minSpendWeekend": null,
-      "image": null
+      "id": "rear-patio",
+      "name": "Rear patio",
+      "kind": "Outdoors · May–September",
+      "seated": 30,
+      "standing": 40,
+      "image": "video-patio.jpg",
+      "imageAlt": "The rear patio: wooden tables and black chairs under the trees"
     },
     {
-      "id": "whole-house",
-      "name": "The Whole House",
-      "kind": "Full buyout",
-      "summary": null,
-      "seated": null,
-      "standing": null,
-      "minSpendWeeknight": null,
-      "minSpendWeekend": null,
-      "image": null
+      "id": "dining-room-patio",
+      "name": "Dining room + rear patio",
+      "kind": "Indoors & out",
+      "seated": 65,
+      "standing": 75,
+      "image": "video-table-friends.jpg",
+      "imageAlt": "Friends laughing around a table by the front windows"
+    },
+    {
+      "id": "full-buyout",
+      "name": "Full buyout",
+      "kind": "The whole house · May–September",
+      "seated": 80,
+      "standing": 100,
+      "offSeason": { "label": "October–April", "seated": 55, "standing": 75 },
+      "image": "video-bar-room.jpg",
+      "imageAlt": "The bar and dining room on a summer evening, guests at the bar"
     }
   ]
 }

@@ -1,8 +1,5 @@
 {
-  "_readme": "Catering details (report Q12: drop-off? on-site?). null = visible [placeholder]. Set services to the options you actually offer.",
-  "summary": null,
-  "services": ["Drop-off", "On-site with staff", "Not sure yet"],
-  "minimumGuests": null,
-  "leadTime": null,
-  "deliveryArea": null
+  "_readme": "Catering details (report Q12). The owners offer both drop-off and on-site service and handle minimums, lead time and delivery area case by case through the inquiry form, so the page shows a 'get in touch' note instead of fixed numbers. 'services' are the options guests pick in the form.",
+  "summary": "Drop-off catering, or on-site service with our staff.",
+  "services": ["Drop-off", "On-site with staff", "Not sure yet"]
 }

@@ -2,7 +2,6 @@
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import site from '../data/site.json';
-import Tbd from '../components/Tbd.astro';
 
 // Update whenever an audit is run (keep audit records; see README)
 const reviewed = 'October 2026';
@@ -40,7 +39,7 @@ const reviewed = 'October 2026';
       <p>If there’s anything that would make your visit easier, tell us when you book or call ahead.</p>
 
       <h2>Tell us what we missed</h2>
-      <p>If you hit a barrier on this site, please let us know and we’ll work to fix it. Email <a href={`mailto:${site.email}?subject=${encodeURIComponent('Website accessibility')}`}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a>. We aim to respond within <Tbd value={null} label="response time" />.</p>
+      <p>If you hit a barrier on this site, please let us know and we’ll work to fix it. Email <a href={`mailto:${site.email}?subject=${encodeURIComponent('Website accessibility')}`}>{site.email}</a> or call <a href={site.phoneHref}>{site.phone}</a>. We aim to respond within an hour.</p>
 
       <p class="ac__date">This statement was last reviewed in {reviewed}.</p>
     </div>

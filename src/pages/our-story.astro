@@ -4,6 +4,11 @@ import PageHeader from '../components/PageHeader.astro';
 import Tbd from '../components/Tbd.astro';
 import { Image } from 'astro:assets';
 import about from '../assets/img/about.jpg';
+import { getImage } from 'astro:assets';
+import diningRoom from '../assets/img/dining-room-candles.jpg';
+import filmStill from '../assets/img/video-sign.jpg';
+
+const filmPoster = await getImage({ src: filmStill, width: 1280, format: 'webp', quality: 70 });
 import site from '../data/site.json';
 import story from '../data/story.json';
 ---
@@ -16,7 +21,7 @@ import story from '../data/story.json';
 
   <section class="section st" aria-labelledby="st-founders">
     <div class="wrap st__grid">
-      <div class="st__img ph" aria-hidden="true"></div>
+      <Image src={diningRoom} alt="A corner of the dining room: candlelit tables, wine glasses and a dark booth against exposed brick" widths={[480, 800, 1333]} sizes="(min-width: 1024px) 50vw, 100vw" class="st__photo st__photo--tall" quality={72} />
       <div>
         <p class="eyebrow">Who we are</p>
         <h2 id="st-founders" class="display h2 st__h2">Five friends, <em>one table</em></h2>
@@ -36,6 +41,21 @@ import story from '../data/story.json';
         <p class="lead">{site.voice.lights}</p>
         <p>A dimly lit, music-forward room on West 17th Street, a secluded back patio, and a bar that stays open late. Walk-ins always welcome.</p>
       </div>
+    </div>
+  </section>
+
+  <section class="section st film" aria-labelledby="st-film">
+    <div class="wrap">
+      <p class="eyebrow">Inside the house</p>
+      <h2 id="st-film" class="display h2 st__h2">A night <em>at F.Y.C.</em></h2>
+      <video class="film__video" controls preload="none" playsinline poster={filmPoster.src} width="1280" height="720" aria-describedby="film-desc">
+        <source src="/video/fyc-film.mp4" type="video/mp4" />
+        <p>Your browser can’t play this video. <a href="/video/fyc-film.mp4">Download it (MP4, 8 MB)</a>.</p>
+      </video>
+      <details class="film__desc" id="film-desc">
+        <summary>What’s in the film</summary>
+        <p>A 35-second look at an evening at F.Y.C. / N.Y.C.: a bartender shakes, pours and garnishes a cocktail; guests talk at the bar; a soft egg dish is cut open; the gold F.Y.C. / N.Y.C. sign; friends raise their glasses; the back patio; the dining room; flames in the kitchen; candlelit tables against the brick wall; red wine poured; herbs chopped and lemon squeezed over a dish; and a table of friends laughing together.</p>
+      </details>
     </div>
   </section>
 
@@ -79,7 +99,11 @@ import story from '../data/story.json';
 
 <style>
   .st__grid { display: grid; gap: 28px; align-items: center; }
-  .st__img { height: 280px; }
+  .st :global(.st__photo--tall) { object-position: 50% 55%; }
+  .film__video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; margin-top: 8px; border-radius: var(--r); background: #000; }
+  .film__desc { margin-top: 14px; color: var(--soft); max-width: 720px; }
+  .film__desc summary { cursor: pointer; font-weight: 700; color: var(--gold-lt); min-height: 44px; display: flex; align-items: center; }
+  .film__desc p { margin-top: 6px; }
   .st :global(.st__photo) { width: 100%; height: 300px; object-fit: cover; object-position: 60% 50%; border-radius: var(--r); }
   .st__h2 { margin: 10px 0 18px; }
   .st__h3 { margin: 10px 0 14px; }
@@ -95,7 +119,6 @@ import story from '../data/story.json';
   @media (min-width: 1024px) {
     .st__grid { grid-template-columns: 1fr 1fr; gap: 72px; }
     .st__grid--rev > :first-child { order: 0; }
-    .st__img { height: 520px; }
     .st :global(.st__photo) { height: 520px; }
     .st__cols { grid-template-columns: 1fr 1fr; gap: 72px; }
     .partners { grid-template-columns: repeat(3, 1fr); column-gap: 32px; }
