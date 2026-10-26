@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Tbd from '../components/Tbd.astro';
 import Icon from '../components/Icon.astro';
+import { Image } from 'astro:assets';
 import FamilyCard from '../components/FamilyCard.astro';
 import { weekly, upcoming, dateParts, timeRange, eventSchema } from '../lib/events';
 import { DAY_SHORT, DAY_LONG, type DayKey } from '../lib/hours';
@@ -10,11 +11,18 @@ import { DAY_SHORT, DAY_LONG, type DayKey } from '../lib/hours';
 const hasWeekly = weekly.some((w) => w.title);
 
 const events = upcoming();
+
+// Event flyers: drop files in src/assets/img and set "image" in events.json
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
+const photo = (file?: string | null) => (file ? images[`../assets/img/${file}`]?.default : undefined);
+
+// From the private-events outreach email
+const partyTypes = ['Team + client dinners', 'Birthdays + celebrations', 'Group dining', 'Cocktail gatherings', 'Private events', 'Partial + full buyouts'];
 const schema = events.map(eventSchema).filter(Boolean);
 ---
 <Base
   title="Happenings: Events & Late Nights in Flatiron | F.Y.C. / N.Y.C."
-  description="What’s on at F.Y.C. / N.Y.C. on West 17th St in Flatiron: the weekly rhythm, holiday suppers and special events. Reserve, get tickets, add to your calendar."
+  description="What’s on at F.Y.C. / N.Y.C. on West 17th St in Flatiron: Halloween parade night, an $89 Thanksgiving prix fixe, holiday suppers and private parties. Reserve and add to your calendar."
   crumbs={[{ name: 'Happenings', path: '/happenings/' }]}
   schema={schema}
 >
@@ -47,32 +55,44 @@ const schema = events.map(eventSchema).filter(Boolean);
           {events.map((e) => {
             const d = dateParts(e.date);
             const time = timeRange(e);
+            const img = photo(e.image);
             return (
-              <li class="evt" id={e.id} data-date={e.date}>
-                <p class="evt__date" aria-hidden="true"><small>{d.month}</small><b>{d.day}</b></p>
+              <li class:list={['evt', { 'evt--img': img }]} id={e.id} data-date={e.date}>
+                {img ? (
+                  <Image src={img} alt={e.imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 1024px) 45vw, 100vw" class="evt__img" quality={80} />
+                ) : (
+                  <p class="evt__date" aria-hidden="true"><small>{d.month}</small><b>{d.day}</b></p>
+                )}
                 <div class="evt__body">
-                  <h3 class="evt__title">
+                  <p class="evt__when"><time datetime={e.date}>{d.long}</time>{time && <> · {time}</>}</p>
+                  <h3 class="display evt__title">
                     {e.title}
                     {e.draft && <span class="evt__draft">Draft: confirm details</span>}
                   </h3>
-                  <p class="evt__when">
-                    <span class="sr-only">{d.long}. </span>
-                    <span aria-hidden="true">{d.weekday}</span>
-                    {' · '}{time ?? <Tbd value={null} label="time" />}
-                  </p>
-                  <p class="evt__sum"><Tbd value={e.summary} label="One-line description" /></p>
-                  <p class="evt__meta">
-                    <Tbd value={e.price} label="$XX" format={(v) => `$${v}`} /> · <Tbd value={e.seats} label="XX" format={(v) => `${v}`} /> seats
-                  </p>
+                  {e.tagline && <p class="evt__tag">{e.tagline}</p>}
+                  {e.summary && <p class="evt__sum">{e.summary}</p>}
+                  {(e.price != null || e.seats != null) && (
+                    <p class="evt__meta">
+                      {e.price != null && <span class="evt__price">${e.price}{e.priceNote && ` ${e.priceNote}`}</span>}
+                      {e.price != null && e.seats != null && ' · '}
+                      {e.seats != null && <span>{e.seats} seats</span>}
+                    </p>
+                  )}
+                  {e.menu && e.menu.length > 0 && (
+                    <div class="evt__menu" aria-label={`${e.title} menu`}>
+                      {e.menu.map((c) => (
+                        <div class="evt__course">
+                          <h4>{c.course}{c.choice && <small> · choice of</small>}</h4>
+                          <ul role="list">{c.items.map((i) => <li>{i}</li>)}</ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div class="evt__acts">
-                    {e.cta === 'tickets' ? (
-                      e.ticketUrl ? (
-                        <a class="btn btn--primary btn--sm" href={e.ticketUrl} target="_blank" rel="noopener" data-track="ticket_click">Get tickets<span class="sr-only"> for {e.title} (opens in a new tab)</span></a>
-                      ) : (
-                        <span class="btn btn--primary btn--sm is-disabled" aria-disabled="true">Get tickets <Tbd value={null} label="link" /></span>
-                      )
+                    {e.cta === 'tickets' && e.ticketUrl ? (
+                      <a class="btn btn--primary btn--sm" href={e.ticketUrl} target="_blank" rel="noopener" data-track="ticket_click">Get tickets<span class="sr-only"> for {e.title} (opens in a new tab)</span></a>
                     ) : (
-                      <a class="btn btn--primary btn--sm" href="/reserve/" data-booking data-track="reserve_click" data-track-location={`event_${e.id}`}>Reserve<span class="sr-only"> for {e.title}</span></a>
+                      <a class="btn btn--primary btn--sm" href="/reserve/" data-booking data-track="reserve_click" data-track-location={`event_${e.id}`}>Reserve your table<span class="sr-only"> for {e.title}</span></a>
                     )}
                     <a class="btn btn--sm" href={`/happenings/${e.id}.ics`} download={`${e.id}.ics`} data-track="add_to_calendar">
                       <Icon name="calendar" size={16} /> Calendar<span class="sr-only">: add {e.title} to your calendar</span>
@@ -84,6 +104,28 @@ const schema = events.map(eventSchema).filter(Boolean);
           })}
         </ul>
       )}
+    </div>
+  </section>
+
+  <section class="section parties" aria-labelledby="parties-title">
+    <div class="wrap parties__grid">
+      <div>
+        <p class="eyebrow">Group dining · Private parties · Buyouts</p>
+        <h2 id="parties-title" class="display h2 parties__h2">Dinners are <em>better together</em></h2>
+        <p class="lead"><b>F.Y.C. / N.Y.C. = Family You Choose.</b> Our place on West 17th is built around the people you actually want at your table: global comfort food, boutique wines, bespoke cocktails, low lights, music up, and hospitality without the stiffness.</p>
+        <a class="btn btn--primary parties__cta" href="/private-events/" data-track="event_inquiry_start" data-track-location="happenings_parties">Choose your party path</a>
+      </div>
+      <div>
+        <ul class="parties__list" role="list">
+          {partyTypes.map((t) => <li>{t}</li>)}
+        </ul>
+        <div class="parties__reply">
+          <p class="eyebrow">Your table is around the corner</p>
+          <p>Something coming up? Send us the</p>
+          <p class="parties__dgv">Date <span aria-hidden="true">/</span> Guest count <span aria-hidden="true">/</span> Vibe</p>
+          <p>and we’ll take it from there. <a href="/private-events/#inquire" data-track="event_inquiry_start" data-track-location="happenings_reply">Start an inquiry</a></p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -146,15 +188,20 @@ const schema = events.map(eventSchema).filter(Boolean);
   .wk__day.is-hot b { color: var(--ink); }
   .wk__detail { font-size: 12px; letter-spacing: 0; color: var(--mute); font-weight: 500; }
 
-  .evts { border-top: 1px solid var(--line); }
+  .evts { display: grid; gap: 20px; }
   .evt {
     display: grid;
     grid-template-columns: 72px 1fr;
-    gap: 14px;
-    padding: 18px 0;
-    border-bottom: 1px solid var(--line);
+    gap: 16px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--ink-2);
     scroll-margin-top: calc(var(--header-h) + 20px);
   }
+  .evt--img { grid-template-columns: 1fr; padding: 0; overflow: hidden; }
+  .evt--img .evt__body { padding: 0 20px 22px; }
+  .evt :global(.evt__img) { display: block; width: 100%; height: auto; }
   .evt__date {
     display: grid;
     place-content: center;
@@ -166,24 +213,45 @@ const schema = events.map(eventSchema).filter(Boolean);
   }
   .evt__date small { font-size: 11px; font-weight: 700; letter-spacing: .2em; color: var(--gold-lt); }
   .evt__date b { font-size: 26px; font-weight: 800; color: var(--bone); }
-  .evt__title { font-family: var(--body); font-size: 18px; font-weight: 700; line-height: 1.35; color: var(--bone); }
+  .evt__when { font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
+  .evt__title { font-size: clamp(1.9rem, 1.4rem + 2vw, 2.75rem); line-height: 1.05; margin: 8px 0 6px; color: var(--bone); }
   .evt__draft {
     display: inline-block;
     margin-left: 8px;
     padding: 2px 8px;
     border: 1px dashed var(--gold-lt);
     border-radius: 999px;
+    font-family: var(--body);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: .06em;
     color: var(--gold-lt);
-    vertical-align: 3px;
+    vertical-align: 6px;
   }
-  .evt__when { font-size: 14px; color: var(--soft); margin-top: 2px; }
-  .evt__sum, .evt__meta { font-size: 14px; color: var(--mute); margin-top: 2px; }
-  .evt__acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .evt__tag { font-family: var(--display); font-style: italic; font-size: 20px; color: var(--gold-lt); margin-bottom: 8px; }
+  .evt__sum { font-size: 15.5px; color: var(--soft); max-width: 52ch; }
+  .evt__meta { margin-top: 10px; font-size: 14px; color: var(--mute); }
+  .evt__price { font-size: 18px; font-weight: 800; color: var(--bone); }
+  .evt__menu { display: grid; gap: 14px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .evt__course h4 { font-family: var(--body); font-size: 12px; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; color: var(--gold-lt); }
+  .evt__course h4 small { font-size: inherit; font-weight: 600; letter-spacing: .08em; text-transform: none; color: var(--mute); }
+  .evt__course li { font-size: 15px; color: var(--bone); line-height: 1.6; }
+  .evt__acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
   .evt__acts .btn { min-height: 44px; font-size: 13px; padding: 0 16px; }
   .evt__acts :global(svg) { margin-right: -2px; }
+
+  .parties { border-top: 1px solid var(--line); }
+  .parties__grid { display: grid; gap: 28px; }
+  .parties__h2 { margin: 10px 0 14px; }
+  .parties__cta { margin-top: 20px; }
+  .parties__list { display: grid; grid-template-columns: 1fr 1fr; border-block: 1px solid var(--line); }
+  .parties__list li { padding: 12px 0; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--bone); border-bottom: 1px solid var(--line); }
+  .parties__list li:nth-last-child(-n+2) { border-bottom: 0; }
+  .parties__reply { margin-top: 20px; padding: 22px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink-2); color: var(--soft); }
+  .parties__reply .eyebrow { margin-bottom: 8px; }
+  .parties__dgv { margin: 8px 0; font-size: 15px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--bone); }
+  .parties__dgv span { color: var(--gold-lt); padding-inline: 6px; }
+  .parties__reply a { color: var(--gold-lt); font-weight: 700; }
   .is-disabled { opacity: .55; cursor: not-allowed; }
 
   .fam { padding-top: 40px; }
@@ -195,9 +263,12 @@ const schema = events.map(eventSchema).filter(Boolean);
     .wk__day { padding: 22px 8px; border-radius: var(--r); gap: 6px; }
     .wk__day abbr { font-size: 12px; }
     .wk__day b { font-family: var(--display); font-size: 24px; font-weight: 400; letter-spacing: -.01em; }
-    .evts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; border: 0; }
-    .evt { grid-template-columns: 1fr; border: 1px solid var(--line); border-radius: var(--r); padding: 24px; background: var(--ink-2); }
-    .evt__date { width: 72px; }
+    .evts { gap: 28px; }
+    .evt { padding: 28px; grid-template-columns: 88px 1fr; gap: 28px; }
+    .evt--img { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; padding: 0; align-items: center; }
+    .evt--img .evt__body { padding: 36px 40px 36px 0; }
+    .evt__menu { grid-template-columns: repeat(3, auto); justify-content: start; gap: 28px; }
+    .parties__grid { grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
     .fam__grid { grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
   }
 </style>
