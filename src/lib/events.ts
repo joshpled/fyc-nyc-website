@@ -15,6 +15,11 @@ export interface FycEvent {
   seats: number | null;
   cta: 'reserve' | 'tickets';
   ticketUrl: string | null;
+  tagline?: string | null;
+  priceNote?: string | null;
+  image?: string | null;
+  imageAlt?: string | null;
+  menu?: { course: string; choice?: boolean; items: string[] }[] | null;
 }
 
 export const weekly = eventsData.weekly;

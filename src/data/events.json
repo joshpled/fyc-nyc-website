@@ -1,5 +1,5 @@
 {
-  "_readme": "Weekly rhythm + dated events. One file feeds /happenings, .ics calendar files and Event JSON-LD. Dates are YYYY-MM-DD; start/end are 24h 'HH:MM' New York time (end may be after midnight). price: number in dollars or null. cta: 'reserve' (opens booking) or 'tickets' (ticketUrl). 'draft: true' marks ideas from the marketing calendar: they show a Draft tag and are left out of Google's Event data until confirmed. Past events hide automatically. The 'Every week' strip on /happenings stays hidden until at least one day has a title.",
+  "_readme": "Weekly rhythm + dated events. One file feeds /happenings, .ics calendar files and Event JSON-LD. Dates are YYYY-MM-DD; start/end are 24h 'HH:MM' New York time (end may be after midnight). price: number in dollars or null (priceNote adds context, e.g. 'prix fixe'). Optional: tagline, image + imageAlt (file in src/assets/img; the alt should repeat any text in the flyer), menu ([{ course, choice?, items[] }]). Empty fields are simply left off the page. cta: 'reserve' (opens booking) or 'tickets' (ticketUrl). 'draft: true' marks ideas from the marketing calendar: they show a Draft tag and are left out of Google's Event data until confirmed. Past events hide automatically. The 'Every week' strip on /happenings stays hidden until at least one day has a title.",
   "weekly": [
     {
       "day": "mon",
@@ -44,5 +44,69 @@
       "featured": false
     }
   ],
-  "events": []
+  "events": [
+    {
+      "id": "halloween-2026",
+      "draft": false,
+      "title": "Halloween at F.Y.C.",
+      "tagline": "Come for the parade. Stay for the vibes.",
+      "date": "2026-10-31",
+      "start": null,
+      "end": null,
+      "summary": "Dinner before, drinks after. Global comfort food, boutique wines and cocktails, a short walk from the parade’s uptown end.",
+      "price": null,
+      "priceNote": null,
+      "seats": null,
+      "cta": "reserve",
+      "ticketUrl": null,
+      "image": "event-halloween-2026.jpg",
+      "imageAlt": "Halloween at F.Y.C. / N.Y.C. poster: a skeleton in a top hat and tuxedo raises a coupe at a candlelit table with the Empire State Building behind. Come for the parade. Stay for the vibes. Saturday, October 31, 2026. Dinner before. Drinks after. 44 West 17th Street, near the parade’s uptown end.",
+      "menu": null
+    },
+    {
+      "id": "thanksgiving-2026",
+      "draft": false,
+      "title": "Thanksgiving at F.Y.C.",
+      "tagline": "Good company. Great food. A New York tradition.",
+      "date": "2026-11-26",
+      "start": null,
+      "end": null,
+      "summary": "A three-course Thanksgiving dinner with all the classics.",
+      "price": 89,
+      "priceNote": "prix fixe",
+      "seats": null,
+      "cta": "reserve",
+      "ticketUrl": null,
+      "image": "event-thanksgiving-2026.jpg",
+      "imageAlt": "Thanksgiving at F.Y.C. flyer: sliced roast turkey with stuffing, candied yams, cranberry sauce and green beans, with white bean stew, a kale salad, a roll and a cocktail on a marble table. $89 prix fixe menu.",
+      "menu": [
+        {
+          "course": "Starter",
+          "choice": true,
+          "items": [
+            "White Bean Stew",
+            "Baby Kale Salad"
+          ]
+        },
+        {
+          "course": "Main",
+          "choice": false,
+          "items": [
+            "White or dark meat turkey, or both",
+            "Veggie or sausage stuffing",
+            "Candied yams",
+            "Cranberry sauce",
+            "Green beans"
+          ]
+        },
+        {
+          "course": "Dessert",
+          "choice": false,
+          "items": [
+            "Seasonal dessert"
+          ]
+        }
+      ]
+    }
+  ]
 }

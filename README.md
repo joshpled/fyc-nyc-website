@@ -390,7 +390,8 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 - [ ] **Deck inquiry link:** page 1 of the deck points “Group event inquiry” at the SpotHopper form (`tmt.spotapps.co`). Re-export it pointing at `https://thefycnyc.com/private-events/#inquire` before SpotHopper is cancelled.
 - [x] **Private‑events FAQ:** deposit and cancellation, service charge (new question), cake fee, dietary needs, music/AV/decor, invoicing.
 - [x] **Events reply window:** 2 hours.
-- [x] **Holiday events:** Halloween, Thanksgiving and NYE drafts cancelled. Halloween may be added back later.
+- [x] **Holiday events:** Halloween (Sat Oct 31, parade night) and Thanksgiving ($89 prix fixe, Thu Nov 26) are live on `/happenings/` with their flyers. NYE is not scheduled.
+- [ ] **Event times:** add start / end times for Halloween and Thanksgiving in `events.json` when known (the calendar files are all-day until then).
 - [ ] **Weekly programming** (Q5): deferred, the owners will add it over time. The “Every week” strip on `/happenings/` stays hidden until a day has a title.
 - [ ] **Menus:** deferred because the menu changes often. Still needed:
   - Dish descriptions, the remaining items, wine and cocktail lists, “Pairs with” picks.
