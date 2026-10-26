@@ -385,7 +385,7 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 - [x] **Hours:** confirmed by the owners (Q9). There's no brunch service (Q10), so `/menus/brunch/`, the brunch hours and the homepage brunch card are gone.
 - [ ] **Listings:** make Google Business Profile, Apple Maps, Yelp, Resy, OpenTable, Instagram and Birdeye match the website hours the same day. Google currently shows Tue 4–11pm and Sun 4–9pm.
 - [x] **Booking platform:** Resy is primary (Q1).
-- [ ] **Resy widget:** add the venue ID and widget API key to `site.json → booking`. Until then the drawer shows direct Resy / OpenTable links.
+- [x] **Resy widget:** venue ID 78264 and the widget key are in `site.json → booking`. Test a booking from the drawer and `/reserve/` with a keyboard and a phone.
 - [x] **Events deck:** `public/docs/fyc-private-dining-and-events.pdf` (compressed from 3.7 MB to 1.4 MB) is linked twice on `/private-events/`. Its spaces, capacities, food packages and bar packages now fill the page (Q2, Q4). To update the deck, replace that file and edit `spaces.json` / `packages.json` to match.
 - [ ] **Deck inquiry link:** page 1 of the deck points “Group event inquiry” at the SpotHopper form (`tmt.spotapps.co`). Re-export it pointing at `https://thefycnyc.com/private-events/#inquire` before SpotHopper is cancelled.
 - [x] **Private‑events FAQ:** deposit and cancellation, service charge (new question), cake fee, dietary needs, music/AV/decor, invoicing.

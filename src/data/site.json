@@ -49,10 +49,10 @@
   },
 
   "booking": {
-    "_readme": "provider: 'resy' or 'opentable'. Resy is primary (Q1, confirmed Oct 2026). Add Resy's venue ID and widget API key to embed the widget; until both are set the drawer shows direct links.",
+    "_readme": "provider: 'resy' or 'opentable'. Resy is primary (Q1, confirmed Oct 2026). Resy venue ID and widget API key are set (public embed values from Resy's widget code), so the drawer and /reserve/ load Resy's booking button.",
     "provider": "resy",
-    "venueId": "",
-    "resyApiKey": "",
+    "venueId": "78264",
+    "resyApiKey": "7md9J3P8bDT0xbteRkHfYNcl3bkvjgii",
     "resyUrl": "https://resy.com/cities/new-york-ny/venues/fyc-nyc",
     "opentableUrl": "https://www.opentable.com/r/fyc/nyc-new-york",
     "policy": [
