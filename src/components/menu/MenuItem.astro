@@ -3,7 +3,6 @@
  * One menu row. Featured items get a "Pairs with" line (no photos on menu pages).
  * Prices print without "$" (menu convention); screen readers still hear dollars.
  */
-import Tbd from '../Tbd.astro';
 
 export interface Item {
   name: string | null;
@@ -30,24 +29,21 @@ const isWine = item.glass !== undefined || item.bottle !== undefined;
 <li class:list={['mi', { 'mi--feat': featured, 'mi--ph': item.placeholder }, ...tags.map((t) => `is-${t}`)]}>
   <div class="mi__body">
     <div class="mi__top">
-      <h3 class="mi__name"><Tbd value={item.name} label="Menu item" /></h3>
+      <h3 class="mi__name">{item.name}</h3>
       <span class="mi__price">
         {isWine ? (
           <>
             {item.glass != null && <span><span class="sr-only">Glass $</span>{item.glass}</span>}
             {item.glass != null && item.bottle != null && <span aria-hidden="true"> / </span>}
             {item.bottle != null && <span><span class="sr-only">, bottle $</span>{item.bottle}</span>}
-            {item.glass == null && item.bottle == null && <Tbd value={null} label="glass / bottle" />}
           </>
-        ) : item.price != null ? (
+        ) : item.price != null && (
           <><span class="sr-only">$</span>{item.price}</>
-        ) : (
-          <Tbd value={null} label="$" />
         )}
       </span>
     </div>
-    <p class="mi__desc"><Tbd value={item.description} label="Short description" /></p>
-    {featured && <p class="mi__pair">Pairs with: <Tbd value={item.pairing} label="by-the-glass pick" /></p>}
+    {item.description && <p class="mi__desc">{item.description}</p>}
+    {featured && item.pairing && <p class="mi__pair">Pairs with: {item.pairing}</p>}
     {tags.length > 0 && (
       <ul class="tags mi__tags" role="list">
         {tags.map((t) => <li class:list={['tag', { 'tag--v': t === 'vegetarian' }]}>{tagLabels[t] ?? t}</li>)}

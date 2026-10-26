@@ -6,7 +6,6 @@
  */
 import Base from '../../layouts/Base.astro';
 import MenuItem from '../../components/menu/MenuItem.astro';
-import Tbd from '../../components/Tbd.astro';
 import menus from '../../data/menus.json';
 import site from '../../data/site.json';
 import { menuSchema } from '../../lib/schema';
@@ -61,10 +60,17 @@ const menu = (menus as any)[key] as {
   sections?: { id: string; name: string; subtitle?: string; items: Item[] }[];
   chefsDinner?: { name: string; description: string | null; pricePerPerson: number | null };
 };
-const sections = menu.courses ?? menu.sections ?? [];
+// Only real dishes: stand-in rows and sections with nothing in them yet stay off the page
+const isReal = (i: Item) => !i.placeholder && Boolean(i.name);
+const sections = (menu.courses ?? menu.sections ?? [])
+  .map((s) => ({ ...s, items: s.items.filter(isReal) }))
+  .filter((s) => s.items.length > 0);
 const tagLabels = menus.tagLabels as Record<string, string>;
 const FILTERS = ['vegetarian', 'gluten-free', 'shareable'];
 const hasTag = (t: string) => sections.some((s) => s.items.some((i) => i.tags?.includes(t)));
+const filters = FILTERS.filter(hasTag);
+const chef = menu.chefsDinner;
+const chefDetails = chef ? [chef.description, chef.pricePerPerson != null ? `$${chef.pricePerPerson} per person` : null].filter(Boolean).join(' · ') : '';
 const schema = menuSchema({ name: `${site.name} ${menu.title} menu`, path: meta.path, sections });
 ---
 <Base
@@ -86,27 +92,23 @@ const schema = menuSchema({ name: `${site.name} ${menu.title} menu`, path: meta.
     <header class="menu__head wrap">
       <p class="eyebrow">{menu.eyebrow}</p>
       <h1 class="display menu__h1" set:html={meta.h1} />
-      {menu.intro ? <p class="menu__intro">{menu.intro}</p> : <p class="menu__intro"><Tbd value={null} label={`${menu.title} intro line`} /></p>}
+      {menu.intro && <p class="menu__intro">{menu.intro}</p>}
     </header>
 
     <div class="mf wrap">
-      {meta.filters && (
+      {meta.filters && filters.length > 0 && (
         <>
           <span id="all" class="mf__t"></span>
           {FILTERS.map((f) => <span id={f} class="mf__t"></span>)}
           <nav class="chips" aria-label="Filter dishes">
             <a href="#all" class="chip chip--all" data-filter="all">All</a>
-            {FILTERS.map((f) => <a href={`#${f}`} class={`chip chip--${f}`} data-filter={f}>{tagLabels[f]}</a>)}
+            {filters.map((f) => <a href={`#${f}`} class={`chip chip--${f}`} data-filter={f}>{tagLabels[f]}</a>)}
           </nav>
           <p class="sr-only" aria-live="polite" data-filter-status></p>
-          {FILTERS.filter((f) => !hasTag(f)).map((f) => (
-            <p class={`mf__empty mf__empty--${f}`}>
-              <Tbd value={null} label={`No ${tagLabels[f].toLowerCase()} dishes tagged yet`} /> Ask your server and the kitchen will steer you right.
-            </p>
-          ))}
         </>
       )}
 
+      {sections.length === 0 && <p class="menu__empty">The list changes often. Ask your bartender what’s pouring tonight.</p>}
       <div class="menu__body">
         {sections.map((s) => (
           <section class:list={['course', ...FILTERS.filter((f) => s.items.some((i) => i.tags?.includes(f))).map((f) => `has-${f}`)]}>
@@ -122,14 +124,12 @@ const schema = menuSchema({ name: `${site.name} ${menu.title} menu`, path: meta.
       </div>
     </div>
 
-    {menu.chefsDinner && (
+    {chef && (
       <div class="wrap">
         <section class="chef" aria-labelledby="chef-title">
           <p class="eyebrow">For the table</p>
           <h2 id="chef-title" class="display chef__h">F.Y.C. <em>Chef’s Dinner</em></h2>
-          <p class="chef__p">
-            <Tbd value={menu.chefsDinner.description} label="Format" /> · <Tbd value={menu.chefsDinner.pricePerPerson} label="$X per person" format={(v) => `$${v} per person`} />
-          </p>
+          {chefDetails && <p class="chef__p">{chefDetails}</p>}
           <a class="btn btn--primary" href="/reserve/" data-booking data-track="reserve_click" data-track-location="chefs_dinner">Reserve for the Chef’s Dinner</a>
         </section>
       </div>
@@ -237,10 +237,7 @@ const schema = menuSchema({ name: `${site.name} ${menu.title} menu`, path: meta.
   #shareable:target ~ .chips .chip--shareable,
   #all:target ~ .chips .chip--all { background: var(--gold-grad); border-color: transparent; color: var(--ink); }
 
-  .mf__empty { display: none; margin-top: 20px; font-size: 15px; }
-  #gluten-free:target ~ .mf__empty--gluten-free,
-  #shareable:target ~ .mf__empty--shareable,
-  #vegetarian:target ~ .mf__empty--vegetarian { display: block; }
+  .menu__empty { margin-top: 24px; font-size: 16px; color: var(--paper-mute); text-align: center; }
 
   /* .mi rows come from MenuItem.astro, so they need :global() to match */
   #vegetarian:target ~ .menu__body :global(.mi:not(.is-vegetarian)),
