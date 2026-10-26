@@ -2,7 +2,6 @@
 /** Signature dishes (white section). Pulls `featured: true` items from menus.json. */
 import { Image } from 'astro:assets';
 import menus from '../../data/menus.json';
-import Tbd from '../Tbd.astro';
 
 const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
 const img = (file?: string | null) => (file ? images[`../../assets/img/${file}`]?.default : undefined);
@@ -33,9 +32,9 @@ const tagLabel = menus.tagLabels as Record<string, string>;
           )}
           <h3 class="dish__name">
             <span>{d.name}</span>
-            <span class="dish__price"><Tbd value={d.price} label="$" format={(v) => `$${v}`} /></span>
+            {d.price != null && <span class="dish__price">${d.price}</span>}
           </h3>
-          <p class="dish__desc"><Tbd value={d.blurb ?? d.description} label="Short description" /></p>
+          {(d.blurb ?? d.description) && <p class="dish__desc">{d.blurb ?? d.description}</p>}
           {d.tags.length > 0 && (
             <ul class="tags" role="list">
               {d.tags.map((t) => <li class:list={['tag', { 'tag--v': t === 'vegetarian' }]}>{tagLabel[t] ?? t}</li>)}
