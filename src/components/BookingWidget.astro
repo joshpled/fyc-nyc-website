@@ -6,10 +6,17 @@
  * src/scripts/booking.ts only when the booking drawer opens or on /reserve,
  * so third-party JS never loads on page view.
  *
- * Until a provider + venue ID are set in site.json, guests get direct links
- * to the existing Resy and OpenTable pages, so booking still works.
+ * The venue ID and Resy widget key come from the RESY_VENUE_ID and
+ * RESY_API_KEY environment variables (set in Vercel), never from the repo.
+ * Until both are set, guests get direct links to the Resy and OpenTable
+ * pages, so booking still works.
  */
 import site from '../data/site.json';
+
+// Read at build time from the host's environment variables
+const env = import.meta.env as Record<string, string | undefined>;
+const envVenueId = env.RESY_VENUE_ID ?? process.env.RESY_VENUE_ID ?? '';
+const resyKey = env.RESY_API_KEY ?? process.env.RESY_API_KEY ?? '';
 
 interface Props {
   provider?: 'resy' | 'opentable' | null;
@@ -20,11 +27,11 @@ interface Props {
 }
 const {
   provider = site.booking.provider as Props['provider'],
-  venueId = site.booking.venueId,
+  venueId = envVenueId,
   load = 'on-open',
   id = 'booking-widget',
 } = Astro.props;
-const configured = Boolean(provider && venueId);
+const configured = Boolean(provider && venueId && (provider !== 'resy' || resyKey));
 ---
 <div
   class="bw"
@@ -32,7 +39,7 @@ const configured = Boolean(provider && venueId);
   data-booking-widget
   data-provider={provider ?? ''}
   data-venue-id={venueId}
-  data-resy-key={site.booking.resyApiKey}
+  data-resy-key={resyKey || undefined}
   data-load={load}
 >
   {configured ? (
