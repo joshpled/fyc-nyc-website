@@ -1,8 +1,8 @@
 ---
 /**
  * Frosted sticky header.
- * Desktop (1200px+): Menus · Wine · Happenings · [logo] · Private Events · Join the Family · [Reserve]
- * Below 1200px: centered logo + accessible menu button (opens a modal <dialog>).
+ * Desktop (1280px+): Menus · Wine · Happenings · [logo] · Private Events · Join the Family · [Reserve]
+ * Below 1280px: centered logo + accessible menu button (opens a modal <dialog>).
  */
 import { Image } from 'astro:assets';
 import logoWhite from '../assets/img/logo_1.png';
@@ -31,7 +31,7 @@ const path = Astro.url.pathname;
         {navRight.map((l) => (
           <li><a href={l.href} aria-current={isCurrent(l.href, path) ? 'page' : undefined}>{l.label}</a></li>
         ))}
-        <li><a class="btn btn--primary btn--sm hdr__reserve" href="/reserve/" data-booking data-track="reserve_click" data-track-location="header">Reserve</a></li>
+        <li class="hdr__reserve-li"><a class="btn btn--primary btn--sm hdr__reserve" href="/reserve/" data-booking data-track="reserve_click" data-track-location="header">Reserve</a></li>
       </ul>
     </nav>
 
@@ -108,7 +108,7 @@ const path = Astro.url.pathname;
     color: var(--bone);
     border-radius: 12px;
   }
-  /* The full nav only fits from 1200px; below that the header uses the menu button */
+  /* The full nav only fits from 1280px; below that the header uses the menu button */
   .hdr__nav { display: none; }
   .hdr__nav ul { display: flex; align-items: center; gap: 26px; }
   .hdr__nav a:not(.btn) {
@@ -144,10 +144,13 @@ const path = Astro.url.pathname;
     .hdr__logo :global(img) { height: 70px; }
     .hdr__reserve--mid { display: inline-flex; }
   }
-  @media (min-width: 1200px) {
+  @media (min-width: 1280px) {
     .hdr__nav { display: block; }
     .hdr__end { display: none; }
-    .hdr__nav--r ul { justify-content: flex-end; }
+    /* Links hug the logo with the same gap on both sides; Reserve sits on the far right */
+    .hdr__nav--l ul { justify-content: flex-end; padding-right: 52px; }
+    .hdr__nav--r ul { justify-content: flex-start; padding-left: 52px; }
+    .hdr__reserve-li { margin-left: auto; padding-left: 26px; }
   }
 
   /* ----- Mobile menu (modal dialog) ----- */
