@@ -2,7 +2,7 @@
 /**
  * Frosted sticky header.
  * Desktop: Menus · Wine · Happenings · [logo] · Private Events · Join the Family · [Reserve]
- * Mobile: logo + accessible menu button (opens a modal <dialog>).
+ * Mobile: centered logo + accessible menu button (opens a modal <dialog>).
  */
 import { Image } from 'astro:assets';
 import logoWhite from '../assets/img/logo_1.png';
@@ -81,18 +81,22 @@ const path = Astro.url.pathname;
     backdrop-filter: blur(14px) saturate(140%);
     border-bottom: 1px solid var(--line);
   }
+  /* Three columns on every screen size, so the logo always sits in the true center */
   .hdr__row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     height: var(--header-h);
     padding-inline: 18px;
     max-width: var(--max);
     margin-inline: auto;
   }
   .hdr__logo { display: block; }
+  .hdr__row > .hdr__logo { grid-column: 2; justify-self: center; }
   .hdr__logo :global(img) { height: 44px; width: auto; }
   .hdr__burger {
+    grid-column: 3;
+    justify-self: end;
     width: 48px;
     height: 48px;
     margin-right: -10px;
@@ -130,11 +134,7 @@ const path = Astro.url.pathname;
   .hdr__reserve { min-height: 52px; padding-inline: 32px; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; }
 
   @media (min-width: 1024px) {
-    .hdr__row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      padding-inline: var(--gutter);
-    }
+    .hdr__row { padding-inline: var(--gutter); }
     .hdr__nav--r ul { justify-content: flex-end; }
     .hdr__logo :global(img) { height: 70px; }
   }
@@ -158,14 +158,17 @@ const path = Astro.url.pathname;
   .mnav[open] { display: flex; }
   .mnav::backdrop { background: rgba(0, 0, 0, .6); }
   .mnav__top {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: space-between;
     height: 64px;
     flex: none;
   }
+  .mnav__top .hdr__logo { grid-column: 2; }
   .mnav__top :global(img) { height: 44px; width: auto; }
   .mnav__close {
+    grid-column: 3;
+    justify-self: end;
     width: 48px; height: 48px;
     margin-right: -10px;
     display: grid; place-items: center;
