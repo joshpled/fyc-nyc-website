@@ -179,6 +179,7 @@ The site picks the right adapter from the host’s build environment (`astro.con
 
 | Variable | Needed for | Notes |
 |---|---|---|
+| `RESY_VENUE_ID`, `RESY_API_KEY` | Resy booking widget | From Resy's embed code. Build-time only; changing them needs a redeploy |
 | `RESEND_API_KEY` | Inquiry + catering emails, signup fallback | From resend.com. Verify the `thefycnyc.com` domain there first |
 | `FORMS_FROM_EMAIL` | Sender | e.g. `F.Y.C. / N.Y.C. Website <website@thefycnyc.com>` |
 | `EVENTS_TO_EMAIL` | Where inquiries go | Defaults to `events@thefycnyc.com`. Comma‑separate several addresses |
@@ -214,11 +215,11 @@ After launch, check each old URL in a browser, and check Google Search Console f
 Pick one (open question **Q1**), then edit `site.json → booking`:
 
 ```json
-"booking": { "provider": "resy", "venueId": "12345", "resyApiKey": "…" }
+"booking": { "provider": "resy" }
 ```
 
-- **Resy:** ask Resy for the venue ID and widget API key. The button opens Resy’s booking modal.
-- **OpenTable:** `"provider": "opentable"` and the restaurant ID (`rid`) as `venueId`. The standard reservation widget loads in the drawer.
+- **Resy:** put the venue ID and widget API key in the Vercel environment variables `RESY_VENUE_ID` and `RESY_API_KEY` (never in the repo), then redeploy. The button opens Resy’s booking modal.
+- **OpenTable:** `"provider": "opentable"` and the restaurant ID (`rid`) in `RESY_VENUE_ID`. The standard reservation widget loads in the drawer.
 
 The provider’s script only loads when someone opens the booking drawer or visits `/reserve/`, so it never slows page loads. Until it’s set, the drawer shows “Book on Resy” and “Book on OpenTable” buttons, so booking works from day one.
 
@@ -385,7 +386,7 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 - [x] **Hours:** confirmed by the owners (Q9). There's no brunch service (Q10), so `/menus/brunch/`, the brunch hours and the homepage brunch card are gone.
 - [ ] **Listings:** make Google Business Profile, Apple Maps, Yelp, Resy, OpenTable, Instagram and Birdeye match the website hours the same day. Google currently shows Tue 4–11pm and Sun 4–9pm.
 - [x] **Booking platform:** Resy is primary (Q1).
-- [ ] **Resy widget:** add the venue ID and widget API key to `site.json → booking`. Until then the drawer shows direct Resy / OpenTable links.
+- [x] **Resy widget:** venue ID and widget key live in Vercel env vars (`RESY_VENUE_ID`, `RESY_API_KEY`). Test a booking from the drawer and `/reserve/` on a phone and with a keyboard.
 - [x] **Events deck:** `public/docs/fyc-private-dining-and-events.pdf` (compressed from 3.7 MB to 1.4 MB) is linked twice on `/private-events/`. Its spaces, capacities, food packages and bar packages now fill the page (Q2, Q4). To update the deck, replace that file and edit `spaces.json` / `packages.json` to match.
 - [ ] **Deck inquiry link:** page 1 of the deck points “Group event inquiry” at the SpotHopper form (`tmt.spotapps.co`). Re-export it pointing at `https://thefycnyc.com/private-events/#inquire` before SpotHopper is cancelled.
 - [x] **Private‑events FAQ:** deposit and cancellation, service charge (new question), cake fee, dietary needs, music/AV/decor, invoicing.
