@@ -116,7 +116,7 @@ The “Open now · Bar until 1am” line is worked out in the visitor’s browse
 
 Each item: `name`, `description`, `price` (number), `tags` (`vegetarian`, `gluten-free`, `shareable`), `featured`, `pairing`, `image`. Wine items can use `glass` and `bottle` instead of `price`.
 
-- `"featured": 1` to `4` puts a dish on the homepage in that order and shows its photo and “Pairs with” line on the menu. Use `false` for a regular item.
+- `"featured": 1` to `4` puts a dish on the homepage, with its photo, in that order. On the menu it gets a “Pairs with” line (menu pages show no photos). Use `false` for a regular item.
 - Rows with `"placeholder": true` are stand-ins. Replace them with real items or delete them.
 - Dietary filter buttons work without JavaScript. A tag with no dishes shows a “not tagged yet” message.
 
@@ -138,7 +138,7 @@ Each item: `name`, `description`, `price` (number), `tags` (`vegetarian`, `glute
 ## Photos and the hero video
 
 - **Photos:** put files in `src/assets/img/`. Then:
-  - **Menu items:** set `"image": "burger.jpg"` on the item.
+  - **Menu items:** set `"image": "burger.jpg"` on the item. It shows on the homepage when the dish is featured; menu pages don't show photos.
   - **Event spaces:** set `"image"` in `spaces.json`.
   - **Homepage “Pick your night” cards:** edit the `cards` list at the top of `src/components/home/Bento.astro` (add `img` + `alt`).
   - **Our Story founders photo:** replace the placeholder `div` in `src/pages/our-story.astro`.

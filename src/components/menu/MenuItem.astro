@@ -1,9 +1,8 @@
 ---
 /**
- * One menu row. Featured items get a small photo and a "Pairs with" line.
+ * One menu row. Featured items get a "Pairs with" line (no photos on menu pages).
  * Prices print without "$" (menu convention); screen readers still hear dollars.
  */
-import { Image } from 'astro:assets';
 import Tbd from '../Tbd.astro';
 
 export interface Item {
@@ -24,16 +23,11 @@ interface Props {
 }
 const { item, tagLabels } = Astro.props;
 
-const images = import.meta.glob<{ default: ImageMetadata }>('../../assets/img/*.{jpg,jpeg,png,webp}', { eager: true });
-const photo = item.image ? images[`../../assets/img/${item.image}`]?.default : undefined;
 const tags = item.tags ?? [];
 const featured = Boolean(item.featured);
 const isWine = item.glass !== undefined || item.bottle !== undefined;
 ---
 <li class:list={['mi', { 'mi--feat': featured, 'mi--ph': item.placeholder }, ...tags.map((t) => `is-${t}`)]}>
-  {featured && (photo
-    ? <Image src={photo} alt={item.name ?? ''} widths={[96, 192]} sizes="96px" class="mi__img" />
-    : <div class="mi__img ph" aria-hidden="true"></div>)}
   <div class="mi__body">
     <div class="mi__top">
       <h3 class="mi__name"><Tbd value={item.name} label="Menu item" /></h3>
@@ -68,9 +62,6 @@ const isWine = item.glass !== undefined || item.bottle !== undefined;
     border-bottom: 1px solid var(--paper-line);
     list-style: none;
   }
-  .mi--feat { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: center; }
-  .mi__img { width: 96px; height: 96px; object-fit: cover; border-radius: var(--r-sm); }
-  .mi__img.ph::after { display: none; }
   .mi__top { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
   .mi__name {
     font-family: var(--body);
