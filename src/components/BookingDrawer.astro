@@ -5,6 +5,7 @@
  * /reserve without JavaScript).
  */
 import BookingWidget from './BookingWidget.astro';
+import TableFinder from './TableFinder.astro';
 import Icon from './Icon.astro';
 import site from '../data/site.json';
 ---
@@ -21,6 +22,7 @@ import site from '../data/site.json';
       </button>
     </div>
 
+    <TableFinder location="drawer" load="on-open" />
     <BookingWidget id="booking-widget-drawer" />
 
     <ul class="drawer__policy" role="list">

@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/home/Hero.astro';
 import QuickFacts from '../components/home/QuickFacts.astro';
+import TableFinder from '../components/TableFinder.astro';
 import Bento from '../components/home/Bento.astro';
 import SignatureDishes from '../components/home/SignatureDishes.astro';
 import WineStory from '../components/home/WineStory.astro';
@@ -19,6 +20,7 @@ const preload = await heroPreload();
 >
   <Hero />
   <QuickFacts />
+  <TableFinder variant="section" location="home" />
   <Bento />
   <SignatureDishes />
   <WineStory />

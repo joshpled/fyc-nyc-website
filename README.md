@@ -179,7 +179,7 @@ The site picks the right adapter from the host’s build environment (`astro.con
 
 | Variable | Needed for | Notes |
 |---|---|---|
-| `RESY_VENUE_ID`, `RESY_API_KEY` | Resy booking widget | From Resy's embed code. Build-time only; changing them needs a redeploy |
+| `RESY_VENUE_ID`, `RESY_API_KEY` | Resy booking widget + “Tables tonight” | From Resy's embed code. Read at build time (widget) and by `/api/availability` at run time; changing them needs a redeploy |
 | `RESEND_API_KEY` | Inquiry + catering emails, signup fallback | From resend.com. Verify the `thefycnyc.com` domain there first |
 | `FORMS_FROM_EMAIL` | Sender | e.g. `F.Y.C. / N.Y.C. Website <website@thefycnyc.com>` |
 | `EVENTS_TO_EMAIL` | Where inquiries go | Defaults to `events@thefycnyc.com`. Comma‑separate several addresses |
@@ -222,6 +222,15 @@ Pick one (open question **Q1**), then edit `site.json → booking`:
 - **OpenTable:** `"provider": "opentable"` and the restaurant ID (`rid`) in `RESY_VENUE_ID`. The standard reservation widget loads in the drawer.
 
 The provider’s script only loads when someone opens the booking drawer or visits `/reserve/`, so it never slows page loads. Until it’s set, the drawer shows “Book on Resy” and “Book on OpenTable” buttons, so booking works from day one.
+
+### “Tables tonight” (live open times)
+
+The homepage, `/reserve/` and the booking drawer show open Resy times for a chosen day and party size (1–7). Tapping a time opens the venue's Resy page with that date and party size filled in; guests confirm there.
+
+- Data comes from `GET /api/availability?date=YYYY-MM-DD&seats=2` (`src/server/resy.ts`), which calls the same endpoints Resy's own widget uses, server-side, with `RESY_VENUE_ID` / `RESY_API_KEY`.
+- Responses are cached at the CDN for 5 minutes per date + party size, so Resy sees at most a few calls an hour no matter the traffic.
+- **These Resy endpoints are not a published API.** If Resy changes them, the endpoint returns `{ ok: false }` and the block stays hidden; the Reserve button is unaffected. Check Vercel function logs for lines starting `[availability]`.
+- The widget key also appears in the page source (Resy's button needs it in the browser), so treat it as public. Keeping it in an env var keeps it out of Git history.
 
 Turn on the platform’s confirmation and reminder texts (they cut no‑shows), and test the widget with a keyboard only before launch.
 
@@ -269,6 +278,8 @@ Put the Measurement ID in `site.json → analytics.ga4Id` (`"G-XXXXXXX"`). Leave
 | `reserve_click` | Any Reserve button (with `location`) |
 | `booking_drawer_open` | Booking drawer opens |
 | `booking_start` | Resy / OpenTable fallback button |
+| `slot_click` | A “Tables tonight” time (with `date`, `time`, `seats`, `location`) |
+| `table_finder_seats` | Party size changed in “Tables tonight” |
 | `call_click` / `directions_click` / `email_click` | Phone, Google Maps and email links |
 | `menu_view` | Any menu page (with `menu`) |
 | `event_inquiry_start` / `event_inquiry_submit` | Inquire buttons / private event form sent |

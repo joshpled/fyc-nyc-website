@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
 import BookingWidget from '../components/BookingWidget.astro';
+import TableFinder from '../components/TableFinder.astro';
 import Icon from '../components/Icon.astro';
 import site from '../data/site.json';
 import reviews from '../data/reviews.json';
@@ -20,6 +21,7 @@ const chef = menus.food.chefsDinner;
   <section class="section rs" aria-label="Book a table">
     <div class="wrap rs__grid">
       <div class="rs__book" id="book">
+        <TableFinder location="reserve" level={2} />
         <BookingWidget id="booking-widget-page" load="eager" />
         <ul class="rs__policy" role="list" aria-label="Reservation policy">
           {site.booking.policy.map((p) => <li>{p}</li>)}

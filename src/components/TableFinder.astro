@@ -1,0 +1,115 @@
+---
+/**
+ * <TableFinder variant="section|inline" location="home" />
+ *
+ * "Tables tonight": live open times from Resy via /api/availability.
+ * Guests pick a party size and day; each time links to the venue's Resy page
+ * with that date and party size filled in, where they finish booking.
+ *
+ * Starts hidden and only appears once live times load (src/scripts/tables.ts),
+ * so a Resy outage or missing env vars never shows a broken box.
+ */
+import site from '../data/site.json';
+
+interface Props {
+  /** 'section' = full-width homepage band; 'inline' = inside /reserve or the drawer */
+  variant?: 'section' | 'inline';
+  /** Analytics label */
+  location: string;
+  /** 'on-open' waits for the booking drawer to open */
+  load?: 'eager' | 'on-open';
+  /** Heading level for the inline variant (2 on /reserve, 3 in the drawer) */
+  level?: 2 | 3;
+}
+const { variant = 'inline', location, load = 'eager', level = 3 } = Astro.props;
+const H = level === 2 ? 'h2' : 'h3';
+const uid = `tf-${location}`;
+const seats = [1, 2, 3, 4, 5, 6, 7];
+const Tag = variant === 'section' ? 'section' : 'div';
+---
+<Tag
+  class:list={['tf', `tf--${variant}`]}
+  data-table-finder
+  data-location={location}
+  data-load={load}
+  data-resy-url={site.booking.resyUrl}
+  aria-labelledby={`${uid}-title`}
+  hidden
+>
+  <div class:list={[variant === 'section' && 'wrap']}>
+    <div class="tf__top">
+      <div>
+        <p class="eyebrow">Live from Resy</p>
+        {variant === 'section' ? (
+          <h2 class="display h2 tf__title" id={`${uid}-title`} data-tf-title>Tables <em>tonight</em></h2>
+        ) : (
+          <H class="tf__title tf__title--sm" id={`${uid}-title`} data-tf-title>Tables tonight</H>
+        )}
+      </div>
+      <label class="tf__seats">
+        <span>Guests</span>
+        <select data-tf-seats>
+          {seats.map((n) => <option value={n} selected={n === 2}>{n}</option>)}
+        </select>
+      </label>
+    </div>
+
+    <div class="tf__days" role="group" aria-label="Pick a day" data-tf-days></div>
+
+    <div class="tf__slots" data-tf-slots aria-live="polite" aria-busy="false"></div>
+
+    <p class="tf__note">
+      You’ll confirm on Resy. Party of 8 or more? <a href="/private-events/">Plan a party</a>.
+    </p>
+  </div>
+</Tag>
+
+<style>
+  .tf--section { padding-block: 44px; border-bottom: 1px solid var(--line); }
+  .tf--inline { margin-bottom: 22px; padding: 18px; border: 1px solid var(--line); border-radius: var(--r); background: var(--ink); }
+  .tf__top { display: flex; align-items: end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .tf__title { margin-top: 8px; }
+  .tf__title--sm { font-family: var(--display); font-size: 26px; font-weight: 400; }
+  .tf__seats { display: grid; gap: 4px; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-lt); }
+  .tf__seats select {
+    min-height: 44px; min-width: 88px; padding: 0 12px;
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+    background: var(--ink-2); color: var(--bone);
+    font: 600 16px var(--body); letter-spacing: 0; text-transform: none;
+  }
+  .tf__days {
+    display: flex; gap: 8px; margin: 18px calc(var(--gutter) * -1) 0; padding: 0 var(--gutter) 4px;
+    overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
+  }
+  .tf--inline .tf__days { margin-inline: -18px; padding-inline: 18px; }
+  .tf__days::-webkit-scrollbar { display: none; }
+  .tf__days :global(button) {
+    flex: none; scroll-snap-align: start;
+    display: grid; justify-items: center; gap: 1px;
+    min-width: 64px; min-height: 52px; padding: 6px 10px;
+    border: 1px solid var(--line); border-radius: var(--r-sm);
+    background: transparent; color: var(--soft); cursor: pointer;
+    font: 600 14px var(--body);
+  }
+  .tf__days :global(button small) { font-size: 11px; font-weight: 600; color: var(--mute); }
+  .tf__days :global(button[aria-pressed='true']) { border-color: var(--gold); background: rgba(212, 164, 58, .12); color: var(--bone); }
+  .tf__days :global(button:disabled) { opacity: .45; cursor: not-allowed; }
+  .tf__slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; min-height: 48px; }
+  .tf__slots[aria-busy='true'] { opacity: .5; }
+  .tf__slots :global(a) {
+    display: grid; justify-items: center; align-content: center;
+    min-width: 96px; min-height: 48px; padding: 6px 14px;
+    border: 1px solid rgba(212, 164, 58, .55); border-radius: var(--r-sm);
+    color: var(--bone); font-weight: 700; font-size: 15px; text-decoration: none;
+    transition: background var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  }
+  .tf__slots :global(a:hover), .tf__slots :global(a:focus-visible) { background: var(--gold-grad); border-color: transparent; color: var(--ink); }
+  .tf__slots :global(a small) { font-size: 11px; font-weight: 600; opacity: .8; }
+  .tf__slots :global(.tf__empty) { color: var(--soft); font-size: 15px; align-self: center; }
+  .tf__note { margin-top: 14px; color: var(--mute); font-size: 13px; }
+  .tf__note a { color: var(--gold-lt); text-decoration: underline; text-underline-offset: 3px; }
+  @media (min-width: 1024px) {
+    .tf--section { padding-block: 56px; }
+    .tf--section .tf__days { margin-inline: 0; padding-inline: 0; flex-wrap: wrap; overflow: visible; }
+  }
+</style>

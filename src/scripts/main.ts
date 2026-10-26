@@ -8,6 +8,7 @@
 import { getStatus, fmtPeriods } from '../lib/hours';
 import { loadBookingWidget } from './booking';
 import { initAnalytics, track } from './analytics';
+import { initTableFinder, initTableFinders } from './tables';
 
 function initStatus() {
   const s = getStatus();
@@ -109,6 +110,8 @@ function initDialogs() {
       track('booking_drawer_open', { location: booking.dataset.trackLocation ?? '' });
       const widget = drawer.querySelector<HTMLElement>('[data-booking-widget]');
       if (widget) loadBookingWidget(widget);
+      const finder = drawer.querySelector<HTMLElement>('[data-table-finder]');
+      if (finder) initTableFinder(finder);
       return;
     }
 
@@ -147,4 +150,5 @@ export function initSite() {
   initDialogs();
   initAnalytics();
   initReveal();
+  initTableFinders();
 }
