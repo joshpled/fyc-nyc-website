@@ -49,7 +49,7 @@
   },
 
   "booking": {
-    "_readme": "provider: 'resy' or 'opentable'. Resy is primary (Q1, confirmed Oct 2026). The venue ID and widget key are NOT stored here: set RESY_VENUE_ID and RESY_API_KEY in Vercel. Until both are set the drawer shows direct links.",
+    "_readme": "Booking buttons in the drawer and on /reserve open these pages in a new tab.",
     "provider": "resy",
     "resyUrl": "https://resy.com/cities/new-york-ny/venues/fyc-nyc",
     "opentableUrl": "https://www.opentable.com/r/fyc/nyc-new-york",
