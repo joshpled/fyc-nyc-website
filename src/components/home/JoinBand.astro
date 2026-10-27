@@ -1,19 +1,12 @@
 ---
 import JoinForm from '../JoinForm.astro';
-import site from '../../data/site.json';
-import loyalty from '../../data/loyalty.json';
-
-const perks = loyalty.perks.slice(0, 3);
 ---
 <section class="section join" aria-labelledby="join-title">
   <div class="wrap join__inner">
-    <p class="eyebrow">{site.voice.cookout}</p>
+    <p class="eyebrow">Newsletter</p>
     <h2 id="join-title" class="display h2 join__title">Join the <em>Family</em></h2>
-    <p class="lead join__lead">First dibs on holiday tables, members-only producer nights and a birthday glass on us.</p>
+    <p class="lead join__lead">New menus, events and holiday reservations, sent by email. Add your mobile for text updates.</p>
     <JoinForm id="join-home" layout="inline" source="home" />
-    <ul class="perks" role="list" aria-label="Member perks">
-      {perks.map((p) => <li>{p}</li>)}
-    </ul>
   </div>
 </section>
 
@@ -25,19 +18,7 @@ const perks = loyalty.perks.slice(0, 3);
   .join__inner { max-width: 1240px; }
   .join__title { margin: 12px 0 14px; font-size: clamp(3rem, 2rem + 4.2vw, 5.25rem); }
   .join__lead { max-width: 640px; margin: 0 auto 28px; }
-  .perks {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px 32px;
-    margin-top: 28px;
-    font-size: 14px;
-    color: var(--mute);
-  }
-  .perks li { display: inline-flex; align-items: center; gap: 10px; }
-  .perks li::before { content: '◆'; color: var(--gold); font-size: 10px; }
   @media (min-width: 1024px) {
     .join__lead { margin-bottom: 36px; }
-    .perks { margin-top: 34px; gap: 40px; }
   }
 </style>

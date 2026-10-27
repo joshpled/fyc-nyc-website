@@ -1,4 +1,4 @@
-/** POST /api/join — "Join the Family" email / SMS / birthday signup. */
+/** POST /api/join: "Join the Family" newsletter (email) and optional text signup. */
 import { readForm, reply, isEmail, toE164, clientIp, verifyTurnstile } from './http';
 import { addSubscriber } from './subscribers';
 
@@ -20,27 +20,24 @@ export async function handleJoin(req: Request): Promise<Response> {
   }
 
   const email = (data.email || '').toLowerCase();
-  if (!isEmail(email)) return reply(req, { ok: false, error: 'Please enter a valid email', redirect: '/join/' });
+  if (!isEmail(email)) return reply(req, { ok: false, error: 'Enter a valid email address', redirect: '/join/' });
 
   const phone = data.mobile ? toE164(data.mobile) : '';
-  if (data.mobile && !phone) return reply(req, { ok: false, error: 'Please enter a 10-digit US mobile number', redirect: '/join/' });
+  if (data.mobile && !phone) return reply(req, { ok: false, error: 'Enter a 10-digit US mobile number', redirect: '/join/' });
   const smsConsent = data.sms_consent === 'yes';
-  if (phone && !smsConsent) return reply(req, { ok: false, error: 'Tick the box to get texts, or leave mobile blank', redirect: '/join/' });
-
-  const birthday = /^(0[1-9]|1[0-2])\/(0[1-9]|[12]\d|3[01])$/.test(data.birthday || '') ? data.birthday : undefined;
+  if (phone && !smsConsent) return reply(req, { ok: false, error: 'Check the box to receive texts, or leave mobile blank', redirect: '/join/' });
 
   const result = await addSubscriber({
     email,
     phone: phone || undefined,
     smsConsent: Boolean(phone && smsConsent),
-    birthday,
     source: (data.source || 'website').slice(0, 40),
     consentText: CONSENT_TEXT,
     ip: clientIp(req),
   });
   if (!result.ok) {
     console.error('[join] provider error', result.detail);
-    return reply(req, { ok: false, status: 502, error: 'Could not sign you up right now', redirect: '/join/' });
+    return reply(req, { ok: false, status: 502, error: 'We couldn’t sign you up right now', redirect: '/join/' });
   }
   return reply(req, { ok: true, redirect: '/join/thanks/' });
 }

@@ -1,8 +1,8 @@
 ---
 /**
- * "Join the Family" signup: email (required), mobile (optional, with SMS
- * consent), birthday MM/DD. Posts to /api/join, which hands off to the
- * email/SMS provider adapter (Toast Marketing, Klaviyo or Mailchimp).
+ * "Join the Family" signup: email (required) for the newsletter, plus an
+ * optional mobile number with SMS consent. Posts to /api/join, which adds
+ * the contact to Mailchimp (src/server/subscribers.ts).
  */
 import Tbd from './Tbd.astro';
 import Turnstile from './Turnstile.astro';
@@ -36,31 +36,23 @@ const f = (n: string) => `${id}-${n}`;
     <div>
       <div class="field">
         <label for={f('email')}>Email</label>
-        <input id={f('email')} name="email" type="email" autocomplete="email" required aria-describedby={f('email-error')} data-msg-required="Add your email so we can send the invite." />
+        <input id={f('email')} name="email" type="email" autocomplete="email" required aria-describedby={f('email-error')} data-msg-required="Enter your email address." />
       </div>
       <span class="field-error" id={f('email-error')}></span>
     </div>
     <div>
       <div class="field">
-        <label for={f('mobile')}>Mobile <span class="opt">(optional, for texts)</span></label>
+        <label for={f('mobile')}>Mobile <span class="opt">(optional)</span></label>
         <input id={f('mobile')} name="mobile" type="tel" autocomplete="tel-national" inputmode="tel" data-sms-number aria-describedby={f('mobile-error')} />
       </div>
       <span class="field-error" id={f('mobile-error')}></span>
-    </div>
-    <div class="join-form__bday">
-      <div class="field">
-        <label for={f('birthday')}>Birthday <span class="opt">(MM/DD)</span></label>
-        <input id={f('birthday')} name="birthday" type="text" inputmode="numeric" autocomplete="off" placeholder="MM/DD" maxlength="5"
-          pattern="(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])" data-msg-pattern="Use MM/DD, like 07/14." aria-describedby={f('birthday-error')} />
-      </div>
-      <span class="field-error" id={f('birthday-error')}></span>
     </div>
   </div>
 
   <div class="join-form__consent">
     <label class="check" for={f('sms')}>
       <input id={f('sms')} name="sms_consent" type="checkbox" value="yes" data-sms-consent aria-describedby={f('sms-error') + ' ' + f('sms-terms')} />
-      <span>Yes, text me too.</span>
+      <span>Yes, send me text messages.</span>
     </label>
     <p class="join-form__terms" id={f('sms-terms')}>
       By checking the box, you agree to receive recurring automated marketing texts from {site.name} at the number provided.
@@ -70,27 +62,19 @@ const f = (n: string) => `${id}-${n}`;
     <span class="field-error" id={f('sms-error')}></span>
   </div>
   <Turnstile />
-  <button class="btn btn--primary join-form__submit" type="submit">Count me in</button>
+  <button class="btn btn--primary join-form__submit" type="submit">Sign up</button>
 
   <p class="join-form__status" role="alert" data-form-status></p>
 </form>
 
 <div id={f('success')} class="join-success" hidden>
-  <p class="display join-success__title" tabindex="-1">Welcome to the <em>Family.</em></p>
-  <p>You’re on the list. Watch your inbox for the cookout invite.</p>
+  <p class="display join-success__title" tabindex="-1">You’re on the <em>list.</em></p>
+  <p>Thanks for signing up. Our next update will land in your inbox.</p>
 </div>
 
 <script>
   import { initForms } from '../scripts/forms';
   initForms();
-  // Auto-insert the slash in MM/DD
-  document.querySelectorAll<HTMLInputElement>('input[name="birthday"]').forEach((el) => {
-    el.addEventListener('input', (e) => {
-      if ((e as InputEvent).inputType?.startsWith('delete')) return;
-      const d = el.value.replace(/\D/g, '').slice(0, 4);
-      el.value = d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d;
-    });
-  });
 </script>
 
 <style>
@@ -112,13 +96,13 @@ const f = (n: string) => `${id}-${n}`;
     /* Inline (homepage band): fields + button on one row, consent underneath.
        DOM order stays fields → consent → button so keyboard users meet consent first. */
     .join-form--inline {
-      grid-template-columns: 280px 280px 190px auto;
+      grid-template-columns: 300px 300px auto;
       justify-content: center;
       align-items: start;
       column-gap: 12px;
     }
     .join-form--inline .join-form__fields { display: contents; }
-    .join-form--inline .join-form__submit { grid-column: 4; grid-row: 1; width: auto; padding-inline: 32px; }
+    .join-form--inline .join-form__submit { grid-column: 3; grid-row: 1; width: auto; padding-inline: 32px; }
     .join-form--inline .join-form__consent,
     .join-form--inline .join-form__status,
     .join-form--inline :global(.ts) { grid-column: 1 / -1; }

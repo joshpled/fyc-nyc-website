@@ -7,23 +7,24 @@ import site from '../data/site.json';
 import loyalty from '../data/loyalty.json';
 ---
 <Base
-  title="Join the Family: Email, Texts & Birthday Perks | F.Y.C. / N.Y.C."
-  description="Get the invite to the family cookout: first dibs on holiday tables, members-only producer nights and a birthday glass on us at F.Y.C. / N.Y.C. in Flatiron."
+  title="Join the Family: Newsletter & Text Updates | F.Y.C. / N.Y.C."
+  description="Sign up for the F.Y.C. / N.Y.C. newsletter: new menus, events and holiday reservations at our Flatiron wine bar. Text updates are optional."
   crumbs={[{ name: 'Join the Family', path: '/join/' }]}
 >
   <section class="section jn" aria-labelledby="jn-title">
     <div class="wrap jn__grid">
       <div class="jn__copy">
-        <p class="eyebrow">{site.voice.cookout}</p>
+        <p class="eyebrow">Newsletter</p>
         <h1 id="jn-title" class="display h1 jn__h1">Join the <em>Family</em></h1>
-        <p class="lead">{site.voice.kidsTable}</p>
-        <ul class="jn__perks" role="list" aria-label="What you get">
-          {loyalty.perks.map((p) => <li>{p}</li>)}
+        <p class="lead">Be the first to hear about new menus, events and holiday reservations.</p>
+        <ul class="jn__perks" role="list" aria-label="What you’ll get">
+          <li>Email: our newsletter and restaurant updates.</li>
+          <li>Text (optional): timely updates, up to <Tbd value={site.forms.smsFrequency} label="X" /> a month.</li>
         </ul>
-        <p class="jn__freq">Texts only if you opt in, up to <Tbd value={site.forms.smsFrequency} label="X" /> a month. Unsubscribe anytime.</p>
+        <p class="jn__freq">Unsubscribe from email anytime. Reply STOP to end texts.</p>
       </div>
       <div class="jn__form">
-        <h2 class="jn__formh">Count me in</h2>
+        <h2 class="jn__formh">Sign up</h2>
         <JoinForm id="join-page" layout="stacked" source="join_page" />
       </div>
     </div>
