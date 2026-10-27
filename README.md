@@ -185,9 +185,9 @@ The site picks the right adapter from the host’s build environment (`astro.con
 | `EVENTS_TO_EMAIL` | Where inquiries go | Defaults to `events@thefycnyc.com`. Comma‑separate several addresses |
 | `JOIN_TO_EMAIL` | Signup fallback inbox | Defaults to `info@thefycnyc.com` |
 | `TURNSTILE_SECRET_KEY` | Spam check | The public site key goes in `site.json → forms.turnstileSiteKey` |
-| `SUBSCRIBER_PROVIDER` | Join form | `klaviyo`, `mailchimp` or `email` (default) |
+| `SUBSCRIBER_PROVIDER` | Join form | Leave blank for Mailchimp (once its key is set); `klaviyo` or `email` otherwise |
 | `KLAVIYO_API_KEY`, `KLAVIYO_LIST_ID` | Klaviyo | Private API key |
-| `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID` | Mailchimp | Key ends in `-usX` |
+| `MAILCHIMP_API_KEY`, `MAILCHIMP_LIST_ID` | Join the Family (Mailchimp) | Key ends in `-usX`; list ID is the Audience ID |
 
 In production, a missing `RESEND_API_KEY` makes the form show an error with the email address. The site never silently drops a guest’s inquiry.
 
@@ -243,15 +243,22 @@ Show the real reply window by setting `site.json → forms.eventsReplyWindow` (e
 
 ## Join the Family: email / SMS provider
 
-Open question **Q7**. Set `SUBSCRIBER_PROVIDER`:
+**Mailchimp** (decided Oct 2026). Set two environment variables in Vercel, then redeploy:
 
-| Provider | How |
+| Variable | Where to find it |
 |---|---|
-| `klaviyo` | Subscribes the email (and SMS, only with consent) to `KLAVIYO_LIST_ID`, and stores the birthday as `birthday_mmdd` |
-| `mailchimp` | Adds or updates the member with `BIRTHDAY` and `PHONE` merge fields. Create those fields in the audience first |
-| `email` (default) | Emails each signup to `JOIN_TO_EMAIL` for manual import, e.g. into **Toast Marketing**, which has no public signup API |
+| `MAILCHIMP_API_KEY` | Mailchimp → Profile → Extras → API keys → Create a key. It ends in `-usXX` |
+| `MAILCHIMP_LIST_ID` | Audience → Settings → Audience name and defaults → **Audience ID** |
 
-> The Klaviyo and Mailchimp adapters (`src/server/subscribers.ts`) follow those services’ documented APIs but haven’t been run against live accounts. Test one signup with real keys before launch.
+With `SUBSCRIBER_PROVIDER` unset, the site uses Mailchimp as soon as `MAILCHIMP_API_KEY` is set. Each signup:
+
+- is added to the audience as **subscribed** (single opt-in), or updated if already there. Someone who unsubscribed before gets Mailchimp's confirmation email instead (Mailchimp requires it);
+- is tagged **Website** and **Source: home** or **Source: join_page**;
+- with a mobile number and the text box checked: the number goes in the audience's **Phone** field, the contact is tagged **SMS opt-in**, and a contact note records the date, IP and exact consent text shown. If the Phone field rejects the number, the email signup still goes through and the number stays in the note.
+
+**Texting through Mailchimp:** Mailchimp's API can't mark a contact as SMS-subscribed, so texts need Mailchimp's SMS add-on, with its SMS audience built from contacts tagged **SMS opt-in**. Check Mailchimp's current SMS import rules when you set it up; they may require their own confirmation step.
+
+Other options (`SUBSCRIBER_PROVIDER`): `klaviyo` (`KLAVIYO_API_KEY`, `KLAVIYO_LIST_ID`; not yet tested against a live account) or `email`, which emails each signup to `JOIN_TO_EMAIL` for manual import.
 
 **SMS compliance:**
 - Texts need a separate, unchecked consent box. The form refuses a mobile number without it.
@@ -402,7 +409,7 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 - [ ] **Reviews:** paste the exact wording of the three Google reviews and each star rating, then set `paraphrased: false`.
   - Giulia A.’s quote names meatballs, branzino and steak tartare. Confirm they’re still on the menu, or choose another quote.
   - Refresh the 4.7 ★ / 182 snapshot.
-- [ ] **Email / SMS tool** (Q7): not decided yet, so signups keep going to `JOIN_TO_EMAIL`.
+- [ ] **Email / SMS tool** (Q7): Mailchimp. Add `MAILCHIMP_API_KEY` and `MAILCHIMP_LIST_ID` in Vercel and test one signup.
 - [x] **SMS frequency:** up to 4 a month.
 - [x] **Loyalty** (Q8): simple birthday and email program first. Tiers are hidden (`tiersEnabled: false`).
 - [x] **Join perks:** all four confirmed.
@@ -437,7 +444,7 @@ Then do it again with the live Resy / OpenTable widget. Keep notes of each audit
 | Q4 | Package names, contents, price per person | **From the events deck**: 5 food formats, 3 bar packages | `packages.json` |
 | Q5 | Real recurring programming (happy hour, music, wine classes) | Deferred | `events.json → weekly` |
 | Q6 | Who controls domain/DNS; what the SpotHopper contract covers | Josh holds the domain; contract open | [DNS cutover](#dns-cutover-from-spothopper) |
-| Q7 | Email/SMS tool | Not decided | `SUBSCRIBER_PROVIDER` env |
+| Q7 | Email/SMS tool | **Mailchimp** | `MAILCHIMP_*` env |
 | Q8 | Loyalty tiers (Toast Loyalty) or simple birthday/email first? | **Birthday/email first** | `loyalty.json` |
 | Q9 | Master hours | **Confirmed** | `hours.json` |
 | Q10 | Weekend brunch service and menu | **No brunch** | (removed) |
