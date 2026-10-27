@@ -2,11 +2,9 @@
  * Site-wide client script (kept small on purpose).
  * - Live open/closed status from hours.json (New York time)
  * - Mobile menu + booking drawer (<dialog>)
- * - Lazy third-party booking widget
  * - Analytics events + UTM preservation
  */
 import { getStatus, fmtPeriods } from '../lib/hours';
-import { loadBookingWidget } from './booking';
 import { initAnalytics, track } from './analytics';
 
 function initStatus() {
@@ -107,8 +105,6 @@ function initDialogs() {
       // Mobile menu link: close the menu first, then open the drawer
       openDialog('booking-drawer', booking);
       track('booking_drawer_open', { location: booking.dataset.trackLocation ?? '' });
-      const widget = drawer.querySelector<HTMLElement>('[data-booking-widget]');
-      if (widget) loadBookingWidget(widget);
       return;
     }
 
@@ -116,9 +112,6 @@ function initDialogs() {
     const inDialogLink = target.closest<HTMLAnchorElement>('dialog a[href]');
     if (inDialogLink) inDialogLink.closest('dialog')?.close();
   });
-
-  // /reserve loads the widget immediately
-  document.querySelectorAll<HTMLElement>('[data-booking-widget][data-load="eager"]').forEach(loadBookingWidget);
 }
 
 function initReveal() {

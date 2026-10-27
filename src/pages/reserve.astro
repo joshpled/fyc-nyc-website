@@ -20,7 +20,7 @@ const chef = menus.food.chefsDinner;
   <section class="section rs" aria-label="Book a table">
     <div class="wrap rs__grid">
       <div class="rs__book" id="book">
-        <BookingWidget id="booking-widget-page" load="eager" />
+        <BookingWidget id="booking-widget-page" />
         <ul class="rs__policy" role="list" aria-label="Reservation policy">
           {site.booking.policy.map((p) => <li>{p}</li>)}
         </ul>
