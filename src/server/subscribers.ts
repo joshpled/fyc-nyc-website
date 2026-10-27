@@ -108,8 +108,13 @@ async function mailchimp(s: Subscriber): Promise<Result> {
   const call = (path: string, method: string, body: unknown) =>
     fetch(`${base}${path}`, { method, headers, body: JSON.stringify(body), signal: AbortSignal.timeout(8000) });
   const why = async (res: Response) => {
-    const j = (await res.json().catch(() => ({}))) as { title?: string; detail?: string };
-    return `Mailchimp ${res.status}: ${j.title ?? ''} ${j.detail ?? ''}`.trim();
+    const j = (await res.json().catch(() => ({}))) as {
+      title?: string;
+      detail?: string;
+      errors?: { field?: string; message?: string }[];
+    };
+    const fields = (j.errors ?? []).map((e) => `${e.field ?? '?'}: ${e.message ?? ''}`).join('; ');
+    return `Mailchimp ${res.status}: ${j.title ?? ''} ${j.detail ?? ''}${fields ? ` [${fields}]` : ''}`.trim();
   };
 
   const member = (status: 'subscribed' | 'pending', withPhone: boolean) => ({
@@ -118,19 +123,20 @@ async function mailchimp(s: Subscriber): Promise<Result> {
     ...(status === 'pending' ? { status: 'pending' } : {}),
     ...(withPhone && s.phone ? { merge_fields: { PHONE: usPhone(s.phone) } } : {}),
     ...(s.ip ? { ip_signup: s.ip } : {}),
-    timestamp_signup: new Date().toISOString(),
   });
 
-  let res = await call('', 'PUT', member('subscribed', true));
+  // skip_merge_validation: the audience may require fields this form doesn't ask for (e.g. name)
+  const put = '?skip_merge_validation=true';
+  let res = await call(put, 'PUT', member('subscribed', true));
   if (!res.ok) {
     const detail = await why(res);
     if (/compliance state/i.test(detail)) {
       // Previously unsubscribed: Mailchimp only allows a confirmation email
-      res = await call('', 'PUT', member('pending', true));
-    } else if (s.phone && /merge field|PHONE/i.test(detail)) {
-      // Audience phone field rejected the format: keep the email signup, log the rest
+      res = await call(put, 'PUT', member('pending', true));
+    } else if (s.phone && res.status === 400) {
+      // Audience Phone field rejected the number: keep the email signup; the number stays in the note
       console.error('[join]', detail);
-      res = await call('', 'PUT', member('subscribed', false));
+      res = await call(put, 'PUT', member('subscribed', false));
     } else {
       return { ok: false, detail };
     }
